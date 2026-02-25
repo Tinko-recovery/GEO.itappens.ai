@@ -107,46 +107,59 @@ class AutoRouter:
         task_description: str = "",
     ) -> str:
         """
-        1. Selects provider based on agent_name.
-        2. Tries preferred provider.
-        3. Falls back to others if needed.
+        Dynamically selects the 'best' brain for the job based on:
+        1. Context Length (Large -> Gemini)
+        2. Task Complexity (High Intelligence -> Sonnet)
+        3. Speed/Cost (Simple -> Groq)
         """
-        # ── Route to Groq (Free/Fast Tier) ───────────────────────────────────
-        if agent_name in GROQ_AGENTS and self._groq:
+        total_chars = len(system_prompt) + len(user_message)
+        is_mission_critical = any(kw in system_prompt.lower() for kw in ["architecture", "security", "financial", "database", "ceo", "launch"])
+        is_structured_data = any(kw in system_prompt.lower() for kw in ["json", "csv", "xml", "schema"])
+
+        # 🧠 Heuristic 1: Long Context (Scraping, Research, Audits)
+        if total_chars > 20000 and self._gemini:
+            try:
+                logger.info(f"Dynamic Router: Routing {agent_name} to Gemini Flash for long context")
+                return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
+            except Exception: pass
+
+        # 🧠 Heuristic 2: Mission Critical Tasks -> Sonnet 3.5 (The Best)
+        if is_mission_critical:
+            try:
+                return self._call_anthropic(agent_name, CLAUDE_SONNET, system_prompt, user_message, cache_system_prompt, temperature, max_tokens, task_description)
+            except Exception: pass
+
+        # 🧠 Heuristic 3: Structured Data -> GPT-4o-mini (Best at JSON consistency)
+        if is_structured_data and self._openai:
+            try:
+                return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
+            except Exception: pass
+
+        # 🧠 Heuristic 4: Sub-second / Short Tasks -> Groq (Llama 3)
+        if max_tokens < 500 and self._groq:
             try:
                 return self._call_groq(agent_name, system_prompt, user_message, temperature, max_tokens)
-            except Exception as e:
-                logger.warning("Groq failed for %s: %s. Falling back to Claude.", agent_name, e)
+            except Exception: pass
 
-        # ── Route to Gemini (Free/Research Tier) ─────────────────────────────
-        if agent_name in GEMINI_AGENTS and self._gemini:
-            try:
-                return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
-            except Exception as e:
-                logger.warning("Gemini failed for %s: %s. Falling back to Claude.", agent_name, e)
-
-        # ── Route to Claude (Premium Tier) ───────────────────────────────────
-        model = CLAUDE_SONNET if agent_name in SONNET_AGENTS else CLAUDE_HAIKU
+        # Default: Fallback to Claude Haiku (Best price/performance for prose)
+        preferred_model = CLAUDE_HAIKU
         
-        # If we're in a temporary fallback window, go straight to GPT-4o
+        # Fallback to OpenAI if Anthropic is in cooldown
         if self._in_fallback_mode and time.time() < self._fallback_until and self._openai:
             return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
 
         try:
             return self._call_anthropic(
-                agent_name, model, system_prompt, user_message,
+                agent_name, preferred_model, system_prompt, user_message,
                 cache_system_prompt, temperature, max_tokens, task_description
             )
         except Exception as exc:
             if not self._fallback_enabled or not self._openai:
                 raise
             
-            logger.warning("Claude API error (%s) — switching to GPT-4o fallback.", exc)
-            self._log_fallback(agent_name, model, str(exc))
+            logger.warning("Claude API error — switching to GPT-4o fallback.")
+            self._log_fallback(agent_name, preferred_model, str(exc))
             self._enter_fallback_mode()
-
-            if self._telegram:
-                self._telegram.send_now("⚠️ Claude API issue detected. Running on backup model (GPT-4o).")
             return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
 
     # ── Private: Anthropic ──────────────────────────────────────────────────

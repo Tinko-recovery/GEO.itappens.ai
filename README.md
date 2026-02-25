@@ -1,4 +1,4 @@
-# 🤖 itappens.ai — The Autonomous Business Engine
+# 🤖 itappens.ai — The Autonomous Workforce Engine
 
 **"What if your product team worked while you slept? Not a VA. Not a freelancer. Not an agency. An autonomous AI team — engineers, marketers, a project manager — all working in parallel. Shipping code. Writing content."**
 

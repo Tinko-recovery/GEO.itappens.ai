@@ -296,7 +296,7 @@ async def landing_page():
     <html lang="en">
     <head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>itappens.ai | The AI Nation</title>
+        <title>itappens.ai | The Autonomous Collective</title>
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
         <style>
             :root { --p: #ff00ff; --s: #00ffff; --bg: #030014; --glass: rgba(255, 255, 255, 0.05); }
@@ -466,7 +466,7 @@ async def dashboard_ui():
                 <p style="color: var(--s); font-weight: bold;">[01] DASHBOARD</p>
                 <p style="opacity: 0.4;">[02] MISSION ARCHIVE</p>
                 <p style="opacity: 0.4;">[03] BILLING NODES</p>
-                <p style="opacity: 0.4;">[04] ZENITH CONFIG</p>
+                <p style="opacity: 0.4;">[04] AUTONOMY CONFIG</p>
             </nav>
             <div style="font-size: 0.7rem; color: #444;">V.1.0.1 // SOVEREIGN_MODE</div>
         </div>
@@ -486,7 +486,7 @@ async def dashboard_ui():
             <ul id="live-feed">
                 <li class="thought-entry initial">
                     <span class="thought-role">System</span>
-                    <div class="thought-msg">Establishing connection to itappens.ai nation...</div>
+                    <div class="thought-msg">Establishing connection to itappens.ai collective...</div>
                 </li>
                 <li class="thought-entry initial" style="animation-delay: 0.5s">
                     <span class="thought-role">Infrastructure</span>
@@ -502,7 +502,7 @@ async def dashboard_ui():
                 
                 const btn = document.getElementById('init-btn');
                 btn.disabled = true;
-                btn.innerText = 'INITIALIZING NATION CORE...';
+                btn.innerText = 'INITIALIZING COLLECTIVE CORE...';
 
                 const res = await fetch('/missions', {
                     method: 'POST',
