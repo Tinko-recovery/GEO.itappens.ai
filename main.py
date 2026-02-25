@@ -287,7 +287,14 @@ async def health():
 
 async def startup_sequence():
     """Run the company in the background."""
-    await asyncio.sleep(5) # Give the web server a head start
+    logger.info("Initializing itappens.ai background process...")
+    # Send an immediate ping to Telegram to prove logic is running
+    try:
+        from main import telegram # Use the instance if global, or create a temporary one
+        telegram.send_now("🔋 *itappens.ai:* Background logic is warming up. Zenith is preparing the mission...")
+    except: pass
+
+    await asyncio.sleep(8) # Short delay to let uvicorn settle
     try:
         await run_company(
             goal="Build MVP invoice tracker SaaS with landing page and launch campaign.",
