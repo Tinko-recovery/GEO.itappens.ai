@@ -13,7 +13,7 @@ from typing import Optional
 
 from dotenv import load_dotenv
 
-from cost.auto_router import AutoRouter, SONNET_MODEL, HAIKU_MODEL
+from cost.auto_router import AutoRouter, CLAUDE_SONNET, CLAUDE_HAIKU
 from cost.cost_tracker import CostTracker
 from quality.quality_gate import QualityGateAgent
 from customer.customer_brain import CustomerBrain
@@ -54,8 +54,8 @@ class TeamFactory:
 
         # CrewAI 1.x uses LiteLLM internally — pass model name strings directly.
         # Format: "anthropic/<model-id>" tells LiteLLM to use the Anthropic provider.
-        self._llm_sonnet = f"anthropic/{SONNET_MODEL}"
-        self._llm_haiku = f"anthropic/{HAIKU_MODEL}"
+        self._llm_sonnet = f"anthropic/{CLAUDE_SONNET}"
+        self._llm_haiku = f"anthropic/{CLAUDE_HAIKU}"
 
     # ── Spawners ──────────────────────────────────────────────────────────────
     # ... (existing spawners)

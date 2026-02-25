@@ -29,11 +29,6 @@ FALLBACK_LOG_PATH = Path(__file__).parent.parent / "memory" / "fallback_log.json
 # Sonnet: complex reasoning agents
 # Haiku:  simple / high-volume agents (5x cheaper)
 
-# SONNET_MODEL = "claude-3-5-sonnet-20241022"
-# HAIKU_MODEL  = "claude-3-haiku-20240307"
-# GEMINI_MODEL = "gemini-1.5-flash"
-# GROQ_MODEL   = "llama-3.3-70b-versatile"
-
 # Models by category
 CLAUDE_SONNET = "claude-3-5-sonnet-20241022"
 CLAUDE_HAIKU  = "claude-3-haiku-20240307"
