@@ -67,13 +67,22 @@ class TelegramReporter:
         
         app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), on_message))
         
-        # Start the application in a background task
+        async def bootstrap():
+            try:
+                await app.initialize()
+                await app.start()
+                if app.updater:
+                    await app.updater.start_polling()
+                logger.info("Telegram polling started — you can now 'talk' to agents.")
+            except Exception as e:
+                logger.error("Failed to start Telegram polling: %s", e)
+
+        # Start the bootstrap process in the background
         loop = asyncio.get_event_loop()
-        loop.create_task(app.initialize())
-        loop.create_task(app.start())
-        loop.create_task(app.updater.start_polling())
-        
-        logger.info("Telegram polling started — you can now 'talk' to agents.")
+        if loop.is_running():
+            loop.create_task(bootstrap())
+        else:
+            loop.run_until_complete(bootstrap())
 
     async def ask_human_link(self, agent_name: str, question: str) -> str:
         """Send a question and WAIT for the user to type a reply in Telegram."""
