@@ -51,9 +51,9 @@ HAIKU_AGENTS = {
     "Project Manager",
 }
 
-SONNET_MODEL = "claude-sonnet-4-6"
-HAIKU_MODEL  = "claude-haiku-4-5"
-FALLBACK_MODEL = "gpt-4o"
+SONNET_MODEL = "claude-3-5-haiku-20241022"
+HAIKU_MODEL  = "claude-3-5-haiku-20241022"
+FALLBACK_MODEL = "gpt-4o-mini"
 
 
 class AutoRouter:

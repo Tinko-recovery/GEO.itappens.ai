@@ -269,12 +269,42 @@ async def run_daily_sales() -> None:
     logger.info("Daily sales run complete: %s", results)
 
 
+from fastapi import FastAPI, BackgroundTasks
+import uvicorn
+
+app = FastAPI(title="itappens.ai API")
+
+@app.get("/")
+async def root():
+    return {"status": "itappens.ai is online", "time": datetime.now().isoformat()}
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
 # ── Entry point ────────────────────────────────────────────────────────────────
 
+async def startup_sequence():
+    """Run the company in the background."""
+    await asyncio.sleep(5) # Give the web server a head start
+    try:
+        await run_company(
+            goal="Build MVP invoice tracker SaaS with landing page and launch campaign.",
+            customer_id="cust_001",
+            num_eng_teams=1, # Reduced for initial test cost safety
+            num_mkt_teams=1, # Reduced for initial test cost safety
+        )
+    except Exception as e:
+        logger.error("Startup company run failed: %s", e)
+
 if __name__ == "__main__":
-    asyncio.run(run_company(
-        goal="Build MVP invoice tracker SaaS with landing page and launch campaign.",
-        customer_id="cust_001",
-        num_eng_teams=2,
-        num_mkt_teams=2,
-    ))
+    # Start the web server (Blocks the main thread)
+    # Render provides a PORT environment variable
+    port = int(os.getenv("PORT", "10000"))
+    
+    # Run the company logic as a background task
+    loop = asyncio.get_event_loop()
+    loop.create_task(startup_sequence())
+    
+    logger.info(f"Starting heartbeat server on port {port}")
+    uvicorn.run(app, host="0.0.0.0", port=port)
