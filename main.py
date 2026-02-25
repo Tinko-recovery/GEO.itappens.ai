@@ -1,0 +1,280 @@
+"""
+main.py
+────────
+Entry point for the itappens.ai autonomous AI company.
+Runs the full multi-agent hierarchy in parallel using asyncio.
+"""
+
+import asyncio
+import logging
+import os
+from datetime import datetime
+
+from dotenv import load_dotenv
+
+# ── Core infrastructure ───────────────────────────────────────────────────────
+from memory.sprint_board import SprintBoard
+from cost.cost_tracker import BudgetExceededError, CostTracker
+from cost.auto_router import AutoRouter
+from telegram_bot.reporter import TelegramReporter
+
+# ── Orchestration ─────────────────────────────────────────────────────────────
+from orchestration.ceo_agent import CEOAgent
+from orchestration.cto_agent import CTOAgent
+from orchestration.cpo_agent import CPOAgent
+
+# ── Teams ─────────────────────────────────────────────────────────────────────
+from teams.team_factory import TeamFactory
+
+# ── Quality ───────────────────────────────────────────────────────────────────
+from quality.quality_gate import QualityGateAgent
+
+# ── Customer ──────────────────────────────────────────────────────────────────
+from customer.customer_brain import CustomerBrain
+from customer.onboarding_agent import OnboardingAgent
+from customer.weekly_win_agent import WeeklyWinAgent
+from customer.exit_interview import ExitInterviewAgent
+from customer.referral_engine import ReferralEngine
+
+load_dotenv()
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
+logger = logging.getLogger("itappens.ai")
+
+
+# ── Product description (injected into all sales agents) ─────────────────────
+PRODUCT_DESCRIPTION = """
+itappens.ai provides autonomous AI product teams for solo founders and small SaaS companies.
+Each team includes engineers and marketers powered by Claude AI.
+The team ships features, writes code, creates marketing content, and finds customers — autonomously.
+Starting at $497/mo. Saves clients $10,000+/month vs hiring.
+"""
+
+
+# ── Main company runner ──────────────────────────────────────────────────────
+
+async def run_company(
+    goal: str,
+    customer_id: str,
+    num_eng_teams: int = 2,
+    num_mkt_teams: int = 2,
+) -> dict:
+    """
+    Run the full itappens.ai AI company for one sprint.
+
+    Steps:
+      1. Initialize all infrastructure (SprintBoard, CostTracker, Telegram, etc.)
+      2. Load or create customer brain
+      3. If new customer → run OnboardingAgent (5-question interview)
+      4. Start Telegram 15-min scheduler
+      5. Budget kill switch check
+      6. CEO plans missions → assigns to CTO and CPO
+      7. CTO/CPO issue technical/marketing briefs
+      8. TeamFactory spawns all teams simultaneously
+      9. asyncio.gather() runs ALL teams in parallel
+      10. Every output passes through QualityGateAgent
+      11. CEO synthesizes final results
+      12. CustomerBrain updated with sprint results
+      13. Completion report sent to Telegram
+    """
+
+    logger.info("🚀 itappens.ai starting — customer: %s, goal: %s", customer_id, goal[:80])
+
+    # ── Step 1: Initialize infrastructure ────────────────────────────────────
+    daily_budget = float(os.getenv("DAILY_BUDGET_USD", "20.00"))
+    alert_threshold = float(os.getenv("ALERT_THRESHOLD_USD", "15.00"))
+
+    sprint_board = SprintBoard()
+    telegram = TelegramReporter(sprint_board=sprint_board)
+    cost_tracker = CostTracker(
+        daily_budget_usd=daily_budget,
+        alert_threshold_usd=alert_threshold,
+        telegram_notifier=telegram,
+    )
+    auto_router = AutoRouter(cost_tracker=cost_tracker, telegram_notifier=telegram)
+    quality_gate = QualityGateAgent(auto_router=auto_router, sprint_board=sprint_board)
+    factory = TeamFactory(
+        auto_router=auto_router,
+        cost_tracker=cost_tracker,
+        sprint_board=sprint_board,
+        quality_gate=quality_gate,
+        telegram_notifier=telegram,
+    )
+
+    # ── Step 2: Load or create customer brain ────────────────────────────────
+    brain = CustomerBrain.load(customer_id)
+    logger.info("Customer brain loaded for %s.", customer_id)
+
+    # ── Step 3: Onboarding (new customers only) ──────────────────────────────
+    if not OnboardingAgent.is_onboarding_complete(customer_id):
+        logger.info("New customer — starting onboarding interview.")
+        telegram.send_now(f"👋 New customer {customer_id} — starting onboarding interview.")
+        onboarding = OnboardingAgent(customer_id=customer_id)
+        brain = await onboarding.run_onboarding_interview()
+        logger.info("Onboarding complete for %s.", customer_id)
+
+    # ── Step 4: Start Telegram scheduler ────────────────────────────────────
+    telegram.start_scheduler()
+    telegram.start_polling()
+
+    # ── Step 4b: Start Weekly Win scheduler ─────────────────────────────────
+    def send_email(to: str, subject: str, body: str) -> None:
+        """Simple adapter to call Gmail send tool."""
+        try:
+            from tools.gmail_tool import gmail_send_tool
+            gmail_send_tool._run(to=to, subject=subject, body=body)
+        except Exception as exc:
+            logger.error("Email send failed: %s", exc)
+
+    weekly_win = WeeklyWinAgent(
+        sprint_board=sprint_board,
+        cost_tracker=cost_tracker,
+        gmail_send_fn=send_email,
+        telegram=telegram,
+    )
+    weekly_win.start_scheduler()
+
+    # ── Step 5: Send startup notification ───────────────────────────────────
+    telegram.send_startup(goal, customer_id, num_eng_teams, num_mkt_teams)
+    sprint_board.update("company", "status", "active")
+    sprint_board.update("company", "current_task", "Teams introducing themselves")
+
+    # ── Meet the Team ───────────────────────────────────────────────────────
+    async def meet_the_team():
+        exec_intro = (
+            "🤝 *Meet your itappens.ai Executive Team:*\n\n"
+            "👤 *Sadish (CEO):* I'll be overseeing the strategy, planning your missions, and ensuring cross-team alignment.\n"
+            "👤 *Smrithi (CTO):* I'm managing the engineering architecture and technical delivery for your product.\n"
+            "👤 *Sujitha (CPO):* I'm handling the branding, marketing campaigns, and content strategy.\n"
+        )
+        
+        crew_intro = (
+            "\n🏗️ *Engineering Squad:* PM, Lead Engineer, Backend Dev, Frontend Dev, and QA Engineer.\n"
+            "📢 *Marketing Squad:* PM, Content Lead, SEO Specialist, and Marketing Analyst.\n"
+            "💼 *Sales Squad:* Lead Researcher, Outreach Agent, Content Creator, and Follow-up Agent.\n\n"
+            "🚀 *Status:* All 12 specialists are online, briefed by Sadish/Smrithi/Sujitha, and starting their work now."
+        )
+        
+        await telegram._send_async(exec_intro + crew_intro)
+    
+    await meet_the_team()
+
+    # ── Step 5b: Budget kill switch ──────────────────────────────────────────
+    try:
+        cost_tracker.check_kill_switch()
+    except BudgetExceededError as exc:
+        logger.error("Budget exceeded before start: %s", exc)
+        return {"error": str(exc), "status": "budget_exceeded"}
+
+    # ── Step 6: CEO plans missions ───────────────────────────────────────────
+    ceo = CEOAgent(auto_router=auto_router, sprint_board=sprint_board, telegram=telegram)
+    sprint_plan = ceo.plan_missions(goal, customer_id, num_eng_teams, num_mkt_teams)
+    logger.info("CEO plan: %s", sprint_plan.get("sprint_goal", ""))
+
+    # ── Budget check again after CEO ─────────────────────────────────────────
+    try:
+        cost_tracker.check_kill_switch()
+    except BudgetExceededError as exc:
+        telegram.send_now(f"🛑 Budget exceeded after CEO planning. Sprint paused.\n{exc}")
+        return {"error": str(exc), "status": "budget_exceeded"}
+
+    # ── Step 7: CTO and CPO issue briefs ─────────────────────────────────────
+    cto = CTOAgent(auto_router=auto_router, sprint_board=sprint_board)
+    cpo = CPOAgent(auto_router=auto_router, sprint_board=sprint_board)
+
+    cto_missions = sprint_plan.get("cto_missions", [])
+    cpo_missions = sprint_plan.get("cpo_missions", [])
+
+    eng_briefs, mkt_briefs = await asyncio.gather(
+        asyncio.get_event_loop().run_in_executor(None, cto.assign_missions, cto_missions, customer_id),
+        asyncio.get_event_loop().run_in_executor(None, cpo.assign_missions, cpo_missions, customer_id),
+    )
+
+    # ── Step 8: Spawn all teams ───────────────────────────────────────────────
+    teams_to_run = []
+
+    for brief in eng_briefs:
+        team_id = brief.get("team_id", f"eng_{len(teams_to_run)+1}")
+        mission_text = brief.get("technical_brief", "")
+        teams_to_run.append(factory.spawn_engineering_team(team_id, mission_text, customer_id))
+
+    for brief in mkt_briefs:
+        team_id = brief.get("team_id", f"mkt_{len(teams_to_run)+1}")
+        teams_to_run.append(factory.spawn_marketing_team(team_id, brief, customer_id))
+
+    logger.info("Spawning %d teams in parallel.", len(teams_to_run))
+    sprint_board.update("company", "current_task", f"Running {len(teams_to_run)} teams in parallel")
+
+    # ── Step 9: Run all teams simultaneously ─────────────────────────────────
+    team_results = await factory.run_teams_in_parallel(teams_to_run)
+
+    logger.info("All teams finished. Synthesizing results.")
+
+    # ── Step 10: CEO synthesizes results ─────────────────────────────────────
+    final_summary = ceo.synthesize_results(customer_id, sprint_plan, team_results)
+
+    # ── Step 11: Update customer brain ───────────────────────────────────────
+    brain_all = CustomerBrain.load(customer_id)
+    past_count = len(brain_all.get("past_sprints", []))
+    sprint_result = {
+        "sprint_number": past_count + 1,
+        "goal": goal,
+        "completed": [
+            f"Team {r['team_id']}: {r.get('quality_decision', 'done')}"
+            for r in team_results.values() if r.get("status") == "done"
+        ],
+        "failed": [
+            f"Team {r['team_id']}: {r.get('error', 'unknown')}"
+            for r in team_results.values() if r.get("status") == "error"
+        ],
+        "customer_feedback": "",
+        "finished_at": datetime.utcnow().isoformat(),
+    }
+    CustomerBrain.update_after_sprint(customer_id, sprint_result)
+
+    # ── Step 12: Referral prompt after first sprint ───────────────────────────
+    referral = ReferralEngine(telegram=telegram)
+    if past_count == 0:
+        referral.send_referral_prompt_after_sprint1(customer_id, CustomerBrain.load(customer_id))
+
+    # ── Step 13: Send completion report ─────────────────────────────────────
+    telegram.send_completion(customer_id, final_summary)
+    sprint_board.update("company", "status", "done")
+    sprint_board.update("company", "current_task", "Sprint complete")
+
+    logger.info("✅ Sprint complete for customer %s.", customer_id)
+    return {
+        "status": "complete",
+        "customer_id": customer_id,
+        "sprint_goal": sprint_plan.get("sprint_goal", goal),
+        "teams_run": len(teams_to_run),
+        "summary": final_summary,
+        "cost": {
+            "spent_today": cost_tracker.today_spent(),
+            "budget_remaining": cost_tracker.budget_remaining(),
+        },
+    }
+
+
+# ── Sales team scheduler (runs daily at 9am) ─────────────────────────────────
+
+async def run_daily_sales() -> None:
+    """Run the autonomous sales team once."""
+    from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+    auto_router = AutoRouter()
+    factory = TeamFactory(auto_router=auto_router)
+
+    sales_tuple = factory.spawn_sales_team(PRODUCT_DESCRIPTION)
+    results = await factory.run_teams_in_parallel([sales_tuple])
+    logger.info("Daily sales run complete: %s", results)
+
+
+# ── Entry point ────────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    asyncio.run(run_company(
+        goal="Build MVP invoice tracker SaaS with landing page and launch campaign.",
+        customer_id="cust_001",
+        num_eng_teams=2,
+        num_mkt_teams=2,
+    ))
