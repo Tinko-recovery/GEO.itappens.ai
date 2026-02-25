@@ -288,41 +288,105 @@ class MissionRequest(BaseModel):
     customer_id: str = "guest_user"
 
 @app.get("/", response_class=HTMLResponse)
-async def dashboard_ui():
-    """Serve a basic but premium mission portal UI."""
+async def landing_page():
+    """High-converting marketing landing page."""
     return """
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>itappens.ai | Mission Control</title>
+        <meta charset="UTF-8"><title>itappens.ai | The Autonomous Employee Workforce</title>
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
         <style>
-            :root { --p: #8000FF; --bg: #050505; --card: #111; --text: #eee; }
-            body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 40px; }
-            .container { max-width: 800px; margin: 0 auto; }
-            h1 { font-family: 'Orbitron', sans-serif; color: var(--p); letter-spacing: 2px; }
-            .card { background: var(--card); border: 1px solid #333; padding: 25px; border-radius: 12px; margin-bottom: 20px; }
-            textarea { width: 100%; background: #000; color: #fff; border: 1px solid #444; padding: 15px; border-radius: 8px; box-sizing: border-box; }
-            button { background: var(--p); color: #fff; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 15px; }
-            .status { font-size: 0.9em; color: #888; margin-top: 10px; }
-            .plan-box { background: #000; border-left: 3px solid var(--p); padding: 15px; margin-top: 15px; white-space: pre-wrap; font-size: 0.9em; }
+            :root { --p: #8000FF; --bg: #000; --text: #fff; }
+            body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+            nav { padding: 30px; display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
+            .hero { height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at center, #1a0033 0%, #000 70%); }
+            h1 { font-family: 'Orbitron'; font-size: 4rem; margin: 0; color: var(--p); text-shadow: 0 0 20px rgba(128,0,255,0.5); }
+            p.tagline { font-size: 1.5rem; color: #888; margin-top: 10px; max-width: 600px; }
+            .cta { background: var(--p); color: #fff; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 30px; transition: 0.3s; border: 1px solid var(--p); }
+            .cta:hover { background: transparent; box-shadow: 0 0 30px var(--p); }
+            .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1200px; margin: 80px auto; padding: 0 20px; }
+            .f-card { background: #111; padding: 30px; border-radius: 15px; border: 1px solid #222; }
+            .f-card h3 { color: var(--p); font-family: 'Orbitron'; }
         </style>
     </head>
     <body>
-        <div class="container">
+        <nav>
+            <div style="font-family:'Orbitron'; font-weight:bold; font-size:1.5rem;">itappens.ai</div>
+            <a href="/dashboard" class="cta" style="margin-top:0; padding:10px 25px;">Enter Dashboard</a>
+        </nav>
+        <div class="hero">
+            <h1>HIRE AN AI NATION</h1>
+            <p class="tagline">The world's first autonomous workforce. 12 specialists. 1 goal. Zero management.</p>
+            <a href="/dashboard" class="cta">Start Your Mission</a>
+        </div>
+        <div class="features">
+            <div class="f-card"><h3>24/7 Sprints</h3><p>Our agents don't sleep. They build, market, and sell while you dream.</p></div>
+            <div class="f-card"><h3>Quality Firewall</h3><p>Vigil, our QA bot, scores every output. Buggy code never reaches you.</p></div>
+            <div class="f-card"><h3>Point Economy</h3><p>Pay only for output. 10 points = $1 of autonomous labor.</p></div>
+        </div>
+    </body>
+    </html>
+    """
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def dashboard_ui():
+    """Serve the mission control dashboard with real-time chatter."""
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8"><title>itappens.ai | Dashboard</title>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+        <style>
+            :root { --p: #8000FF; --bg: #050505; --card: #111; --text: #eee; }
+            body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; height: 100vh; }
+            .sidebar { width: 280px; background: #000; border-right: 1px solid #222; padding: 30px; box-sizing: border-box; }
+            .main { flex: 1; padding: 40px; overflow-y: auto; }
+            .chatter { width: 350px; background: #0a0a0a; border-left: 1px solid #222; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; }
+            h1, h2 { font-family: 'Orbitron', sans-serif; color: var(--p); }
+            .card { background: var(--card); border: 1px solid #333; padding: 25px; border-radius: 12px; margin-bottom: 20px; }
+            textarea { width: 100%; background: #000; color: #fff; border: 1px solid #444; padding: 15px; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+            button { background: var(--p); color: #fff; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 15px; width: 100%; }
+            button:hover { filter: brightness(1.2); }
+            #live-feed { flex: 1; overflow-y: auto; font-family: monospace; font-size: 0.85em; color: #aaa; list-style: none; padding: 0; }
+            .thought-entry { margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+            .thought-role { color: var(--p); font-weight: bold; margin-bottom: 3px; display: block; }
+            .plan-box { background: #000; border-left: 3px solid var(--p); padding: 15px; margin-top: 15px; white-space: pre-wrap; font-size: 0.9em; max-height: 300px; overflow-y: auto; }
+        </style>
+    </head>
+    <body>
+        <div class="sidebar">
+            <h2 style="font-size: 1.2rem;">ITAPPENS.AI</h2>
+            <p style="color:#666; font-size:0.8rem;">Sovereign AI Workforce</p>
+            <div style="margin-top:40px;">
+                <p style="color:var(--p);">• Dashboard</p>
+                <p>• Missions</p>
+                <p>• Billing</p>
+            </div>
+        </div>
+        <div class="main">
             <h1>MISSION CONTROL</h1>
             <div class="card">
-                <h3>Submit Mission Goal</h3>
-                <textarea id="goal" rows="4" placeholder="What do you want itappens.ai to build for you today?"></textarea>
-                <button onclick="submitMission()">Initialize Zenith</button>
+                <h3>New Mission Goal</h3>
+                <textarea id="goal" rows="4" placeholder="Launch a local coffee shop brand..."></textarea>
+                <button id="init-btn" onclick="submitMission()">Initialize Zenith</button>
             </div>
             <div id="mission-area"></div>
+        </div>
+        <div class="chatter">
+            <h3>AGENT LIVE FEED</h3>
+            <ul id="live-feed">
+                <li class="thought-entry"><i>System: Awaiting mission to wake agents...</i></li>
+            </ul>
         </div>
         <script>
             async function submitMission() {
                 const goal = document.getElementById('goal').value;
+                if(!goal) return alert('Enter a goal.');
+                document.getElementById('init-btn').disabled = true;
+                document.getElementById('init-btn').innerText = 'Initializing...';
+                
                 const res = await fetch('/missions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -339,16 +403,22 @@ async def dashboard_ui():
                 const timer = setInterval(async () => {
                     const res = await fetch(`/missions/${id}`);
                     const m = await res.json();
+                    
                     if (m.state === 'planned') {
                         clearInterval(timer);
                         area.innerHTML = `
-                            <div class="card">
-                                <h3>Mission Proposal</h3>
+                            <div class="card" style="border-color: var(--p);">
+                                <h3>ZENITH PROPOSAL RECEIVED</h3>
                                 <div class="plan-box">${JSON.stringify(m.plan, null, 2)}</div>
-                                <p>Cost: <strong>${m.budget_points} Points</strong></p>
+                                <p style="font-size: 1.2rem; margin-top: 20px;">Allocation Needed: <span style="color: var(--p);">${m.budget_points} Points</span></p>
                                 <button onclick="approve('${id}')">Approve & Start Mission</button>
                             </div>
                         `;
+                    } else if (m.state === 'failed') {
+                        clearInterval(timer);
+                        area.innerHTML = `<div class="card" style="border-color: red;">❌ Planning Failed: ${m.error || 'Check logs'}</div>`;
+                        document.getElementById('init-btn').disabled = false;
+                        document.getElementById('init-btn').innerText = 'Retry Initialization';
                     }
                 }, 3000);
             }
@@ -356,12 +426,33 @@ async def dashboard_ui():
             async function approve(id) {
                 await fetch(`/missions/${id}/approve`, { method: 'POST' });
                 alert('Mission Approved! Agents are waking up.');
-                location.reload();
+                document.getElementById('mission-area').innerHTML = '<div class="card">⚡ Mission in progress. Watch the Live Feed.</div>';
             }
+
+            // Simple status feed polling
+            setInterval(async () => {
+                const res = await fetch('/status/board');
+                const board = await res.json();
+                const feed = document.getElementById('live-feed');
+                let html = '';
+                for (const [id, info] of Object.entries(board)) {
+                    if (info.current_task) {
+                        html += `<li class="thought-entry">
+                            <span class="thought-role">${id}</span>
+                            ${info.current_task}
+                        </li>`;
+                    }
+                }
+                if(html) feed.innerHTML = html;
+            }, 4000);
         </script>
     </body>
     </html>
     """
+
+@app.get("/status/board")
+async def get_board():
+    return sprint_board.get_full_board()
 
 @app.post("/missions")
 async def create_mission(req: MissionRequest, background_tasks: BackgroundTasks):
@@ -385,17 +476,32 @@ async def approve_mission(mission_id: str, background_tasks: BackgroundTasks):
 
 async def plan_mission_logic(mission_id: str):
     """Background task to let Zenith plan the mission."""
-    m = mission_store.get_mission(mission_id)
-    daily_budget = float(os.getenv("DAILY_BUDGET_USD", "20.00"))
-    cost_tracker = CostTracker(daily_budget_usd=daily_budget, telegram_notifier=telegram)
-    auto_router = AutoRouter(cost_tracker=cost_tracker, telegram_notifier=telegram)
-    
-    ceo = CEOAgent(auto_router=auto_router, sprint_board=sprint_board, telegram=telegram)
-    plan = ceo.plan_missions(m["goal"], m["customer_id"])
-    points = plan.get("budget_points", 15)
-    
-    mission_store.update_plan(mission_id, plan, points)
-    await telegram._send_async(f"🎯 *New Mission Planned:* User is viewing the proposal for '{m['goal'][:50]}...'. Awaiting approval on dashboard.")
+    try:
+        m = mission_store.get_mission(mission_id)
+        if not m: return
+        
+        logger.info(f"Zenith starting plan for mission {mission_id}")
+        
+        daily_budget = float(os.getenv("DAILY_BUDGET_USD", "20.00"))
+        cost_tracker = CostTracker(daily_budget_usd=daily_budget, telegram_notifier=telegram)
+        auto_router = AutoRouter(cost_tracker=cost_tracker, telegram_notifier=telegram)
+        
+        ceo = CEOAgent(auto_router=auto_router, sprint_board=sprint_board, telegram=telegram)
+        plan = ceo.plan_missions(m["goal"], m["customer_id"])
+        points = plan.get("budget_points", 15)
+        
+        mission_store.update_plan(mission_id, plan, points)
+        await telegram._send_async(f"🎯 *New Mission Planned:* User is viewing the proposal for '{m['goal'][:50]}...'. Awaiting approval on dashboard.")
+        logger.info(f"Zenith finished plan for mission {mission_id}")
+    except Exception as e:
+        logger.error(f"Zenith failed to plan mission {mission_id}: {e}")
+        # Update mission with error state so UI stops polling
+        with mission_store._lock:
+            data = mission_store._read()
+            if mission_id in data:
+                data[mission_id]["state"] = "failed"
+                data[mission_id]["error"] = str(e)
+                mission_store._write(data)
 
 async def run_approved_mission(mission_id: str):
     """Kick off the actual agents for an approved mission."""
