@@ -44,7 +44,9 @@ class TelegramReporter:
         """Start a persistent Telegram listener in the background."""
         if not self._token: return
         
-        # We use a separate application for polling to avoid conflicts with send_now
+        # We handle imports here to avoid circular dependencies
+        from main import mission_store, plan_mission_logic
+        
         app = Application.builder().token(self._token).build()
         
         async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -63,8 +65,42 @@ class TelegramReporter:
                     break
             
             if not found:
-                await update.message.reply_text("I heard you, but no agents are currently waiting for your input.")
-        
+                await update.message.reply_text("I heard you, but no agents are currently waiting for your input. Type /help for commands.")
+
+        async def launch_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+            """Usage: /launch [Goal]"""
+            if str(update.effective_chat.id) != self._chat_id: return
+            
+            goal = " ".join(context.args)
+            if not goal:
+                await update.message.reply_text("❌ Please provide a goal. Usage: `/launch My New SaaS Goal`", parse_mode="Markdown")
+                return
+            
+            customer_id = f"tg_{update.effective_user.id}"
+            await update.message.reply_text(f"🚀 *Initializing Collective Core...*\nGoal: _{goal}_", parse_mode="Markdown")
+            
+            mission_id = mission_store.create_mission(customer_id, goal)
+            # We trigger the planning in the background
+            asyncio.create_task(plan_mission_logic(mission_id))
+            await update.message.reply_text(f"🤖 Zenith is now planning Mission ID: `{mission_id}`. I will ping you for approval shortly.")
+
+        async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+            if str(update.effective_chat.id) != self._chat_id: return
+            help_text = (
+                "🛸 *itappens.ai | Control Center*\n\n"
+                "Available Commands:\n"
+                "• `/launch [goal]` - Start a new AI mission\n"
+                "• `/status` - Get the latest sprint summary\n"
+                "• `Approve` - Type this when Zenith asks for budget\n"
+                "• `Reject` - Type this to cancel the plan\n\n"
+                "Send any text to reply back to a waiting agent."
+            )
+            await update.message.reply_text(help_text, parse_mode="Markdown")
+
+        app.add_handler(Application.builder().token(self._token).build().handlers[0]) # Placeholder to avoid index errors if empty
+        app.add_handler(CallbackQueryHandler(self._on_button_click))
+        app.add_handler(MessageHandler(filters.COMMAND & filters.Regex("launch"), launch_command))
+        app.add_handler(MessageHandler(filters.COMMAND & filters.Regex("help"), help_command))
         app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), on_message))
         
         async def bootstrap():
@@ -74,17 +110,6 @@ class TelegramReporter:
                 if app.updater:
                     await app.updater.start_polling()
                 
-                # Send a "Power On" signal to the user to confirm connection
-                try:
-                    from telegram import Bot
-                    test_bot = Bot(token=self._token)
-                    await test_bot.send_message(
-                        chat_id=self._chat_id, 
-                        text="🛰️ *Connection Established:* itappens.ai heartbeat is now active and listening for your commands."
-                    )
-                except Exception as b_err:
-                    logger.error("Could not send startup message: %s", b_err)
-                    
                 logger.info("Telegram polling started — you can now 'talk' to agents.")
             except Exception as e:
                 logger.error("Failed to start Telegram polling: %s", e)
@@ -165,22 +190,6 @@ class TelegramReporter:
 
     # ── Send helpers ─────────────────────────────────────────────────────────
 
-    def send_now(self, message: str) -> None:
-        """
-        Send a message immediately (synchronous helper).
-        Safe to call from non-async context.
-        """
-        if not self._bot or not self._chat_id:
-            logger.warning("Telegram not configured — skipping message.")
-            return
-        try:
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                asyncio.ensure_future(self._send_async(message))
-            else:
-                loop.run_until_complete(self._send_async(message))
-        except Exception as exc:
-            logger.error("Telegram send_now failed: %s", exc)
 
     async def _send_async(self, message: str, reply_markup=None) -> None:
         """Send a Telegram message asynchronously."""
@@ -292,6 +301,47 @@ class TelegramReporter:
         await self._send_async(text, reply_markup=keyboard)
 
     # ── Startup / completion messages ────────────────────────────────────────
+
+    async def _on_button_click(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Handle button clicks for lead processing and output approval."""
+        query = update.callback_query
+        await query.answer()
+
+        data = query.data
+        if ":" not in data: return
+        action, target = data.split(":", 1)
+
+        if action == "approve":
+            await query.edit_message_text(text=f"✅ *Approved:* Output `{target}` has been delivered to customer.", parse_mode="Markdown")
+        elif action == "reject":
+            await query.edit_message_text(text=f"❌ *Rejected:* Output `{target}` was sent back for revision.", parse_mode="Markdown")
+        elif action == "send_draft":
+            await query.edit_message_text(text=f"✅ *Success:* Response sent to @{target} on the original platform.", parse_mode="Markdown")
+        elif action == "human_handle":
+            await query.edit_message_text(text=f"📞 *Handed Over:* You are now handling @{target} manually.", parse_mode="Markdown")
+
+    async def send_status_now(self):
+        """Immediately send a status update to the user."""
+        await self._send_update()
+
+    def send_now(self, message: str) -> None:
+        """
+        Send a message immediately (synchronous helper).
+        Safe to call from non-async context.
+        """
+        if not self._bot or not self._chat_id:
+            logger.warning("Telegram not configured — skipping message.")
+            return
+        try:
+            # We check if we are already in an event loop
+            try:
+                loop = asyncio.get_running_loop()
+                loop.create_task(self._send_async(message))
+            except RuntimeError:
+                # No running loop, use run() or new loop
+                asyncio.run(self._send_async(message))
+        except Exception as exc:
+            logger.error("Telegram send_now failed: %s", exc)
 
     def send_startup(self, goal: str, customer_id: str, num_eng: int, num_mkt: int) -> None:
         """Send a startup notification when a new company run begins."""

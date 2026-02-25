@@ -1127,8 +1127,15 @@ async def plan_mission_logic(mission_id: str):
         points = plan.get("budget_points", 15)
         
         mission_store.update_plan(mission_id, plan, points)
-        await telegram._send_async(f"🎯 *New Mission Planned:* User is viewing the proposal for '{m['goal'][:50]}...'. Awaiting approval on dashboard.")
-        logger.info(f"Zenith finished plan for mission {mission_id}")
+        
+        # 🔔 INTERACTIVE: Wait for Telegram approval
+        approved = await telegram.ask_budget_approval(points)
+        if approved:
+            mission_store.approve_mission(mission_id)
+            await run_approved_mission(mission_id)
+        else:
+            logger.info(f"Mission {mission_id} cancelled or ignored on Telegram.")
+
     except Exception as e:
         logger.error(f"Zenith failed to plan mission {mission_id}: {e}")
         # Update mission with error state so UI stops polling
