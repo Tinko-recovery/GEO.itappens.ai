@@ -421,7 +421,7 @@ async def landing_page():
             <div class="nav-links">
                 <a href="#how">How it works</a>
                 <a href="#pricing">Pricing</a>
-                <a href="#security">Security</a>
+                <a href="/security">Security</a>
                 <a href="/dashboard" class="cta" style="padding: 12px 30px; font-size: 0.9rem; margin: 0;">Launch Your Team →</a>
             </div>
         </nav>
@@ -750,6 +750,7 @@ async def landing_page():
             <div class="logo" style="font-size: 1rem;">itappens.ai</div>
             <div>© 2026 itappens.ai — by blocks and loops technologies</div>
             <div style="display: flex; gap: 20px;">
+                <a href="/security" style="color: inherit;">Security</a>
                 <a href="#" style="color: inherit;">Twitter</a>
                 <a href="#" style="color: inherit;">Terms</a>
             </div>
@@ -765,6 +766,154 @@ async def landing_page():
                 }
             }, 15000);
         </script>
+    </body>
+    </html>
+    """
+
+@app.get("/security", response_class=HTMLResponse)
+async def security_page():
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security & Trust | itappens.ai</title>
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+        <style>
+            :root { --p: #ff00ff; --s: #00ffff; --bg: #030014; --glass: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1); }
+            * { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; }
+            body { background: var(--bg); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; line-height: 1.6; }
+            h1, h2, h3, h4, .logo { font-family: 'Unbounded'; }
+            .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% 50%, #1a0033 0%, #030014 100%); }
+            
+            nav { padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; max-width: 1300px; margin: 0 auto; }
+            .logo { font-size: 1.5rem; color: #fff; text-decoration: none; font-weight: bold; }
+            
+            .container { max-width: 1000px; margin: 80px auto; padding: 0 20px; }
+            h1 { font-size: 3.5rem; margin-bottom: 20px; }
+            h2 { font-size: 2rem; color: var(--s); margin-top: 60px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+            
+            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
+            .card { background: var(--glass); border: 1px solid var(--border); padding: 35px; border-radius: 30px; }
+            .card h3 { color: var(--p); margin-top: 0; font-size: 1.2rem; }
+            
+            .check-list { list-style: none; padding: 0; }
+            .check-list li { padding: 12px 0; padding-left: 30px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05); }
+            .check-list li::before { content: '✓'; color: var(--s); position: absolute; left: 0; font-weight: bold; }
+            
+            .badge { display: inline-block; padding: 5px 15px; border-radius: 20px; background: rgba(0,255,255,0.1); color: var(--s); font-size: 0.8rem; font-weight: bold; margin-bottom: 15px; }
+            
+            .guarantee-box { background: linear-gradient(45deg, rgba(255,0,255,0.05), rgba(0,255,255,0.05)); border: 2px solid var(--s); padding: 50px; border-radius: 40px; margin-top: 80px; text-align: center; }
+            .guarantee-text { font-size: 1.3rem; font-style: italic; color: #eee; max-width: 700px; margin: 0 auto; }
+            
+            footer { padding: 60px 40px; border-top: 1px solid var(--border); text-align: center; color: #555; }
+            mark { background: none; color: var(--s); }
+            .back-link { color: var(--s); text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+        </style>
+    </head>
+    <body>
+        <div class="bg-glow"></div>
+        <nav>
+            <a href="/" class="logo">itappens.ai</a>
+            <a href="/" class="back-link">← Back to home</a>
+        </nav>
+
+        <div class="container">
+            <h1 class="center" style="text-align:center;">Security & <mark>Trust</mark></h1>
+            <p class="center" style="font-size: 1.2rem; opacity: 0.7; text-align:center;">How we keep your data safe and your business protected.</p>
+
+            <h2>Part 1: Your Safety</h2>
+            <p>Infrastructure protocols for founders running the itappens.ai core.</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <div class="badge">LAYER 1 & 2</div>
+                    <h3>Environment Isolation</h3>
+                    <ul class="check-list">
+                        <li><strong>Encrypted Environments</strong>: API keys never leave your secure server</li>
+                        <li><strong>Docker Sandboxing</strong>: Agents trapped in isolated containers</li>
+                        <li><strong>No Host Access</strong>: Agents cannot touch your server files</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="badge">LAYER 3 & 4</div>
+                    <h3>Execution Guardrails</h3>
+                    <ul class="check-list">
+                        <li><strong>Code Blocklist</strong>: rm, delete, DROP TABLE blocked at system level</li>
+                        <li><strong>Budget Kill Switch</strong>: Automatic stop at daily limit</li>
+                        <li><strong>Manual Gates</strong>: AUTO_SEND=false by default</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 40px;">
+                <h3>🛡️ Safe Rollout Strategy</h3>
+                <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px;">
+                    <div style="font-size: 0.8rem; opacity: 0.6;"><strong>WEEK 1</strong><br>Dry Run only. Watch agents work.</div>
+                    <div style="font-size: 0.8rem; opacity: 0.6;"><strong>WEEK 2</strong><br>Manual approval for every action.</div>
+                    <div style="font-size: 0.8rem; opacity: 0.6;"><strong>WEEK 3</strong><br>Deploy to Cloud (Render) isolation.</div>
+                    <div style="font-size: 0.8rem; opacity: 1; color: var(--s);"><strong>WEEK 4</strong><br>Trust established. Autopilot active.</div>
+                </div>
+            </div>
+
+            <h2>Part 2: Customer Guarantees</h2>
+            <p>The 6 pillars of trust we build into every customer interaction.</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>1. Total Control</h3>
+                    <p>Nothing goes live without approval. No code commits, emails, or posts without an explicit tap in Telegram.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Privacy First</h3>
+                    <p>Customer data never trains any AI model. Not ours, not Anthropic's, not anyone's.</p>
+                </div>
+                <div class="card">
+                    <h3>3. Deep Isolation</h3>
+                    <p>Every customer is isolated in their own container. Zero data crossover possible.</p>
+                </div>
+                <div class="card">
+                    <h3>4. Cost Certainty</h3>
+                    <p>Hard daily budget limits they control. No surprise bills. Agents stop when the limit is reached.</p>
+                </div>
+                <div class="card">
+                    <h3>5. Full Audit Log</h3>
+                    <p>Every agent action is timestamped and recorded. Every draft and code snippet is visible.</p>
+                </div>
+                <div class="card">
+                    <h3>6. Instant Erasure</h3>
+                    <p>Cancel and delete everything instantly. All data wiped within 24 hours of cancellation.</p>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 100px;">What We <mark>NEVER</mark> Do</h2>
+            <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div style="padding: 20px;">
+                    <h4 style="color: #ff4444;">✕ NO Direct Main</h4>
+                    <p style="font-size: 0.8rem;">Staging branch only. Customer merges manually.</p>
+                </div>
+                <div style="padding: 20px;">
+                    <h4 style="color: #ff4444;">✕ NO Blind Sends</h4>
+                    <p style="font-size: 0.8rem;">Every email/post shown in Telegram first.</p>
+                </div>
+                <div style="padding: 20px;">
+                    <h4 style="color: #ff4444;">✕ NO Host Files</h4>
+                    <p style="font-size: 0.8rem;">Restricted to /app/workspace only.</p>
+                </div>
+            </div>
+
+            <div class="guarantee-box">
+                <div class="logo" style="font-size: 1.2rem; margin-bottom: 25px;">The Founder Guarantee</div>
+                <p class="guarantee-text">
+                    "If itappens.ai ever damages your business — sends a bad email, commits broken code, or posts something embarrassing — I will personally reach out, fix it, and refund that month. No questions asked. You have my email. Use it."
+                </p>
+                <div style="margin-top: 30px; font-weight: bold; color: var(--s);">— Sadish S. | blocks and loops technologies</div>
+            </div>
+        </div>
+
+        <footer>
+            © 2026 itappens.ai — by blocks and loops technologies
+        </footer>
     </body>
     </html>
     """
