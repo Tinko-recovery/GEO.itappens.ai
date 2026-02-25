@@ -338,7 +338,7 @@ async def landing_page():
         </nav>
 
         <section class="hero">
-            <h1>Fire your <mark>Employees.</mark><br>Hire an AI Nation.</h1>
+            <h1>it appens<br><mark>when you sleep.</mark></h1>
             <p class="tagline">The world's first autonomous workforce that actually finishes what it starts. 12 specialists. One mission. Zero management required.</p>
             <a href="/dashboard" class="cta">Launch Your First Sprint —></a>
         </section>
