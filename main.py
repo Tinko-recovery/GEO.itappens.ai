@@ -270,49 +270,143 @@ async def run_daily_sales() -> None:
     logger.info("Daily sales run complete: %s", results)
 
 
-from fastapi import FastAPI, BackgroundTasks
+from fastapi import FastAPI, BackgroundTasks, HTTPException
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
 import uvicorn
+from memory.mission_store import MissionStore
 
 app = FastAPI(title="itappens.ai API")
+mission_store = MissionStore()
 
-@app.get("/")
-async def root():
-    return {"status": "itappens.ai is online", "time": datetime.now().isoformat()}
+# ── Shared Infrastructure ─────────────────────────────────────────────────────
+sprint_board = SprintBoard()
+telegram = TelegramReporter(sprint_board=sprint_board)
 
-@app.get("/health")
-async def health():
-    return {"status": "healthy"}
+class MissionRequest(BaseModel):
+    goal: str
+    customer_id: str = "guest_user"
+
+@app.get("/", response_class=HTMLResponse)
+async def dashboard_ui():
+    """Serve a basic but premium mission portal UI."""
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>itappens.ai | Mission Control</title>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+        <style>
+            :root { --p: #8000FF; --bg: #050505; --card: #111; --text: #eee; }
+            body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 40px; }
+            .container { max-width: 800px; margin: 0 auto; }
+            h1 { font-family: 'Orbitron', sans-serif; color: var(--p); letter-spacing: 2px; }
+            .card { background: var(--card); border: 1px solid #333; padding: 25px; border-radius: 12px; margin-bottom: 20px; }
+            textarea { width: 100%; background: #000; color: #fff; border: 1px solid #444; padding: 15px; border-radius: 8px; box-sizing: border-box; }
+            button { background: var(--p); color: #fff; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 15px; }
+            .status { font-size: 0.9em; color: #888; margin-top: 10px; }
+            .plan-box { background: #000; border-left: 3px solid var(--p); padding: 15px; margin-top: 15px; white-space: pre-wrap; font-size: 0.9em; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>MISSION CONTROL</h1>
+            <div class="card">
+                <h3>Submit Mission Goal</h3>
+                <textarea id="goal" rows="4" placeholder="What do you want itappens.ai to build for you today?"></textarea>
+                <button onclick="submitMission()">Initialize Zenith</button>
+            </div>
+            <div id="mission-area"></div>
+        </div>
+        <script>
+            async function submitMission() {
+                const goal = document.getElementById('goal').value;
+                const res = await fetch('/missions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ goal })
+                });
+                const data = await res.json();
+                pollMission(data.mission_id);
+            }
+
+            async function pollMission(id) {
+                const area = document.getElementById('mission-area');
+                area.innerHTML = '<div class="card">🤖 Zenith is planning missions...</div>';
+                
+                const timer = setInterval(async () => {
+                    const res = await fetch(`/missions/${id}`);
+                    const m = await res.json();
+                    if (m.state === 'planned') {
+                        clearInterval(timer);
+                        area.innerHTML = `
+                            <div class="card">
+                                <h3>Mission Proposal</h3>
+                                <div class="plan-box">${JSON.stringify(m.plan, null, 2)}</div>
+                                <p>Cost: <strong>${m.budget_points} Points</strong></p>
+                                <button onclick="approve('${id}')">Approve & Start Mission</button>
+                            </div>
+                        `;
+                    }
+                }, 3000);
+            }
+
+            async function approve(id) {
+                await fetch(`/missions/${id}/approve`, { method: 'POST' });
+                alert('Mission Approved! Agents are waking up.');
+                location.reload();
+            }
+        </script>
+    </body>
+    </html>
+    """
+
+@app.post("/missions")
+async def create_mission(req: MissionRequest, background_tasks: BackgroundTasks):
+    mission_id = mission_store.create_mission(req.customer_id, req.goal)
+    background_tasks.add_task(plan_mission_logic, mission_id)
+    return {"mission_id": mission_id, "status": "draft"}
+
+@app.get("/missions/{mission_id}")
+async def get_mission(mission_id: str):
+    m = mission_store.get_mission(mission_id)
+    if not m: raise HTTPException(status_code=404)
+    return m
+
+@app.post("/missions/{mission_id}/approve")
+async def approve_mission(mission_id: str, background_tasks: BackgroundTasks):
+    m = mission_store.get_mission(mission_id)
+    if not m: raise HTTPException(status_code=404)
+    mission_store.approve_mission(mission_id)
+    background_tasks.add_task(run_approved_mission, mission_id)
+    return {"status": "approved"}
+
+async def plan_mission_logic(mission_id: str):
+    """Background task to let Zenith plan the mission."""
+    m = mission_store.get_mission(mission_id)
+    daily_budget = float(os.getenv("DAILY_BUDGET_USD", "20.00"))
+    cost_tracker = CostTracker(daily_budget_usd=daily_budget, telegram_notifier=telegram)
+    auto_router = AutoRouter(cost_tracker=cost_tracker, telegram_notifier=telegram)
+    
+    ceo = CEOAgent(auto_router=auto_router, sprint_board=sprint_board, telegram=telegram)
+    plan = ceo.plan_missions(m["goal"], m["customer_id"])
+    points = plan.get("budget_points", 15)
+    
+    mission_store.update_plan(mission_id, plan, points)
+    await telegram._send_async(f"🎯 *New Mission Planned:* User is viewing the proposal for '{m['goal'][:50]}...'. Awaiting approval on dashboard.")
+
+async def run_approved_mission(mission_id: str):
+    """Kick off the actual agents for an approved mission."""
+    m = mission_store.get_mission(mission_id)
+    # Re-use run_company logic but bypass onboarding for now
+    await run_company(goal=m["goal"], customer_id=m["customer_id"])
+
 
 # ── Entry point ────────────────────────────────────────────────────────────────
 
-async def startup_sequence():
-    """Run the company in the background."""
-    logger.info("Initializing itappens.ai background process...")
-    # Send an immediate ping to Telegram to prove logic is running
-    try:
-        from main import telegram # Use the instance if global, or create a temporary one
-        telegram.send_now("🔋 *itappens.ai:* Background logic is warming up. Zenith is preparing the mission...")
-    except: pass
-
-    await asyncio.sleep(8) # Short delay to let uvicorn settle
-    try:
-        await run_company(
-            goal="Build MVP invoice tracker SaaS with landing page and launch campaign.",
-            customer_id="cust_001",
-            num_eng_teams=1, # Reduced for initial test cost safety
-            num_mkt_teams=1, # Reduced for initial test cost safety
-        )
-    except Exception as e:
-        logger.error("Startup company run failed: %s", e)
-
 if __name__ == "__main__":
-    # Start the web server (Blocks the main thread)
-    # Render provides a PORT environment variable
     port = int(os.getenv("PORT", "10000"))
-    
-    # Run the company logic as a background task
-    loop = asyncio.get_event_loop()
-    loop.create_task(startup_sequence())
-    
-    logger.info(f"Starting heartbeat server on port {port}")
+    logger.info(f"itappens.ai SaaS Portal live on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
