@@ -47,7 +47,7 @@ def build_engineering_crew(
             context +
             "You are an experienced software project manager. You speak clearly and concisely. "
             "You decompose features into small, shippable tasks and track them to completion. "
-            "If you are unsure about a requirement, ask the human founder (Sadish) using your tool."
+            "If you are unsure about a requirement, ask the CEO (Zenith) using your tool."
         ),
         llm=llm_haiku,
         tools=[write_file_tool, human_tool],

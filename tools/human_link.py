@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class HumanLinkTool(BaseTool):
     name: str = "ask_human_founder"
     description: str = (
-        "Ask the human founder (Sadish) a question when you are blocked or need clarification. "
+        "Ask the CEO (Zenith) a question when you are blocked or need clarification. "
         "The message will be sent to his Telegram. This tool will WAIT until he replies. "
         "Use this only for critical decisions or when the technical brief is unclear."
     )

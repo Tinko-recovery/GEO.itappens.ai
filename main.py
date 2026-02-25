@@ -142,16 +142,16 @@ async def run_company(
     async def meet_the_team():
         exec_intro = (
             "🤝 *Meet your itappens.ai Executive Team:*\n\n"
-            "👤 *Sadish (CEO):* I'll be overseeing the strategy, planning your missions, and ensuring cross-team alignment.\n"
-            "👤 *Smrithi (CTO):* I'm managing the engineering architecture and technical delivery for your product.\n"
-            "👤 *Sujitha (CPO):* I'm handling the branding, marketing campaigns, and content strategy.\n"
+            "👤 *Zenith (CEO):* I oversee high-level strategy, mission planning, and cross-team alignment.\n"
+            "👤 *Cortex (CTO):* I manage the engineering architecture and technical delivery of your product.\n"
+            "👤 *Synapse (CPO):* I handle the branding, content strategy, and marketing growth.\n"
         )
         
         crew_intro = (
             "\n🏗️ *Engineering Squad:* PM, Lead Engineer, Backend Dev, Frontend Dev, and QA Engineer.\n"
             "📢 *Marketing Squad:* PM, Content Lead, SEO Specialist, and Marketing Analyst.\n"
             "💼 *Sales Squad:* Lead Researcher, Outreach Agent, Content Creator, and Follow-up Agent.\n\n"
-            "🚀 *Status:* All 12 specialists are online, briefed by Sadish/Smrithi/Sujitha, and starting their work now."
+            "🚀 *Status:* All 12 specialists are online, briefed by Zenith/Cortex/Synapse, and starting work."
         )
         
         await telegram._send_async(exec_intro + crew_intro)

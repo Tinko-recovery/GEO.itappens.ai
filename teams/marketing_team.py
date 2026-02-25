@@ -55,7 +55,7 @@ def build_marketing_crew(
             context +
             "You manage marketing campaigns for SaaS products. You ensure every piece of content "
             "serves a strategic purpose and hits the right audience at the right time. "
-            "If the campaign direction is unclear, ask the human founder (Sadish)."
+            "If the campaign direction is unclear, ask the CEO (Zenith)."
         ),
         llm=llm_haiku,
         tools=[write_file_tool, human_tool],

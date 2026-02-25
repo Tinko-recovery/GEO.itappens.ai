@@ -11,9 +11,9 @@ itappens.ai is the world's first fully autonomous AI company system. It doesn't 
 We combine the world's most powerful LLMs (Claude 3.5/4.5 Sonnet & Haiku) with an agentic framework to create a self-correcting, high-speed production line.
 
 ### 🏢 The Executive Team
-*   **Sadish (CEO)**: Strategy, Planning, and Mission Management.
-*   **Smrithi (CTO)**: Technical Architecture and Engineering Lead.
-*   **Sujitha (CPO)**: Brand Strategy, Marketing, and Product Vision.
+*   **Zenith (CEO)**: Strategy, Planning, and Mission Management.
+*   **Cortex (CTO)**: Technical Architecture and Engineering Lead.
+*   **Synapse (CPO)**: Brand Strategy, Marketing, and Product Vision.
 
 ### 🛠️ The Specialized Squads
 1.  **Engineering Squad**: Ships complete, working code (Frontend, Backend, QA).
