@@ -73,6 +73,18 @@ class TelegramReporter:
                 await app.start()
                 if app.updater:
                     await app.updater.start_polling()
+                
+                # Send a "Power On" signal to the user to confirm connection
+                try:
+                    from telegram import Bot
+                    test_bot = Bot(token=self._token)
+                    await test_bot.send_message(
+                        chat_id=self._chat_id, 
+                        text="🛰️ *Connection Established:* itappens.ai heartbeat is now active and listening for your commands."
+                    )
+                except Exception as b_err:
+                    logger.error("Could not send startup message: %s", b_err)
+                    
                 logger.info("Telegram polling started — you can now 'talk' to agents.")
             except Exception as e:
                 logger.error("Failed to start Telegram polling: %s", e)
