@@ -72,10 +72,17 @@ class AutoRouter:
 
     def __init__(self, cost_tracker=None, telegram_notifier=None):
         self._anthropic = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self._openai = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        
+        # Only initialize OpenAI if key is provided; otherwise disable fallback
+        openai_key = os.getenv("OPENAI_API_KEY")
+        if openai_key:
+            self._openai = openai.OpenAI(api_key=openai_key)
+        else:
+            self._openai = None
+
         self._cost_tracker = cost_tracker
         self._telegram = telegram_notifier
-        self._fallback_enabled = os.getenv("FALLBACK_ENABLED", "true").lower() == "true"
+        self._fallback_enabled = os.getenv("FALLBACK_ENABLED", "true").lower() == "true" and self._openai is not None
         self._in_fallback_mode = False
         self._fallback_until: float = 0.0
         self._ensure_fallback_log()
