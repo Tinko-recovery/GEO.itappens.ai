@@ -15,6 +15,8 @@ from datetime import datetime
 
 import anthropic
 import openai
+import groq
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -27,33 +29,23 @@ FALLBACK_LOG_PATH = Path(__file__).parent.parent / "memory" / "fallback_log.json
 # Sonnet: complex reasoning agents
 # Haiku:  simple / high-volume agents (5x cheaper)
 
-SONNET_AGENTS = {
-    "CEO Agent",
-    "CTO Agent",
-    "CPO Agent",
-    "Lead Engineer",
-    "Content Lead",
-    "Outreach Agent",
-    "Quality Gate",
-}
+# SONNET_MODEL = "claude-3-5-sonnet-20241022"
+# HAIKU_MODEL  = "claude-3-haiku-20240307"
+# GEMINI_MODEL = "gemini-1.5-flash"
+# GROQ_MODEL   = "llama-3.3-70b-versatile"
 
-HAIKU_AGENTS = {
-    "Backend Developer",
-    "Frontend Developer",
-    "QA Engineer",
-    "SEO Specialist",
-    "Marketing Analyst",
-    "Lead Researcher",
-    "Follow-up Agent",
-    "Onboarding Agent",
-    "Weekly Win Agent",
-    "Exit Interview Agent",
-    "Project Manager",
-}
+# Models by category
+CLAUDE_SONNET = "claude-3-5-sonnet-20241022"
+CLAUDE_HAIKU  = "claude-3-haiku-20240307"
+GPT_FALLBACK  = "gpt-4o-mini"
+GEMINI_FLASH  = "gemini-1.5-flash"
+GROQ_LLAMA    = "llama-3.3-70b-specdec" # Fast Groq model
 
-SONNET_MODEL = "claude-3-5-sonnet-20241022"
-HAIKU_MODEL  = "claude-3-haiku-20240307"
-FALLBACK_MODEL = "gpt-4o-mini"
+# Assign agents to providers
+SONNET_AGENTS = {"CEO Agent", "CTO Agent", "Lead Engineer", "Quality Gate"}
+HAIKU_AGENTS  = {"Content Lead", "Outreach Agent", "Weekly Win Agent"}
+GEMINI_AGENTS = {"Lead Researcher", "SEO Specialist", "Marketing Analyst", "Onboarding Agent"}
+GROQ_AGENTS   = {"Project Manager", "QA Engineer", "Backend Developer", "Frontend Developer", "CPO Agent"}
 
 
 class AutoRouter:
@@ -73,7 +65,22 @@ class AutoRouter:
     def __init__(self, cost_tracker=None, telegram_notifier=None):
         self._anthropic = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
         
-        # Only initialize OpenAI if key is provided; otherwise disable fallback
+        # Google Gemini
+        google_key = os.getenv("GOOGLE_API_KEY")
+        if google_key:
+            genai.configure(api_key=google_key)
+            self._gemini = genai.GenerativeModel(GEMINI_FLASH)
+        else:
+            self._gemini = None
+
+        # Groq
+        groq_key = os.getenv("GROQ_API_KEY")
+        if groq_key:
+            self._groq = groq.Groq(api_key=groq_key)
+        else:
+            self._groq = None
+
+        # OpenAI (Fallback)
         openai_key = os.getenv("OPENAI_API_KEY")
         if openai_key:
             self._openai = openai.OpenAI(api_key=openai_key)
@@ -89,12 +96,6 @@ class AutoRouter:
 
     # ── Public API ──────────────────────────────────────────────────────────
 
-    def get_model_for_agent(self, agent_name: str) -> str:
-        """Return the appropriate Claude model for the given agent role."""
-        if agent_name in SONNET_AGENTS:
-            return SONNET_MODEL
-        return HAIKU_MODEL
-
     def call_with_routing(
         self,
         agent_name: str,
@@ -106,41 +107,47 @@ class AutoRouter:
         task_description: str = "",
     ) -> str:
         """
-        Make an LLM call with automatic model selection and fallback.
-
-        1. Selects Sonnet or Haiku based on agent_name.
-        2. Tries Anthropic Claude first.
-        3. On API error / timeout → silently falls back to GPT-4o.
-        4. Logs tokens + cost via CostTracker.
-        5. Returns the text content of the response.
+        1. Selects provider based on agent_name.
+        2. Tries preferred provider.
+        3. Falls back to others if needed.
         """
-        model = self.get_model_for_agent(agent_name)
+        # ── Route to Groq (Free/Fast Tier) ───────────────────────────────────
+        if agent_name in GROQ_AGENTS and self._groq:
+            try:
+                return self._call_groq(agent_name, system_prompt, user_message, temperature, max_tokens)
+            except Exception as e:
+                logger.warning("Groq failed for %s: %s. Falling back to Claude.", agent_name, e)
 
+        # ── Route to Gemini (Free/Research Tier) ─────────────────────────────
+        if agent_name in GEMINI_AGENTS and self._gemini:
+            try:
+                return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
+            except Exception as e:
+                logger.warning("Gemini failed for %s: %s. Falling back to Claude.", agent_name, e)
+
+        # ── Route to Claude (Premium Tier) ───────────────────────────────────
+        model = CLAUDE_SONNET if agent_name in SONNET_AGENTS else CLAUDE_HAIKU
+        
         # If we're in a temporary fallback window, go straight to GPT-4o
-        if self._in_fallback_mode and time.time() < self._fallback_until:
-            return self._call_openai(agent_name, system_prompt, user_message,
-                                     max_tokens, task_description)
+        if self._in_fallback_mode and time.time() < self._fallback_until and self._openai:
+            return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
 
-        # Attempt Claude
         try:
             return self._call_anthropic(
                 agent_name, model, system_prompt, user_message,
                 cache_system_prompt, temperature, max_tokens, task_description
             )
-        except (anthropic.APIError, anthropic.APITimeoutError, anthropic.APIConnectionError) as exc:
-            if not self._fallback_enabled:
+        except Exception as exc:
+            if not self._fallback_enabled or not self._openai:
                 raise
-
+            
             logger.warning("Claude API error (%s) — switching to GPT-4o fallback.", exc)
             self._log_fallback(agent_name, model, str(exc))
             self._enter_fallback_mode()
 
             if self._telegram:
-                self._telegram.send_now(
-                    "⚠️ Claude API issue detected. Running on backup model (GPT-4o)."
-                )
-            return self._call_openai(agent_name, system_prompt, user_message,
-                                     max_tokens, task_description)
+                self._telegram.send_now("⚠️ Claude API issue detected. Running on backup model (GPT-4o).")
+            return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
 
     # ── Private: Anthropic ──────────────────────────────────────────────────
 
@@ -203,7 +210,7 @@ class AutoRouter:
         task_description: str,
     ) -> str:
         response = self._openai.chat.completions.create(
-            model=FALLBACK_MODEL,
+            model=GPT_FALLBACK,
             max_tokens=max_tokens,
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -214,12 +221,47 @@ class AutoRouter:
         if self._cost_tracker:
             self._cost_tracker.log_call(
                 agent=agent_name,
-                model=FALLBACK_MODEL,
+                model=GPT_FALLBACK,
                 input_tokens=usage.prompt_tokens,
                 output_tokens=usage.completion_tokens,
                 cache_hit=False,
                 task_description=task_description,
             )
+        return response.choices[0].message.content
+
+    # ── Private: Gemini ─────────────────────────────────────────────────────
+
+    def _call_gemini(self, agent_name: str, system: str, user: str, temp: float, tokens: int) -> str:
+        """Call Google Gemini 1.5 Flash."""
+        # Note: Gemini system prompt is handled via the start_chat or generation_config
+        full_prompt = f"SYSTEM: {system}\n\nUSER: {user}"
+        response = self._gemini.generate_content(
+            full_prompt,
+            generation_config=genai.types.GenerationConfig(
+                max_output_tokens=tokens,
+                temperature=temp,
+            )
+        )
+        if self._cost_tracker:
+            # Gemini billing is complex, logging tokens for tracking
+            self._cost_tracker.log_call(agent_name, GEMINI_FLASH, 0, 0, False, "Gemini Research Call")
+        return response.text
+
+    # ── Private: Groq ───────────────────────────────────────────────────────
+
+    def _call_groq(self, agent_name: str, system: str, user: str, temp: float, tokens: int) -> str:
+        """Call Groq (Llama 3)."""
+        response = self._groq.chat.completions.create(
+            model=GROQ_LLAMA,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            temperature=temp,
+            max_tokens=tokens,
+        )
+        if self._cost_tracker:
+            self._cost_tracker.log_call(agent_name, GROQ_LLAMA, 0, 0, False, "Groq Speed Call")
         return response.choices[0].message.content
 
     # ── Private: Fallback state management ──────────────────────────────────
