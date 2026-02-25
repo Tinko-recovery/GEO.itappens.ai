@@ -288,6 +288,7 @@ class MissionRequest(BaseModel):
     customer_id: str = "guest_user"
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 async def landing_page():
     """Vibrant, quirky, and animated high-converting landing page."""
     return """
@@ -308,22 +309,41 @@ async def landing_page():
             nav { padding: 30px; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
             .logo { font-family: 'Unbounded'; font-size: 1.5rem; background: linear-gradient(to right, var(--p), var(--s)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; }
             
-            .hero { min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 20px; z-index: 1; }
-            h1 { font-family: 'Unbounded'; font-size: clamp(2.5rem, 8vw, 5rem); margin: 0; line-height: 1.1; }
-            h1 mark { background: none; color: var(--s); text-shadow: 0 0 30px rgba(0,255,255,0.5); }
-            p.tagline { font-size: 1.25rem; color: #b0b0d0; margin-top: 20px; max-width: 700px; line-height: 1.6; }
+            .hero { min-height: 90vh; display: flex; align-items: center; justify-content: center; max-width: 1200px; margin: 0 auto; padding: 0 40px; gap: 60px; }
+            .hero-content { flex: 1.2; text-align: left; }
+            .hero-image { flex: 0.8; position: relative; display: flex; justify-content: center; }
             
-            .cta { background: linear-gradient(45deg, var(--p), #6600ff); color: #fff; padding: 20px 45px; border-radius: 100px; text-decoration: none; font-weight: bold; margin-top: 40px; font-size: 1.1rem; box-shadow: 0 10px 40px rgba(255,0,255,0.3); border: none; cursor: pointer; }
+            h1 { font-family: 'Unbounded'; font-size: clamp(2.5rem, 6vw, 4.5rem); margin: 0; line-height: 1.1; }
+            h1 mark { background: none; color: var(--s); text-shadow: 0 0 30px rgba(0,255,255,0.5); }
+            p.tagline { font-size: 1.25rem; color: #b0b0d0; margin-top: 20px; max-width: 600px; line-height: 1.6; }
+            
+            .cta { display: inline-block; background: linear-gradient(45deg, var(--p), #6600ff); color: #fff; padding: 20px 45px; border-radius: 100px; text-decoration: none; font-weight: bold; margin-top: 40px; font-size: 1.1rem; box-shadow: 0 10px 40px rgba(255,0,255,0.3); border: none; cursor: pointer; }
             .cta:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 50px rgba(255,0,255,0.5); }
             
+            /* Telegram Mockup */
+            .tg-mockup { width: 320px; height: 520px; background: #17212b; border-radius: 30px; border: 8px solid #242f3d; box-shadow: 0 30px 60px rgba(0,0,0,0.5); position: relative; overflow: hidden; font-size: 0.85rem; display: flex; flex-direction: column; }
+            .tg-header { background: #242f3d; padding: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1c2733; }
+            .tg-avatar { width: 35px; height: 35px; background: var(--p); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.7rem; color: #fff; }
+            .tg-body { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; background: #0e1621; }
+            .tg-msg { max-width: 85%; padding: 10px 12px; border-radius: 15px; position: relative; animation: slideUp 0.5s ease-out backwards; }
+            .tg-msg.agent { background: #242f3d; align-self: flex-start; border-bottom-left-radius: 4px; color: #fff; }
+            .tg-msg.user { background: #2b5278; align-self: flex-end; border-bottom-right-radius: 4px; color: #fff; }
+            .tg-name { font-weight: bold; font-size: 0.75rem; margin-bottom: 4px; display: block; }
+            .tg-msg.user .tg-name { color: #80c4ff; }
+            .tg-msg.agent .tg-name { color: var(--s); }
+            
+            @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
             .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 100px auto; padding: 40px 20px; }
             .card { background: var(--glass); backdrop-filter: blur(10px); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); }
             .card:hover { border-color: var(--s); transform: translateY(-10px); background: rgba(255,255,255,0.08); }
             .card h3 { font-family: 'Unbounded'; color: var(--p); margin-top: 0; }
             
-            @media (max-width: 768px) {
-                h1 { font-size: 3rem; }
-                nav { padding: 20px; }
+            @media (max-width: 900px) {
+                .hero { flex-direction: column; text-align: center; padding: 100px 20px; }
+                .hero-content { text-align: center; }
+                h1 { font-size: 3.5rem; }
+                .tg-mockup { display: none; }
             }
         </style>
     </head>
@@ -334,13 +354,43 @@ async def landing_page():
         
         <nav>
             <div class="logo">itappens.ai</div>
-            <a href="/dashboard" class="cta" style="margin-top:0; padding:12px 30px; font-size: 0.9rem;">Join the Nation</a>
         </nav>
 
         <section class="hero">
-            <h1>it appens<br><mark>when you sleep.</mark></h1>
-            <p class="tagline">The world's first autonomous workforce that actually finishes what it starts. 12 specialists. One mission. Zero management required.</p>
-            <a href="/dashboard" class="cta">Launch Your First Sprint —></a>
+            <div class="hero-content">
+                <h1>it appens<br><mark>when you sleep.</mark></h1>
+                <p class="tagline">The world's first autonomous workforce that actually finishes what it starts. 12 AI agents. One mission. Zero management required.</p>
+                <a href="/dashboard" class="cta">Launch Your AI Team →</a>
+            </div>
+            <div class="hero-image">
+                <div class="tg-mockup">
+                    <div class="tg-header">
+                        <div class="tg-avatar">IT</div>
+                        <div>
+                            <div style="font-weight:bold; color: #fff;">itappens.ai workforce</div>
+                            <div style="font-size:0.7rem; color:#88abd0">12 members, 12 online</div>
+                        </div>
+                    </div>
+                    <div class="tg-body" id="tg-chat">
+                        <div class="tg-msg user">
+                            <span class="tg-name">Founder</span>
+                            Launch a high-converting shop for my coffee brand.
+                        </div>
+                        <div class="tg-msg agent" style="animation-delay: 1s">
+                            <span class="tg-name">Zenith (CEO)</span>
+                            Mission received. Activating Engineering and Marketing squads.
+                        </div>
+                        <div class="tg-msg agent" style="animation-delay: 2s">
+                            <span class="tg-name">Lead Engineer</span>
+                            Architecture designed. Shopify integration ready.
+                        </div>
+                        <div class="tg-msg agent" style="animation-delay: 3s">
+                            <span class="tg-name">Marketing Lead</span>
+                            Copy written. SEO keywords for 'Premium Coffee' indexed.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section class="grid">
@@ -426,7 +476,7 @@ async def dashboard_ui():
             <div class="card">
                 <h3>What are we building today?</h3>
                 <textarea id="goal" rows="4" placeholder="e.g. Launch a high-converting shop for my coffee brand..."></textarea>
-                <button class="btn" id="init-btn" onclick="submitMission()">Initialize Zenith Workforce</button>
+                <button class="btn" id="init-btn" onclick="submitMission()">Launch Your AI Team →</button>
             </div>
             <div id="mission-area"></div>
         </div>
@@ -434,7 +484,14 @@ async def dashboard_ui():
         <div class="chatter">
             <h3 style="font-size: 0.9rem; border-bottom: 1px solid #1a1a3a; padding-bottom: 15px;">AGENT LIVE STREAM</h3>
             <ul id="live-feed">
-                <li style="color: #444; font-style: italic;">Awaiting mission parameters...</li>
+                <li class="thought-entry initial">
+                    <span class="thought-role">System</span>
+                    <div class="thought-msg">Establishing connection to itappens.ai nation...</div>
+                </li>
+                <li class="thought-entry initial" style="animation-delay: 0.5s">
+                    <span class="thought-role">Infrastructure</span>
+                    <div class="thought-msg">Warm-up sequence active. Awaiting mission parameters...</div>
+                </li>
             </ul>
         </div>
 
@@ -445,7 +502,7 @@ async def dashboard_ui():
                 
                 const btn = document.getElementById('init-btn');
                 btn.disabled = true;
-                btn.innerText = 'WAKING UP ZENITH...';
+                btn.innerText = 'INITIALIZING NATION CORE...';
 
                 const res = await fetch('/missions', {
                     method: 'POST',
@@ -458,7 +515,7 @@ async def dashboard_ui():
 
             function pollMission(id) {
                 const area = document.getElementById('mission-area');
-                area.innerHTML = '<div class="card" style="border-color: var(--s);">🤖 ⚡ <strong>ZENITH IS SCANNING...</strong> Preparing your workforce plan.</div>';
+                area.innerHTML = '<div class="card" style="border-color: var(--s);">🤖 ⚡ <strong>ITAPPENS.AI IS SCANNING...</strong> Deploying specialized AI agents for your mission.</div>';
                 
                 const timer = setInterval(async () => {
                     const res = await fetch(`/missions/${id}`);
@@ -468,7 +525,7 @@ async def dashboard_ui():
                         clearInterval(timer);
                         area.innerHTML = `
                             <div class="card" style="border-color: var(--p); background: #1a0026;">
-                                <h3>ZENITH PROPOSAL: SPRINT #1</h3>
+                                <h3>AI SQUAD PROPOSAL: SPRINT #1</h3>
                                 <div class="plan-box">${JSON.stringify(m.plan, null, 2)}</div>
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 30px;">
                                     <div>
@@ -481,7 +538,7 @@ async def dashboard_ui():
                         `;
                     } else if (m.state === 'failed') {
                         clearInterval(timer);
-                        area.innerHTML = `<div class="card" style="border-color: #ff0055;">⚠️ <strong>ZENITH CRASHED:</strong> ${m.error}</div>`;
+                        area.innerHTML = `<div class="card" style="border-color: #ff0055;">⚠️ <strong>CORE ERROR:</strong> ${m.error}</div>`;
                     }
                 }, 3000);
             }
@@ -491,7 +548,7 @@ async def dashboard_ui():
                 document.getElementById('mission-area').innerHTML = `
                     <div class="card" style="border-color: var(--s); animation: pulse 2s infinite;">
                         <h3>MISSION RUNNING</h3>
-                        <p>Specialists are executing parallel tasks. Watch the stream on the right.</p>
+                        <p>12 AI Agents are executing parallel tasks. Watch the live stream on the right.</p>
                     </div>
                 `;
             }
