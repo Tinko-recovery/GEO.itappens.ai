@@ -91,7 +91,7 @@ async def run_company(
         telegram_notifier=telegram,
     )
     auto_router = AutoRouter(cost_tracker=cost_tracker, telegram_notifier=telegram)
-    quality_gate = QualityGateAgent(auto_router=auto_router, sprint_board=sprint_board)
+    quality_gate = QualityGateAgent(auto_router=auto_router, sprint_board=sprint_board, telegram_notifier=telegram)
     factory = TeamFactory(
         auto_router=auto_router,
         cost_tracker=cost_tracker,
@@ -168,14 +168,15 @@ async def run_company(
     # ── Step 6: CEO plans missions ───────────────────────────────────────────
     ceo = CEOAgent(auto_router=auto_router, sprint_board=sprint_board, telegram=telegram)
     sprint_plan = ceo.plan_missions(goal, customer_id, num_eng_teams, num_mkt_teams)
-    logger.info("CEO plan: %s", sprint_plan.get("sprint_goal", ""))
-
-    # ── Budget check again after CEO ─────────────────────────────────────────
-    try:
-        cost_tracker.check_kill_switch()
-    except BudgetExceededError as exc:
-        telegram.send_now(f"🛑 Budget exceeded after CEO planning. Sprint paused.\n{exc}")
-        return {"error": str(exc), "status": "budget_exceeded"}
+    
+    # ── Step 6b: Human-in-the-Loop Budget Approval ──────────────────────────
+    points = sprint_plan.get("budget_points", 15) # Default 15 pts
+    approved = await telegram.ask_budget_approval(points)
+    
+    if not approved:
+        logger.info("Mission cancelled by founder during budget approval.")
+        await telegram._send_async("🛑 *Mission Aborted:* Zenith has halted all team operations as per your instruction.")
+        return {"status": "cancelled", "reason": "budget_not_approved"}
 
     # ── Step 7: CTO and CPO issue briefs ─────────────────────────────────────
     cto = CTOAgent(auto_router=auto_router, sprint_board=sprint_board)

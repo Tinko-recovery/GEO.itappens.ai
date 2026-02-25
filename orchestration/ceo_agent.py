@@ -33,6 +33,7 @@ CRITICAL RULES:
 OUTPUT FORMAT for mission planning (respond in JSON):
 {
   "sprint_goal": "<one sentence>",
+  "budget_points": <integer estimate, 10 points per $1 expected cost>,
   "cto_missions": [
     {"team_id": "eng_1", "mission": "<specific task>", "priority": "high"},
     {"team_id": "eng_2", "mission": "<specific task>", "priority": "medium"}

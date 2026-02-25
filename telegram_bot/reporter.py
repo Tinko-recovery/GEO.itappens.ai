@@ -84,6 +84,32 @@ class TelegramReporter:
         else:
             loop.run_until_complete(bootstrap())
 
+    async def ask_budget_approval(self, points: int) -> bool:
+        """Present a budget estimate and wait for 'Approve' or 'Cancel'."""
+        cost_usd = points / 10.0
+        msg = (
+            f"💰 *Budget Request Form*\n\n"
+            f"Zenith has estimated this sprint will cost:\n"
+            f"📊 *{points} Points* (~${cost_usd:.2f} USD)\n\n"
+            f"Type *Approve* to start the mission, or *Cancel* to abort."
+        )
+        await self._send_async(msg)
+        
+        # We reuse the same pending questions logic but for 'BudgetAgent'
+        loop = asyncio.get_event_loop()
+        future = loop.create_future()
+        self._pending_questions["BudgetAgent"] = future
+        
+        try:
+            # Short timeout for budget approval: 5 mins
+            answer = await asyncio.wait_for(future, timeout=300.0)
+            return answer.lower().strip() == "approve"
+        except asyncio.TimeoutError:
+            await self._send_async("🛑 Budget approval timed out. Mission cancelled.")
+            return False
+        finally:
+            self._pending_questions.pop("BudgetAgent", None)
+
     async def ask_human_link(self, agent_name: str, question: str) -> str:
         """Send a question and WAIT for the user to type a reply in Telegram."""
         if not self._bot or not self._chat_id:

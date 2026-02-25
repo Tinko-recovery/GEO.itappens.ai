@@ -39,9 +39,10 @@ class QualityGateAgent:
     Logs every score to memory/quality_log.json.
     """
 
-    def __init__(self, auto_router, sprint_board=None):
+    def __init__(self, auto_router, sprint_board=None, telegram_notifier=None):
         self._router = auto_router
         self._sprint_board = sprint_board
+        self._telegram = telegram_notifier
         self._ensure_log()
 
     # ── Main entry point ─────────────────────────────────────────────────────
@@ -75,6 +76,15 @@ class QualityGateAgent:
 
         if self._sprint_board:
             self._sprint_board.append_quality_score(team_id, score)
+
+        if self._telegram:
+            msg = (
+                f"🛡️ *Quality Verdict from Vigil*\n"
+                f"Project: {customer_id} | Team: {team_id}\n"
+                f"Score: *{score}/10*\n"
+                f"Issues: {', '.join(issues) if issues else 'None'}"
+            )
+            self._telegram.send_now(msg)
 
         lo, hi = THRESHOLDS["deliver_immediately"]
         if lo <= score <= hi:

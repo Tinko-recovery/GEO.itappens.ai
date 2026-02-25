@@ -130,8 +130,13 @@ class TeamFactory:
                         try:
                             # step is an AgentStep or similar
                             role = getattr(step, "agent", "Agent")
+                            # Extract tool name if available for clarity
+                            tool_use = ""
+                            if hasattr(step, "tool"):
+                                tool_use = f" (using {step.tool})"
+                            
                             thought = str(getattr(step, "thought", "")) or str(step)
-                            self._telegram.send_thought(role, thought)
+                            self._telegram.send_thought(f"{role}{tool_use}", thought)
                         except Exception as e:
                             logger.debug("Reporter step callback failed: %s", e)
                     
