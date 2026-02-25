@@ -51,8 +51,8 @@ HAIKU_AGENTS = {
     "Project Manager",
 }
 
-SONNET_MODEL = "claude-3-5-haiku-20241022"
-HAIKU_MODEL  = "claude-3-5-haiku-20241022"
+SONNET_MODEL = "claude-3-5-sonnet-20241022"
+HAIKU_MODEL  = "claude-3-haiku-20240307"
 FALLBACK_MODEL = "gpt-4o-mini"
 
 
