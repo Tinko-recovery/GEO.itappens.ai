@@ -24,7 +24,10 @@ Your code is now containerized and version-controlled. Follow these steps to tak
 4.  **Runtime**: `Python 3`.
 5.  **Build Command**: `pip install -r requirements.txt`.
 6.  **Start Command**: `python main.py`.
-7.  **Environment Variables**: Add every key from your `.env` (Telegram Token, Chat ID, Anthropic Key, etc.).
+7.  **Environment Variables**: Add every key from your `.env`:
+    *   `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`
+    *   `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`
+    *   `GOOGLE_API_KEY`, `GROQ_API_KEY` (Important for the Dynamic Brain)
 
 ---
 

@@ -55,16 +55,18 @@ def build_engineering_crew(
         allow_delegation=True,
     )
 
+    from tools.github_tool import github_push_tool
     lead_engineer = Agent(
         role="Lead Engineer",
         goal="Design the architecture and review all code for correctness and quality.",
         backstory=(
             context +
             "You are a senior software engineer. You design clean, scalable architectures. "
-            "You review every line of code and ensure it follows best practices and the customer's tech stack."
+            "You review every line of code and ensure it follows best practices and the customer's tech stack. "
+            "Once code is finalized, you use your Github tool to ship it to the 'staging' branch."
         ),
         llm=llm_sonnet,
-        tools=[read_file_tool, write_file_tool, serper_tool],
+        tools=[read_file_tool, write_file_tool, serper_tool, github_push_tool],
         verbose=True,
         allow_delegation=True,
     )
