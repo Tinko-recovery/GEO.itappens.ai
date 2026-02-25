@@ -748,7 +748,7 @@ async def landing_page():
 
         <footer>
             <div class="logo" style="font-size: 1rem;">itappens.ai</div>
-            <div>© 2026 itappens.ai — The Autonomous Collective.</div>
+            <div>© 2026 itappens.ai — by blocks and loops technologies</div>
             <div style="display: flex; gap: 20px;">
                 <a href="#" style="color: inherit;">Twitter</a>
                 <a href="#" style="color: inherit;">Terms</a>
