@@ -907,7 +907,7 @@ async def security_page():
                 <p class="guarantee-text">
                     "If itappens.ai ever damages your business — sends a bad email, commits broken code, or posts something embarrassing — I will personally reach out, fix it, and refund that month. No questions asked. You have my email. Use it."
                 </p>
-                <div style="margin-top: 30px; font-weight: bold; color: var(--s);">— Sadish S. | blocks and loops technologies</div>
+                <div style="margin-top: 30px; font-weight: bold; color: var(--s);">— Blocks and loops technologies private limited</div>
             </div>
         </div>
 
