@@ -144,3 +144,20 @@ def _handle_payment_success(order_id: str, payment_id: str) -> None:
     subscriptions.append(entry)
     _write_json(SUBSCRIPTIONS_PATH, subscriptions)
     logger.info("New subscriber via Razorpay: %s on %s plan", email, plan)
+
+WAITLIST_PATH = Path(__file__).parent.parent / "memory" / "waitlist.json"
+
+def add_to_waitlist(email: str, source: str = "landing") -> bool:
+    """Save email to waitlist.json."""
+    waitlist = _read_json(WAITLIST_PATH)
+    if not isinstance(waitlist, list):
+        waitlist = []
+    if any(item.get("email") == email for item in waitlist):
+        return False
+    waitlist.append({
+        "email": email,
+        "source": source,
+        "created_at": datetime.utcnow().isoformat()
+    })
+    _write_json(WAITLIST_PATH, waitlist)
+    return True
