@@ -37,6 +37,8 @@ GEMINI_FLASH  = "gemini-1.5-flash"
 GROQ_LLAMA    = "llama-3.3-70b-versatile"  # llama-3.3-70b-specdec decommissioned
 
 # Assign agents to providers
+# NOTE: SONNET_AGENTS now route to Gemini Flash first (free tier) with Haiku fallback
+# This keeps mission cost near-zero while preserving quality for orchestration roles
 SONNET_AGENTS = {"CEO Agent", "CTO Agent", "Lead Engineer", "Quality Gate"}
 HAIKU_AGENTS  = {"Content Lead", "Outreach Agent", "Weekly Win Agent"}
 GEMINI_AGENTS = {"Lead Researcher", "SEO Specialist", "Marketing Analyst", "Onboarding Agent"}
@@ -128,9 +130,19 @@ class AutoRouter:
                 logger.warning("GPT-4o-mini failed for %s, falling back: %s", agent_name, e)
 
         # Role-based routing: use pre-assigned model tiers
-        if agent_name in SONNET_AGENTS:
-            preferred_model = CLAUDE_SONNET
-            logger.info("Router: %s -> Claude Sonnet (mission-critical role)", agent_name)
+        if agent_name in SONNET_AGENTS and self._gemini:
+            # Orchestration agents → Gemini Flash first (free tier, 1M tokens/day)
+            # Falls back to Claude Haiku if Gemini is unavailable
+            try:
+                logger.info("Router: %s -> Gemini Flash (orchestration, free tier)", agent_name)
+                return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
+            except Exception as e:
+                logger.warning("Gemini failed for %s (orchestration), falling back to Haiku: %s", agent_name, e)
+                preferred_model = CLAUDE_HAIKU
+        elif agent_name in SONNET_AGENTS:
+            # Gemini not configured — fall back to Haiku (cheapest Claude)
+            preferred_model = CLAUDE_HAIKU
+            logger.info("Router: %s -> Claude Haiku (Gemini unavailable, orchestration fallback)", agent_name)
         elif agent_name in GROQ_AGENTS and self._groq:
             try:
                 logger.info("Router: %s -> Groq Llama (speed/cost role)", agent_name)
@@ -252,7 +264,6 @@ class AutoRouter:
 
     def _call_gemini(self, agent_name: str, system: str, user: str, temp: float, tokens: int) -> str:
         """Call Google Gemini 1.5 Flash."""
-        # Note: Gemini system prompt is handled via the start_chat or generation_config
         full_prompt = f"SYSTEM: {system}\n\nUSER: {user}"
         response = self._gemini.generate_content(
             full_prompt,
@@ -261,10 +272,17 @@ class AutoRouter:
                 temperature=temp,
             )
         )
+        # Guard against blocked/empty responses (safety filters, etc.)
+        try:
+            text = response.text
+        except Exception:
+            # response.text raises ValueError if content was blocked
+            raise RuntimeError(f"Gemini blocked response for {agent_name}. Falling back.")
+        if not text or not text.strip():
+            raise RuntimeError(f"Gemini returned empty response for {agent_name}. Falling back.")
         if self._cost_tracker:
-            # Gemini billing is complex, logging tokens for tracking
-            self._cost_tracker.log_call(agent_name, GEMINI_FLASH, 0, 0, False, "Gemini Research Call")
-        return response.text
+            self._cost_tracker.log_call(agent_name, GEMINI_FLASH, 0, 0, False, "Gemini Call")
+        return text
 
     # ── Private: Groq ───────────────────────────────────────────────────────
 
