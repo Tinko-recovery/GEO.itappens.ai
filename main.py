@@ -295,11 +295,16 @@ async def run_daily_sales() -> None:
     logger.info("Daily sales run complete: %s", results)
 
 
-from fastapi import FastAPI, BackgroundTasks, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, BackgroundTasks, HTTPException, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import BaseModel
 import uvicorn
 from memory.mission_store import MissionStore
+from billing.stripe_handler import (
+    create_checkout_session,
+    handle_webhook,
+    add_to_waitlist,
+)
 
 app = FastAPI(title="itappens.ai API")
 mission_store = MissionStore()
@@ -388,6 +393,10 @@ async def landing_page():
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>itappens.ai | The Autonomous Workforce</title>
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+        <script>
+            !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+            posthog.init('__POSTHOG_KEY__',{api_host:'https://app.posthog.com'});
+        </script>
         <style>
             :root { --p: #ff00ff; --s: #00ffff; --bg: #030014; --glass: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1); }
             * { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; }
@@ -536,7 +545,12 @@ async def landing_page():
             <div class="hero-content">
                 <h1>it appens<br><mark>when you sleep.</mark></h1>
                 <p class="subtext">12 AI specialists. Engineers, marketers, salespeople. They work while you sleep, pick their own tools, and won't ship anything without your approval.</p>
-                <a href="/dashboard" class="cta" style="margin-top: 50px;">Launch Your First Sprint →</a>
+                <a href="#pricing" class="cta" style="margin-top: 50px;">See Pricing →</a>
+                <div style="margin-top: 24px; display: flex; gap: 10px; max-width: 480px; flex-wrap: wrap;">
+                    <input id="hero-email" type="email" placeholder="your@email.com" style="flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 14px 20px; border-radius: 100px; font-size: 0.95rem; outline: none; min-width: 200px;">
+                    <button onclick="joinWaitlist('hero-email','hero')" style="background: rgba(255,0,255,0.15); border: 1px solid rgba(255,0,255,0.4); color: var(--p); padding: 14px 24px; border-radius: 100px; cursor: pointer; font-weight: bold; font-size: 0.9rem; white-space: nowrap;">Join Waitlist</button>
+                </div>
+                <p id="hero-msg" style="margin-top: 10px; font-size: 0.85rem; color: #00ff88; min-height: 20px;"></p>
             </div>
             <div class="hero-image">
                 <div class="tg-mockup">
@@ -824,7 +838,7 @@ async def landing_page():
                         <li>$20/day Budget</li>
                         <li>Dynamic Routing ✓</li>
                     </ul>
-                    <a href="/dashboard" class="cta" style="width: 100%;">Get Started</a>
+                    <a href="/pricing?plan=starter" class="cta" style="width: 100%;">Get Started →</a>
                 </div>
                 <div class="p-card popular">
                     <div style="position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); background: var(--s); color: #000; padding: 5px 20px; border-radius: 20px; font-weight: bold; font-size: 0.8rem;">MOST POPULAR</div>
@@ -838,7 +852,7 @@ async def landing_page():
                         <li>$50/day Budget</li>
                         <li>Adaptive Brain ✓</li>
                     </ul>
-                    <a href="/dashboard" class="cta" style="width: 100%;">Get Started</a>
+                    <a href="/pricing?plan=growth" class="cta" style="width: 100%;">Get Started →</a>
                 </div>
                 <div class="p-card">
                     <h3>SCALE</h3>
@@ -851,7 +865,7 @@ async def landing_page():
                         <li>$150/day Budget</li>
                         <li>SLA Guarantee ✓</li>
                     </ul>
-                    <a href="/dashboard" class="cta" style="width: 100%; background: #fff; color: #000;">Talk to Sales</a>
+                    <a href="/pricing?plan=scale" class="cta" style="width: 100%; background: #fff; color: #000;">Talk to Sales →</a>
                 </div>
             </div>
             
@@ -892,12 +906,17 @@ async def landing_page():
             </div>
         </section>
 
-        <section class="section center">
+        <section class="section center" id="waitlist">
             <h2>Your competitors are shipping <br><mark>while you sleep.</mark></h2>
             <h3>So is your new AI team.</h3>
             <div class="countdown" id="timer">42 spots remaining</div>
-            <a href="/dashboard" class="cta" style="margin-top: 40px; padding: 25px 80px;">Launch Your First Sprint →</a>
+            <a href="#pricing" class="cta" style="margin-top: 40px; padding: 25px 80px;">Start Your Sprint →</a>
             <p style="margin-top: 20px; opacity: 0.5;">First 50 founders get 30% off forever.</p>
+            <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-width: 500px; margin-left: auto; margin-right: auto;">
+                <input id="cta-email" type="email" placeholder="your@email.com" style="flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 16px 24px; border-radius: 100px; font-size: 1rem; outline: none; min-width: 220px;">
+                <button onclick="joinWaitlist('cta-email','cta')" style="background: linear-gradient(45deg, var(--p), #6600ff); border: none; color: #fff; padding: 16px 32px; border-radius: 100px; cursor: pointer; font-weight: bold; font-size: 1rem; white-space: nowrap;">Reserve My Spot →</button>
+            </div>
+            <p id="cta-msg" style="margin-top: 12px; font-size: 0.9rem; color: #00ff88; min-height: 20px;"></p>
         </section>
 
         <footer>
@@ -919,6 +938,43 @@ async def landing_page():
                     document.getElementById('timer').innerText = spots + ' spots remaining';
                 }
             }, 15000);
+
+            // Waitlist signup
+            async function joinWaitlist(inputId, source) {
+                const input = document.getElementById(inputId);
+                const msgId = source === 'hero' ? 'hero-msg' : 'cta-msg';
+                const msg = document.getElementById(msgId);
+                const email = input.value.trim();
+                if (!email || !email.includes('@')) {
+                    msg.style.color = '#ff4466';
+                    msg.textContent = 'Please enter a valid email.';
+                    return;
+                }
+                msg.style.color = '#888';
+                msg.textContent = 'Adding you...';
+                try {
+                    const res = await fetch('/waitlist', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, source })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        msg.style.color = '#00ff88';
+                        msg.textContent = data.newly_added
+                            ? "You're on the list. We'll be in touch."
+                            : "You're already on the list. See you soon.";
+                        input.value = '';
+                        if (typeof posthog !== 'undefined') posthog.capture('waitlist_signup', { source });
+                    } else {
+                        msg.style.color = '#ff4466';
+                        msg.textContent = 'Something went wrong. Try again.';
+                    }
+                } catch(e) {
+                    msg.style.color = '#ff4466';
+                    msg.textContent = 'Network error. Try again.';
+                }
+            }
         </script>
     </body>
     </html>
@@ -1305,6 +1361,113 @@ async def run_approved_mission(mission_id: str):
     m = mission_store.get_mission(mission_id)
     # Re-use run_company logic but bypass onboarding for now
     await run_company(goal=m["goal"], customer_id=m["customer_id"])
+
+
+# ── Stripe Billing Routes ──────────────────────────────────────────────────────
+
+@app.get("/pricing")
+async def pricing_redirect(plan: str = "growth", email: str = ""):
+    """
+    Redirect to Stripe Checkout for the given plan.
+    Usage: /pricing?plan=starter|growth|scale&email=user@example.com
+    """
+    try:
+        url = create_checkout_session(plan=plan, customer_email=email)
+        return RedirectResponse(url=url, status_code=303)
+    except EnvironmentError as exc:
+        # Stripe not configured yet — send back to pricing section with message
+        logger.warning("Stripe not configured: %s", exc)
+        return RedirectResponse(url="/#pricing?msg=coming_soon", status_code=303)
+    except Exception as exc:
+        logger.error("Stripe checkout error: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.post("/webhooks/stripe")
+async def stripe_webhook(request: Request):
+    """Receive and process Stripe webhook events."""
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature", "")
+    try:
+        result = handle_webhook(payload, sig_header)
+        return result
+    except Exception as exc:
+        logger.error("Stripe webhook error: %s", exc)
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+# ── Lead Capture Route ────────────────────────────────────────────────────────
+
+class WaitlistRequest(BaseModel):
+    email: str
+    source: str = "landing"
+
+@app.post("/waitlist")
+async def join_waitlist(req: WaitlistRequest):
+    """Save email to waitlist and optionally send confirmation."""
+    email = req.email.strip().lower()
+    if not email or "@" not in email:
+        raise HTTPException(status_code=422, detail="Invalid email address")
+
+    newly_added = add_to_waitlist(email=email, source=req.source)
+
+    # Best-effort Gmail confirmation — never block response on email failure
+    if newly_added:
+        try:
+            from tools.gmail_tool import gmail_send_tool
+            gmail_send_tool._run(
+                to=email,
+                subject="You're in — itappens.ai is coming for you",
+                body=(
+                    "Hey,\n\n"
+                    "You're on the list. We're giving early access to a small group of founders first.\n\n"
+                    "When you get in, you'll have 12 AI specialists — engineers, marketers, salespeople — "
+                    "shipping work for your startup while you sleep.\n\n"
+                    "No hiring. No management. Just tap Approve on Telegram.\n\n"
+                    "We'll be in touch shortly.\n\n"
+                    "— The itappens.ai team"
+                ),
+            )
+        except Exception as exc:
+            logger.warning("Waitlist confirmation email failed: %s", exc)
+
+    return {"status": "ok", "newly_added": newly_added}
+
+
+@app.get("/success", response_class=HTMLResponse)
+async def checkout_success(plan: str = "growth", session_id: str = ""):
+    """Post-payment success page shown after Stripe checkout."""
+    plan_display = {"starter": "Starter — $497/mo", "growth": "Growth — $997/mo", "scale": "Scale — $2,497/mo"}.get(plan, plan)
+    return f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to itappens.ai!</title>
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+        <style>
+            :root {{ --p: #ff00ff; --s: #00ffff; --bg: #030014; }}
+            body {{ background: var(--bg); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 40px; }}
+            h1, h2 {{ font-family: 'Unbounded'; }}
+            .card {{ background: rgba(255,255,255,0.05); border: 1px solid rgba(0,255,255,0.3); border-radius: 40px; padding: 80px 60px; max-width: 700px; }}
+            .check {{ font-size: 5rem; }}
+            mark {{ background: none; color: var(--s); }}
+            .cta {{ display: inline-block; background: linear-gradient(45deg, var(--p), #6600ff); color: #fff; padding: 18px 50px; border-radius: 100px; text-decoration: none; font-weight: bold; margin-top: 40px; }}
+            p {{ color: #aaa; font-size: 1.1rem; line-height: 1.7; }}
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <div class="check">🎉</div>
+            <h1>You're <mark>in.</mark></h1>
+            <h2 style="opacity:0.7; font-size:1.2rem">{plan_display}</h2>
+            <p>Your AI team is being assembled. Check your email for onboarding instructions.<br>
+            Launch your first sprint from the dashboard — your team is ready when you are.</p>
+            <a href="/dashboard" class="cta">Launch Your Team →</a>
+        </div>
+    </body>
+    </html>
+    """
 
 
 # ── Entry point ────────────────────────────────────────────────────────────────

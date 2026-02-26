@@ -33,6 +33,9 @@ yfinance>=0.2.40
 pandas>=2.2.0
 websockets>=12.0
 
+# Billing
+stripe>=7.0.0
+
 # Utilities
 python-dotenv>=1.0.1
 pydantic>=2.9.2
