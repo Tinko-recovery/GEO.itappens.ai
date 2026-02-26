@@ -31,7 +31,7 @@ FALLBACK_LOG_PATH = Path(__file__).parent.parent / "memory" / "fallback_log.json
 
 # Models by category
 CLAUDE_SONNET = "claude-3-5-sonnet-20241022"
-CLAUDE_HAIKU  = "claude-3-haiku-20240307"
+CLAUDE_HAIKU  = "claude-3-5-haiku-20241022"  # Upgraded: better quality, same price tier
 GPT_FALLBACK  = "gpt-4o-mini"
 GEMINI_FLASH  = "gemini-1.5-flash"
 GROQ_LLAMA    = "llama-3.3-70b-specdec" # Fast Groq model
@@ -102,45 +102,57 @@ class AutoRouter:
         task_description: str = "",
     ) -> str:
         """
-        Dynamically selects the 'best' brain for the job based on:
-        1. Context Length (Large -> Gemini)
-        2. Task Complexity (High Intelligence -> Sonnet)
-        3. Speed/Cost (Simple -> Groq)
+        Selects the cheapest suitable model per call:
+        1. Role-based assignment (SONNET/HAIKU/GEMINI/GROQ agent sets)
+        2. Long context override -> Gemini Flash (cheapest for >20k chars)
+        3. Structured data override -> GPT-4o-mini (best JSON consistency)
+        4. Fallback to Haiku if role unrecognised
         """
         total_chars = len(system_prompt) + len(user_message)
-        is_mission_critical = any(kw in system_prompt.lower() for kw in ["architecture", "security", "financial", "database", "ceo", "launch"])
         is_structured_data = any(kw in system_prompt.lower() for kw in ["json", "csv", "xml", "schema"])
 
-        # 🧠 Heuristic 1: Long Context (Scraping, Research, Audits)
+        # Override 1: Long context -> Gemini (cheapest option for big payloads)
         if total_chars > 20000 and self._gemini:
             try:
-                logger.info(f"Dynamic Router: Routing {agent_name} to Gemini Flash for long context")
+                logger.info("Router: %s -> Gemini Flash (long context %d chars)", agent_name, total_chars)
                 return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
-            except Exception: pass
+            except Exception as e:
+                logger.warning("Gemini failed for %s, falling back: %s", agent_name, e)
 
-        # 🧠 Heuristic 2: Mission Critical Tasks -> Sonnet 3.5 (The Best)
-        if is_mission_critical:
-            try:
-                return self._call_anthropic(agent_name, CLAUDE_SONNET, system_prompt, user_message, cache_system_prompt, temperature, max_tokens, task_description)
-            except Exception: pass
-
-        # 🧠 Heuristic 3: Structured Data -> GPT-4o-mini (Best at JSON consistency)
+        # Override 2: Structured data -> GPT-4o-mini
         if is_structured_data and self._openai:
             try:
+                logger.info("Router: %s -> GPT-4o-mini (structured data)", agent_name)
                 return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
-            except Exception: pass
+            except Exception as e:
+                logger.warning("GPT-4o-mini failed for %s, falling back: %s", agent_name, e)
 
-        # 🧠 Heuristic 4: Sub-second / Short Tasks -> Groq (Llama 3)
-        if max_tokens < 500 and self._groq:
+        # Role-based routing: use pre-assigned model tiers
+        if agent_name in SONNET_AGENTS:
+            preferred_model = CLAUDE_SONNET
+            logger.info("Router: %s -> Claude Sonnet (mission-critical role)", agent_name)
+        elif agent_name in GROQ_AGENTS and self._groq:
             try:
+                logger.info("Router: %s -> Groq Llama (speed/cost role)", agent_name)
                 return self._call_groq(agent_name, system_prompt, user_message, temperature, max_tokens)
-            except Exception: pass
+            except Exception as e:
+                logger.warning("Groq failed for %s, falling back to Haiku: %s", agent_name, e)
+                preferred_model = CLAUDE_HAIKU
+        elif agent_name in GEMINI_AGENTS and self._gemini:
+            try:
+                logger.info("Router: %s -> Gemini Flash (research role)", agent_name)
+                return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
+            except Exception as e:
+                logger.warning("Gemini failed for %s, falling back to Haiku: %s", agent_name, e)
+                preferred_model = CLAUDE_HAIKU
+        else:
+            # HAIKU_AGENTS or unrecognised role — use Haiku (cheapest Claude)
+            preferred_model = CLAUDE_HAIKU
+            logger.info("Router: %s -> Claude Haiku (default/content role)", agent_name)
 
-        # Default: Fallback to Claude Haiku (Best price/performance for prose)
-        preferred_model = CLAUDE_HAIKU
-        
         # Fallback to OpenAI if Anthropic is in cooldown
         if self._in_fallback_mode and time.time() < self._fallback_until and self._openai:
+            logger.info("Router: %s -> GPT-4o-mini (Anthropic cooldown)", agent_name)
             return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
 
         try:
@@ -151,8 +163,7 @@ class AutoRouter:
         except Exception as exc:
             if not self._fallback_enabled or not self._openai:
                 raise
-            
-            logger.warning("Claude API error — switching to GPT-4o fallback.")
+            logger.warning("Claude API error for %s — switching to GPT-4o-mini fallback: %s", agent_name, exc)
             self._log_fallback(agent_name, preferred_model, str(exc))
             self._enter_fallback_mode()
             return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
@@ -289,7 +300,7 @@ class AutoRouter:
             "timestamp": datetime.utcnow().isoformat(),
             "agent": agent,
             "failed_model": model,
-            "fallback_model": FALLBACK_MODEL,
+            "fallback_model": GPT_FALLBACK,
             "error": error,
         }
         try:
