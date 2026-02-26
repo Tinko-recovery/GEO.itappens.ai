@@ -407,6 +407,7 @@ async def landing_page():
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>itappens.ai | The Autonomous Workforce</title>
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <script>
             !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
             posthog.init('__POSTHOG_KEY__',{api_host:'https://app.posthog.com'});
@@ -581,9 +582,26 @@ async def landing_page():
                 <a href="#how">How it works</a>
                 <a href="#pricing">Pricing</a>
                 <a href="/security">Security</a>
-                <a href="/dashboard" class="cta" style="padding: 12px 30px; font-size: 0.9rem; margin: 0;">Launch Your Team →</a>
+                <a href="#" onclick="gotoProtected('/dashboard'); return false;" class="cta" style="padding: 12px 30px; font-size: 0.9rem; margin: 0;">Launch Your Team →</a>
             </div>
         </nav>
+
+        <!-- Auth Modal -->
+        <div id="auth-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+            <div style="background:#0d0d1a; border:1px solid rgba(255,0,255,0.3); border-radius:20px; padding:40px; max-width:420px; width:90%; position:relative; box-shadow:0 0 60px rgba(255,0,255,0.15);">
+                <button onclick="closeAuthModal()" style="position:absolute; top:15px; right:20px; background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer; opacity:0.6;">&times;</button>
+                <h2 style="font-family:'Unbounded'; font-size:1.3rem; margin-bottom:5px; background:linear-gradient(to right, var(--p), var(--s)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Welcome to itappens.ai</h2>
+                <p id="auth-subtitle" style="color:#888; font-size:0.85rem; margin-bottom:25px;">Sign up to launch your AI workforce</p>
+                <div id="auth-error" style="display:none; color:#ff4466; font-size:0.85rem; margin-bottom:15px; padding:10px; background:rgba(255,68,102,0.1); border-radius:8px;"></div>
+                <input id="auth-email" type="email" placeholder="Email" style="width:100%; padding:14px 16px; margin-bottom:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:0.95rem; outline:none;" />
+                <input id="auth-password" type="password" placeholder="Password (min 6 chars)" style="width:100%; padding:14px 16px; margin-bottom:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:0.95rem; outline:none;" />
+                <button id="auth-submit-btn" onclick="handleAuth()" style="width:100%; padding:14px; background:linear-gradient(45deg, var(--p), #6600ff); border:none; color:#fff; border-radius:100px; cursor:pointer; font-weight:bold; font-size:1rem;">Sign Up →</button>
+                <p style="text-align:center; margin-top:15px; color:#888; font-size:0.85rem;">
+                    <span id="auth-toggle-text">Already have an account?</span>
+                    <a href="#" id="auth-toggle-link" onclick="toggleAuthMode(); return false;" style="color:var(--s); text-decoration:none; margin-left:4px;">Log in</a>
+                </p>
+            </div>
+        </div>
 
         <section class="section hero">
             <div class="hero-content">
@@ -1048,6 +1066,124 @@ async def landing_page():
 
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
+            // ── Supabase Auth ───────────────────────────────────────────
+            const supa = supabase.createClient("SUPABASE_URL_PLACEHOLDER", "SUPABASE_ANON_PLACEHOLDER");
+            let authRedirectUrl = null;
+            let authPendingPlan = null;
+            let authIsSignup = true;
+
+            async function getSession() {
+                const { data } = await supa.auth.getSession();
+                return data.session;
+            }
+
+            function showAuthModal(redirectAfter, plan) {
+                authRedirectUrl = redirectAfter || null;
+                authPendingPlan = plan || null;
+                document.getElementById('auth-modal').style.display = 'flex';
+                document.getElementById('auth-error').style.display = 'none';
+                document.getElementById('auth-email').value = '';
+                document.getElementById('auth-password').value = '';
+                document.getElementById('auth-email').focus();
+            }
+
+            function closeAuthModal() {
+                document.getElementById('auth-modal').style.display = 'none';
+                authRedirectUrl = null;
+                authPendingPlan = null;
+            }
+
+            function toggleAuthMode() {
+                authIsSignup = !authIsSignup;
+                document.getElementById('auth-submit-btn').textContent = authIsSignup ? 'Sign Up →' : 'Log In →';
+                document.getElementById('auth-toggle-text').textContent = authIsSignup ? 'Already have an account?' : "Don't have an account?";
+                document.getElementById('auth-toggle-link').textContent = authIsSignup ? 'Log in' : 'Sign up';
+                document.getElementById('auth-subtitle').textContent = authIsSignup ? 'Sign up to launch your AI workforce' : 'Welcome back, commander';
+                document.getElementById('auth-error').style.display = 'none';
+            }
+
+            async function handleAuth() {
+                const email = document.getElementById('auth-email').value.trim();
+                const password = document.getElementById('auth-password').value;
+                const errEl = document.getElementById('auth-error');
+                const btn = document.getElementById('auth-submit-btn');
+
+                if (!email || !email.includes('@')) {
+                    errEl.textContent = 'Enter a valid email.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+                if (password.length < 6) {
+                    errEl.textContent = 'Password must be at least 6 characters.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+
+                btn.textContent = 'Working...';
+                btn.disabled = true;
+                errEl.style.display = 'none';
+
+                try {
+                    let result;
+                    if (authIsSignup) {
+                        result = await supa.auth.signUp({ email, password });
+                    } else {
+                        result = await supa.auth.signInWithPassword({ email, password });
+                    }
+
+                    if (result.error) {
+                        errEl.textContent = result.error.message;
+                        errEl.style.display = 'block';
+                        btn.textContent = authIsSignup ? 'Sign Up →' : 'Log In →';
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    // Check if email confirmation is needed
+                    if (authIsSignup && result.data.user && !result.data.session) {
+                        errEl.style.color = '#00ff88';
+                        errEl.textContent = 'Check your email to confirm your account, then log in.';
+                        errEl.style.display = 'block';
+                        btn.textContent = 'Sign Up →';
+                        btn.disabled = false;
+                        authIsSignup = false;
+                        toggleAuthMode();
+                        return;
+                    }
+
+                    // Success — close modal and proceed
+                    closeAuthModal();
+
+                    if (authPendingPlan) {
+                        triggerRazorpay(authPendingPlan);
+                    } else if (authRedirectUrl) {
+                        window.location.href = authRedirectUrl;
+                    }
+                } catch (e) {
+                    errEl.textContent = 'Something went wrong. Try again.';
+                    errEl.style.display = 'block';
+                    btn.textContent = authIsSignup ? 'Sign Up →' : 'Log In →';
+                    btn.disabled = false;
+                }
+            }
+
+            async function gotoProtected(url) {
+                const session = await getSession();
+                if (session) {
+                    window.location.href = url;
+                } else {
+                    showAuthModal(url, null);
+                }
+            }
+
+            // Allow Enter key to submit auth form
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && document.getElementById('auth-modal').style.display === 'flex') {
+                    handleAuth();
+                }
+            });
+
+            // ── Missions ────────────────────────────────────────────────
             window.launchMission = async (goal) => {
                 const btn = event.target;
                 const originalText = btn.innerText;
@@ -1075,24 +1211,33 @@ async def landing_page():
                 }
             };
             async function triggerRazorpay(plan) {
-                const email = prompt("Enter your email for onboarding instructions:", "");
-                if (!email || !email.includes("@")) return;
+                // Check auth first
+                const session = await getSession();
+                if (!session) {
+                    showAuthModal(null, plan);
+                    return;
+                }
+                const email = session.user.email;
 
                 try {
                     const res = await fetch(`/create-order?plan=${plan}&email=${email}`);
                     const order = await res.json();
 
                     const options = {
-                        "key": "{rzp_key}",
+                        "key": "RAZORPAY_KEY_PLACEHOLDER",
                         "amount": order.amount,
                         "currency": order.currency,
                         "name": "itappens.ai",
                         "description": `${plan.toUpperCase()} Plan Subscription`,
                         "order_id": order.id,
                         "handler": async function (response) {
+                            const currentSession = await getSession();
                             const verifyRes = await fetch("/verify-payment", {
                                 method: "POST",
-                                headers: { "Content-Type": "application/json" },
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Authorization": currentSession ? "Bearer " + currentSession.access_token : ""
+                                },
                                 body: JSON.stringify({
                                     razorpay_order_id: response.razorpay_order_id,
                                     razorpay_payment_id: response.razorpay_payment_id,
@@ -1165,7 +1310,13 @@ async def landing_page():
     </body>
     </html>
     """
-    return html.replace("RAZORPAY_KEY_PLACEHOLDER", rzp_key)
+    supa_url = os.getenv("SUPABASE_URL", "")
+    supa_anon = os.getenv("SUPABASE_ANON_KEY", "")
+    return (html
+        .replace("RAZORPAY_KEY_PLACEHOLDER", rzp_key)
+        .replace("SUPABASE_URL_PLACEHOLDER", supa_url)
+        .replace("SUPABASE_ANON_PLACEHOLDER", supa_anon)
+    )
 
 @app.get("/security", response_class=HTMLResponse)
 async def security_page():
@@ -1589,7 +1740,7 @@ class RazorpayVerifyRequest(BaseModel):
     razorpay_signature: str
 
 @app.post("/verify-payment")
-async def razorpay_verify(req: RazorpayVerifyRequest):
+async def razorpay_verify(req: RazorpayVerifyRequest, request: Request):
     """Verify Razorpay payment signature and save to Supabase."""
     try:
         success = verify_payment(
@@ -1598,11 +1749,14 @@ async def razorpay_verify(req: RazorpayVerifyRequest):
             razorpay_signature=req.razorpay_signature
         )
         if success:
+            # Get authenticated user
+            user = await get_current_user(request)
+            user_id = user.get("user_id", "00000000-0000-0000-0000-000000000001")
+
             # Save to Supabase if available, fallback to JSON
             if supabase_client:
                 try:
                     import razorpay as razorpay_module
-                    # Get order details from Razorpay
                     rzp_client = razorpay_module.Client(
                         auth=(os.getenv("RAZORPAY_KEY_ID"), os.getenv("RAZORPAY_KEY_SECRET"))
                     )
@@ -1610,17 +1764,15 @@ async def razorpay_verify(req: RazorpayVerifyRequest):
                     plan = order.get("notes", {}).get("plan", "unknown")
                     email = order.get("notes", {}).get("email", "unknown")
 
-                    # Insert to Supabase (without auth for now, hardcode a test user_id)
-                    # TODO: Link to actual logged-in user_id after auth is fully set up
                     supabase_client.table("subscriptions").insert({
-                        "user_id": "00000000-0000-0000-0000-000000000001",  # Test user
+                        "user_id": user_id,
                         "razorpay_order_id": req.razorpay_order_id,
                         "razorpay_payment_id": req.razorpay_payment_id,
                         "plan": plan,
                         "status": "active",
                         "customer_email": email
                     }).execute()
-                    logger.info(f"✅ Saved subscription to Supabase: {email} on {plan}")
+                    logger.info(f"Saved subscription to Supabase: {email} on {plan}")
                 except Exception as e:
                     logger.warning(f"Supabase insert failed: {e}, falling back to JSON")
 
@@ -1647,15 +1799,24 @@ async def join_waitlist(req: WaitlistRequest):
 
     newly_added = add_to_waitlist(email=email, source=req.source)
 
-    # Optional: Try to send confirmation email
+    # Send confirmation + owner notification
     if newly_added:
         try:
             from tools.gmail_tool import gmail_send_tool
+            # Confirmation to user
             gmail_send_tool._run(
                 to=email,
                 subject="You're in — itappens.ai is coming for you",
                 body="Hey,\n\nYou're on the list. We'll send onboarding soon.\n\n— itappens.ai"
             )
+            # Notification to owner
+            owner_email = os.getenv("OWNER_EMAIL", "")
+            if owner_email:
+                gmail_send_tool._run(
+                    to=owner_email,
+                    subject=f"New waitlist signup: {email}",
+                    body=f"New waitlist signup!\n\nEmail: {email}\nSource: {req.source}\nTime: {datetime.utcnow().isoformat()}"
+                )
         except Exception as e:
             logger.warning(f"Waitlist email failed: {e}")
 
