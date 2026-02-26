@@ -50,21 +50,24 @@ def build_stock_crew(
     context = CustomerBrain.get_context_prompt(customer_id)
     portfolio_str = ", ".join(portfolio)
 
-    # ── LLM assignments (matches GEMINI_AGENTS / GROQ_AGENTS / SONNET_AGENTS) ─
-    from langchain_anthropic import ChatAnthropic
-    from langchain_openai import ChatOpenAI
+    # ── LLM assignments — FREE TIER ONLY ─────────────────────────────────────
+    # Risk Manager (complex reasoning) → Gemini Flash (Google free tier)
+    # Market Analyst + Fundamentals Scout (fast structured) → Groq Llama 3.3 (free tier)
+    from langchain_google_genai import ChatGoogleGenerativeAI
+    from langchain_groq import ChatGroq
     import os
 
-    llm_sonnet = ChatAnthropic(
-        model="claude-3-5-sonnet-20241022",
-        api_key=os.getenv("ANTHROPIC_API_KEY"),
+    llm_sonnet = ChatGoogleGenerativeAI(
+        model="gemini-1.5-flash",
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
         temperature=0.3,
     )
-    llm_haiku = ChatAnthropic(
-        model="claude-3-5-haiku-20241022",
-        api_key=os.getenv("ANTHROPIC_API_KEY"),
+    llm_haiku = ChatGroq(
+        model="llama-3.3-70b-versatile",
+        groq_api_key=os.getenv("GROQ_API_KEY"),
         temperature=0.2,
     )
+
 
     # ── Agents ────────────────────────────────────────────────────────────────
 

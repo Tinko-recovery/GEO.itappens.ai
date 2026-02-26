@@ -30,8 +30,8 @@ FALLBACK_LOG_PATH = Path(__file__).parent.parent / "memory" / "fallback_log.json
 # Haiku:  simple / high-volume agents (5x cheaper)
 
 # Models by category
-CLAUDE_SONNET = "claude-3-5-sonnet-20241022"
-CLAUDE_HAIKU  = "claude-3-5-haiku-20241022"  # Upgraded: better quality, same price tier
+CLAUDE_SONNET = "claude-3-sonnet-20240229"
+CLAUDE_HAIKU  = "claude-3-haiku-20240307"   # Original Haiku — available on all API tiers (last resort only)
 GPT_FALLBACK  = "gpt-4o-mini"
 GEMINI_FLASH  = "gemini-1.5-flash"
 GROQ_LLAMA    = "llama-3.3-70b-versatile"  # llama-3.3-70b-specdec decommissioned
