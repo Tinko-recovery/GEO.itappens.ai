@@ -7,9 +7,11 @@ Now supports Real-time Agent Chatter and Human-in-the-Loop (HITL) questions.
 """
 
 import asyncio
+import json
 import logging
 import os
 from datetime import datetime
+from pathlib import Path
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup, Update
@@ -18,6 +20,72 @@ from dotenv import load_dotenv
 
 load_dotenv()
 logger = logging.getLogger(__name__)
+
+# Paths for approve/decline to write into
+_BASE = Path(__file__).parent.parent
+_OUTPUTS_PATH = _BASE / "memory" / "pending_outputs.json"
+_CHAT_HISTORY_PATH = _BASE / "memory" / "chat_history.json"
+
+
+def _read_json(path: Path, default):
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def _write_json(path: Path, data) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
+
+
+def _groq_chat(user_message: str, history: list[dict]) -> str:
+    """
+    Free conversational reply using Groq Llama.
+    History format: [{"role": "user"|"assistant", "content": "..."}]
+    Falls back to a static message if Groq key is missing.
+    """
+    groq_key = os.getenv("GROQ_API_KEY")
+    if not groq_key:
+        return "Chat is not configured (GROQ_API_KEY missing). Add it to enable free chat."
+    try:
+        import groq as groq_sdk
+        client = groq_sdk.Groq(api_key=groq_key)
+        system = (
+            "You are the AI brain of itappens.ai — a friendly, sharp, and concise assistant "
+            "that helps the founder manage their autonomous AI business platform. "
+            "You know about their 12-agent workforce (engineering, marketing, sales, quality), "
+            "Telegram control center, cost tracking, and stock intelligence feature. "
+            "For casual questions, brainstorming, or planning: answer freely and helpfully using your own knowledge — no paid API calls needed. "
+            "For executing missions (writing code, publishing content, sending emails, running agents): "
+            "tell the user to use /launch and remind them that will cost tokens. "
+            "Keep replies concise — this is a Telegram chat, not an essay."
+        )
+        messages = [{"role": "system", "content": system}]
+        # Include last 6 turns of history for context
+        messages.extend(history[-6:])
+        messages.append({"role": "user", "content": user_message})
+
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages,
+            max_tokens=600,
+            temperature=0.7,
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        logger.error("Groq free chat failed: %s", e)
+        return f"Chat error: {e}"
+
+
+def _save_chat_turn(user_msg: str, bot_reply: str) -> None:
+    history = _read_json(_CHAT_HISTORY_PATH, [])
+    history.append({"role": "user", "content": user_msg})
+    history.append({"role": "assistant", "content": bot_reply})
+    # Keep last 40 turns (20 exchanges)
+    _write_json(_CHAT_HISTORY_PATH, history[-40:])
 
 
 class TelegramReporter:
@@ -54,12 +122,11 @@ class TelegramReporter:
         async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if not update.message or str(update.effective_chat.id) != self._chat_id:
                 return
-            
-            text = update.message.text
-            # If we have any pending questions, resolve them
-            found = False
+
+            text = update.message.text or ""
+
+            # 1. If an agent is waiting for input — resolve it first
             for agent_name in list(self._pending_questions.keys()):
-                # Special handling for budget approval to allow natural follow-up questions
                 if agent_name == "BudgetAgent":
                     text_lower = text.lower()
                     if "approve" in text_lower or "cancel" in text_lower:
@@ -68,19 +135,27 @@ class TelegramReporter:
                             future.set_result(text)
                             return
                     else:
-                        # User asked a question or sent a non-approval message
-                        await update.message.reply_text("👋 I hear you! If you have a question about the plan, I'll pass it to the team after launch. For now, please *Approve* the budget to start the work.", parse_mode="Markdown")
+                        reply = _groq_chat(text, _read_json(_CHAT_HISTORY_PATH, []))
+                        _save_chat_turn(text, reply)
+                        await update.message.reply_text(
+                            reply + "\n\n_⏳ Note: a budget approval is pending — tap Approve/Cancel when ready._",
+                            parse_mode="Markdown"
+                        )
                         return
 
                 future = self._pending_questions[agent_name]
                 if not future.done():
                     future.set_result(text)
-                    await update.message.reply_text(f"✅ Message sent to *{agent_name}*.", parse_mode="Markdown")
-                    found = True
-                    break
-            
-            if not found:
-                await update.message.reply_text("I heard you, but no agents are currently waiting for your input. Type /help for commands.")
+                    await update.message.reply_text(
+                        f"✅ Reply sent to *{agent_name}*.", parse_mode="Markdown"
+                    )
+                    return
+
+            # 2. No agent waiting — free Groq chat (costs $0)
+            history = _read_json(_CHAT_HISTORY_PATH, [])
+            reply = _groq_chat(text, history)
+            _save_chat_turn(text, reply)
+            await update.message.reply_text(reply, parse_mode="Markdown")
 
         async def launch_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             """Usage: /launch [Goal]"""
@@ -99,16 +174,33 @@ class TelegramReporter:
             if str(update.effective_chat.id) != self._chat_id: return
             help_text = (
                 "🛸 *itappens.ai | Control Center*\n\n"
-                "Available Commands:\n"
-                "• `/launch [goal]` - Start a new AI mission\n"
-                "• `/status` - View current active teams and activity\n"
-                "• `/history` - See last 5 completed jobs\n"
-                "• `/tokens` - Detailed token spend report\n"
-                "• `/stream` - Launch a predefined automation stream\n"
-                "• `Approve` / `Reject` - Budget & Output control\n\n"
-                "You can also ask me anything about the current state!"
+                "*💬 Free (no tokens used):*\n"
+                "• Just *type anything* — chat with your AI brain for free\n"
+                "• `/plan [idea]` - Brainstorm & strategise for free\n"
+                "• `/status` - View active teams & activity\n"
+                "• `/history` - Last 5 completed jobs\n"
+                "• `/tokens` - Token spend breakdown\n\n"
+                "*🚀 Paid (uses AI tokens):*\n"
+                "• `/launch [goal]` - Execute a full AI mission\n"
+                "• `/stream` - Launch an automation stream\n\n"
+                "Tap ✅ Approve or ❌ Reject on any output card."
             )
             await update.message.reply_text(help_text, parse_mode="Markdown")
+
+        async def plan_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+            """Free planning/brainstorming using Groq — no paid tokens."""
+            if str(update.effective_chat.id) != self._chat_id: return
+            idea = " ".join(context.args)
+            if not idea:
+                await update.message.reply_text(
+                    "💡 *Plan Mode* — think out loud for free.\n\nUsage: `/plan [your idea or question]`\n\nExamples:\n• `/plan How should I price my SaaS?`\n• `/plan What features should I build next?`\n• `/plan Review my go-to-market strategy`",
+                    parse_mode="Markdown"
+                )
+                return
+            history = _read_json(_CHAT_HISTORY_PATH, [])
+            reply = _groq_chat(f"[PLANNING MODE] {idea}", history)
+            _save_chat_turn(idea, reply)
+            await update.message.reply_text(f"🧠 *Plan:*\n\n{reply}", parse_mode="Markdown")
 
         async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if str(update.effective_chat.id) != self._chat_id: return
@@ -184,6 +276,7 @@ class TelegramReporter:
         # Add handlers to OUR bot_app instance
         bot_app.add_handler(CommandHandler("launch", launch_command))
         bot_app.add_handler(CommandHandler("help", help_command))
+        bot_app.add_handler(CommandHandler("plan", plan_command))
         bot_app.add_handler(CommandHandler("status", status_command))
         bot_app.add_handler(CommandHandler("history", history_command))
         bot_app.add_handler(CommandHandler("tokens", tokens_command))
@@ -444,15 +537,53 @@ class TelegramReporter:
         action, target = data.split(":", 1)
 
         if action == "approve":
-            # Resolve budget approval if waiting
+            # Budget approval — unblock the waiting future
             if "BudgetAgent" in self._pending_questions:
-                self._pending_questions["BudgetAgent"].set_result("Approve")
-                await query.edit_message_text(text=f"✅ *Budget Approved:* Mission starting now...", parse_mode="Markdown")
+                fut = self._pending_questions["BudgetAgent"]
+                if not fut.done():
+                    fut.set_result("Approve")
+                await query.edit_message_text(
+                    text="✅ *Budget Approved* — mission starting now...", parse_mode="Markdown"
+                )
             else:
-                await query.edit_message_text(text=f"✅ *Approved:* Output `{target}` has been delivered to customer.", parse_mode="Markdown")
-        
+                # Output approval — write to pending_outputs.json so agents pick it up
+                outputs = _read_json(_OUTPUTS_PATH, [])
+                matched = False
+                for o in outputs:
+                    if o.get("id") == target:
+                        o["status"] = "approved"
+                        o["approved_at"] = datetime.utcnow().isoformat()
+                        matched = True
+                        break
+                if matched:
+                    _write_json(_OUTPUTS_PATH, outputs)
+                    await query.edit_message_text(
+                        text=f"✅ *Approved* — output `{target}` marked for delivery.", parse_mode="Markdown"
+                    )
+                else:
+                    await query.edit_message_text(
+                        text=f"✅ *Approved* (output `{target}` already processed).", parse_mode="Markdown"
+                    )
+
         elif action == "reject":
-            await query.edit_message_text(text=f"❌ *Rejected:* Output `{target}` was sent back for revision.", parse_mode="Markdown")
+            # Write rejection to pending_outputs.json
+            outputs = _read_json(_OUTPUTS_PATH, [])
+            matched = False
+            for o in outputs:
+                if o.get("id") == target:
+                    o["status"] = "rejected"
+                    o["rejected_at"] = datetime.utcnow().isoformat()
+                    matched = True
+                    break
+            if matched:
+                _write_json(_OUTPUTS_PATH, outputs)
+                await query.edit_message_text(
+                    text=f"❌ *Rejected* — output `{target}` sent back for revision.", parse_mode="Markdown"
+                )
+            else:
+                await query.edit_message_text(
+                    text=f"❌ *Rejected* (output `{target}` already processed).", parse_mode="Markdown"
+                )
         
         elif action == "pick":
             if "ChoiceAgent" in self._pending_questions:

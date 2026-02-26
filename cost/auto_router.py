@@ -34,7 +34,7 @@ CLAUDE_SONNET = "claude-3-5-sonnet-20241022"
 CLAUDE_HAIKU  = "claude-3-5-haiku-20241022"  # Upgraded: better quality, same price tier
 GPT_FALLBACK  = "gpt-4o-mini"
 GEMINI_FLASH  = "gemini-1.5-flash"
-GROQ_LLAMA    = "llama-3.3-70b-specdec" # Fast Groq model
+GROQ_LLAMA    = "llama-3.3-70b-versatile"  # llama-3.3-70b-specdec decommissioned
 
 # Assign agents to providers
 SONNET_AGENTS = {"CEO Agent", "CTO Agent", "Lead Engineer", "Quality Gate"}
