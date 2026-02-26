@@ -1881,18 +1881,19 @@ async def save_profile(req: ProfileRequest, request: Request):
 
     try:
         from customer.customer_brain import CustomerBrain
-        brain = CustomerBrain.load(customer_id)
-        brain.data["user_name"] = req.name.strip()
-        brain.data["company_name"] = req.company.strip()
-        brain.data["onboarding_complete"] = True
-        brain.data["onboarding_completed_at"] = datetime.utcnow().isoformat()
-        brain.save()
+        brain = CustomerBrain.load(customer_id)   # returns a plain dict
+        brain["user_name"] = req.name.strip()
+        brain["company_name"] = req.company.strip()
+        brain["onboarding_complete"] = True
+        brain["onboarding_completed_at"] = datetime.utcnow().isoformat()
+        CustomerBrain.save(customer_id, brain)     # classmethod(customer_id, dict)
 
         logger.info(f"Profile saved: {customer_id} ({req.name}, {req.company})")
         return {"status": "ok", "customer_id": customer_id}
     except Exception as e:
         logger.error(f"Profile save failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to save profile")
+
 
 
 # ── Lead Capture Route ────────────────────────────────────────────────────────
