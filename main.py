@@ -312,6 +312,67 @@ telegram = TelegramReporter(sprint_board=sprint_board)
 async def startup_event():
     logger.info("Starting Telegram Bot listener...")
     telegram.start_polling()
+    _start_stock_scheduler()
+
+
+# ── Stock Intelligence Scheduler ──────────────────────────────────────────────
+
+# Default demo portfolio — customers set their own via Telegram /portfolio command
+_DEFAULT_PORTFOLIO = os.getenv("STOCK_PORTFOLIO", "RELIANCE,TCS,INFY,HDFCBANK,TATAMOTORS").split(",")
+_STOCK_CUSTOMER_ID = os.getenv("STOCK_CUSTOMER_ID", "stock_user_001")
+
+
+def _start_stock_scheduler():
+    """
+    Schedules two recurring stock intelligence jobs using APScheduler:
+      - Morning briefing:  08:30 IST (03:00 UTC) Mon–Fri
+      - Intraday scan:     Every 30 min, 09:15–15:30 IST (03:45–10:00 UTC) Mon–Fri
+    """
+    from apscheduler.schedulers.asyncio import AsyncIOScheduler
+    from apscheduler.triggers.cron import CronTrigger
+
+    scheduler = AsyncIOScheduler(timezone="UTC")
+
+    # Morning briefing — 03:00 UTC = 08:30 IST
+    scheduler.add_job(
+        _run_morning_briefing_job,
+        CronTrigger(day_of_week="mon-fri", hour=3, minute=0),
+        id="stock_morning_briefing",
+        replace_existing=True,
+    )
+
+    # Intraday scan — every 30 min from 03:45–10:00 UTC (09:15–15:30 IST)
+    scheduler.add_job(
+        _run_intraday_scan_job,
+        CronTrigger(day_of_week="mon-fri", hour="3-10", minute="15,45"),
+        id="stock_intraday_scan",
+        replace_existing=True,
+    )
+
+    scheduler.start()
+    logger.info("Stock Intelligence scheduler started (morning briefing 08:30 IST, intraday every 30min)")
+
+
+async def _run_morning_briefing_job():
+    from teams.stock_team import run_morning_briefing
+    auto_router = AutoRouter(telegram_notifier=telegram)
+    await run_morning_briefing(
+        portfolio=_DEFAULT_PORTFOLIO,
+        customer_id=_STOCK_CUSTOMER_ID,
+        auto_router=auto_router,
+        telegram_notifier=telegram,
+    )
+
+
+async def _run_intraday_scan_job():
+    from teams.stock_team import run_intraday_scan
+    auto_router = AutoRouter(telegram_notifier=telegram)
+    await run_intraday_scan(
+        portfolio=_DEFAULT_PORTFOLIO,
+        customer_id=_STOCK_CUSTOMER_ID,
+        auto_router=auto_router,
+        telegram_notifier=telegram,
+    )
 
 class MissionRequest(BaseModel):
     goal: str
@@ -428,6 +489,21 @@ async def landing_page():
             .faq h4 { margin: 0 0 15px 0; font-size: 1.2rem; cursor: pointer; color: var(--s); }
             .faq p { margin: 0; color: #aaa; line-height: 1.6; }
 
+            /* Stock Intelligence */
+            .stock-section { background: linear-gradient(135deg, rgba(0,255,100,0.03) 0%, rgba(0,200,80,0.06) 100%); border: 1px solid rgba(0,255,100,0.15); border-radius: 50px; padding: 80px; margin-top: 100px; }
+            .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 50px; }
+            .stock-signals { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px; }
+            .signal-pill { background: rgba(0,255,100,0.08); border: 1px solid rgba(0,255,100,0.2); border-radius: 12px; padding: 14px 18px; font-size: 0.85rem; }
+            .signal-pill .s-label { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+            .signal-pill .s-val { font-weight: bold; }
+            .s-buy { color: #00ff64; } .s-sell { color: #ff4466; } .s-hold { color: #ffcc00; }
+            .tg-alert { background: #17212b; border-radius: 20px; padding: 24px; margin-top: 20px; font-family: monospace; font-size: 0.85rem; border: 1px solid #2a3a4a; }
+            .tg-alert .tg-tick { color: #00ff64; font-weight: bold; font-size: 1rem; }
+            .tg-alert .tg-meta { color: #888; font-size: 0.75rem; margin-top: 8px; }
+            .stock-features { list-style: none; padding: 0; margin-top: 30px; }
+            .stock-features li { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: flex-start; gap: 12px; color: #ccc; line-height: 1.5; }
+            .stock-features li::before { content: '▶'; color: #00ff64; font-size: 0.7rem; margin-top: 4px; flex-shrink: 0; }
+
             /* Footer */
             footer { padding: 80px 40px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; max-width: 1300px; margin: 0 auto; color: #555; font-size: 0.9rem; }
 
@@ -436,6 +512,8 @@ async def landing_page():
                 .hero-content { text-align: center; }
                 .nav-links { display: none; }
                 .hero-image { order: -1; }
+                .stock-grid, .stock-signals { grid-template-columns: 1fr; }
+                .stock-section { padding: 40px 24px; }
             }
         </style>
     </head>
@@ -547,6 +625,54 @@ async def landing_page():
             <div class="f-card">
                 <h3>🧠 Adaptive Brain</h3>
                 <p>Remembers your stack, your voice, and your decisions. Gets smarter every sprint as it learns your business.</p>
+            </div>
+        </section>
+
+        <!-- ── Stock Intelligence Feature ─────────────────────────────── -->
+        <section class="section">
+            <div class="stock-section">
+                <div class="center">
+                    <div style="display:inline-block; background: rgba(0,255,100,0.1); border: 1px solid rgba(0,255,100,0.3); border-radius: 100px; padding: 8px 24px; font-size: 0.85rem; color: #00ff64; margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase;">New Feature</div>
+                    <h2 style="font-size: clamp(2rem, 5vw, 3.5rem);">📈 Stock <mark style="color: #00ff64; text-shadow: 0 0 30px rgba(0,255,100,0.3);">Intelligence</mark></h2>
+                    <p style="font-size: 1.3rem; opacity: 0.7; max-width: 700px; margin: 20px auto 0;">Your personal AI finance squad — monitoring BSE &amp; NSE every day, so you never miss a move.</p>
+                </div>
+                <div class="stock-grid">
+                    <div>
+                        <h3 style="font-size: 1.6rem; color: #00ff64;">A professional analyst, trader &amp; risk manager — working for you 24/7.</h3>
+                        <ul class="stock-features">
+                            <li>Every morning before the market opens, get a full briefing: what to sell, what to buy, and exactly why — in plain English.</li>
+                            <li>Scans thousands of stocks using RSI, MACD, and VWAP for technical signals, plus earnings, debt, and promoter activity for fundamentals.</li>
+                            <li>Watches for intraday setups during market hours and fires Telegram alerts with entry price, target, and stop-loss in real time.</li>
+                            <li>Tracks FII activity, Nifty/Sensex mood, and sector rotation — never recommends buying into a falling market.</li>
+                            <li>Every recommendation includes the full reasoning, not just the answer. You understand every call before you make it.</li>
+                        </ul>
+                        <div style="margin-top: 30px; display: flex; gap: 16px; flex-wrap: wrap;">
+                            <div style="background: rgba(0,255,100,0.08); border: 1px solid rgba(0,255,100,0.2); border-radius: 12px; padding: 12px 20px; font-size: 0.9rem;"><strong style="color:#00ff64;">BSE</strong> &amp; <strong style="color:#00ff64;">NSE</strong> covered</div>
+                            <div style="background: rgba(0,255,100,0.08); border: 1px solid rgba(0,255,100,0.2); border-radius: 12px; padding: 12px 20px; font-size: 0.9rem;"><strong style="color:#00ff64;">8:30 AM IST</strong> morning briefing</div>
+                            <div style="background: rgba(0,255,100,0.08); border: 1px solid rgba(0,255,100,0.2); border-radius: 12px; padding: 12px 20px; font-size: 0.9rem;">Live <strong style="color:#00ff64;">Telegram</strong> alerts</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="background: #0e1621; border-radius: 24px; padding: 30px; border: 1px solid #1a2a3a;">
+                            <div style="color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">Morning Briefing · Today · 08:30 IST</div>
+                            <div class="stock-signals">
+                                <div class="signal-pill"><span class="s-label">RELIANCE.NS</span><span class="s-val s-buy">▲ BUY</span><br><span style="font-size:0.75rem; color:#888;">RSI 42 · MACD crossover</span></div>
+                                <div class="signal-pill"><span class="s-label">HDFCBANK.NS</span><span class="s-val s-hold">◆ HOLD</span><br><span style="font-size:0.75rem; color:#888;">Near resistance · wait</span></div>
+                                <div class="signal-pill"><span class="s-label">INFY.NS</span><span class="s-val s-buy">▲ BUY</span><br><span style="font-size:0.75rem; color:#888;">Strong earnings, P/E cheap</span></div>
+                                <div class="signal-pill"><span class="s-label">ZOMATO.NS</span><span class="s-val s-sell">▼ EXIT</span><br><span style="font-size:0.75rem; color:#888;">Promoter selling detected</span></div>
+                            </div>
+                            <div class="tg-alert">
+                                <div class="tg-tick">🚨 Intraday Alert · 11:24 IST</div>
+                                <div style="margin-top: 10px; color: #e0e0e0;">
+                                    <strong style="color:#00ff64;">TATAMOTORS.NS</strong> breakout forming<br>
+                                    Entry: <strong>₹940</strong> · Target: <strong>₹962</strong> · SL: <strong>₹931</strong><br>
+                                    Risk/Reward: 1:2.4 · VWAP reclaim confirmed
+                                </div>
+                                <div class="tg-meta">Nifty Auto sector +1.2% · FII net buyers today</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
