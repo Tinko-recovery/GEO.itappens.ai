@@ -318,8 +318,6 @@ class MissionRequest(BaseModel):
     customer_id: str = "guest_user"
 
 @app.get("/", response_class=HTMLResponse)
-@app.get("/", response_class=HTMLResponse)
-@app.get("/", response_class=HTMLResponse)
 async def landing_page():
     """Vibrant, quirky, and animated high-converting landing page."""
     return """

@@ -10,7 +10,7 @@ import asyncio
 import logging
 import os
 from typing import Optional, Any
-from crewai_tools import BaseTool
+from crewai.tools import BaseTool
 from playwright.async_api import async_playwright
 
 logger = logging.getLogger(__name__)
