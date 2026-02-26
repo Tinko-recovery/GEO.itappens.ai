@@ -6,13 +6,16 @@ import { useState, useEffect, useCallback } from "react";
 import TeamCard from "./components/TeamCard.jsx";
 import OutputReview from "./components/OutputReview.jsx";
 import CostMeter from "./components/CostMeter.jsx";
+import ActivityFeed from "./components/ActivityFeed.jsx";
 
 const API = "http://localhost:8000/api";
 
 const PANEL_TABS = [
     { id: "teams", label: "🤖 Live Teams" },
+    { id: "activity", label: "🧠 Live Activity" },
     { id: "outputs", label: "📋 Review Queue" },
-    { id: "cost", label: "💰 Cost Meter" },
+    { id: "cost", label: "💰 Cost & Tokens" },
+    { id: "history", label: "🕰️ Job History" },
     { id: "weekly", label: "📈 Weekly Win" },
 ];
 
@@ -22,21 +25,27 @@ export default function App() {
     const [outputs, setOutputs] = useState([]);
     const [cost, setCost] = useState(null);
     const [quality, setQuality] = useState(null);
+    const [activity, setActivity] = useState([]);
+    const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [lastUpdate, setLastUpdate] = useState(null);
 
     const fetchAll = useCallback(async () => {
         try {
-            const [teamsRes, outputsRes, costRes, qualityRes] = await Promise.all([
+            const [teamsRes, outputsRes, costRes, qualityRes, activityRes, historyRes] = await Promise.all([
                 fetch(`${API}/teams`).then(r => r.json()).catch(() => ({})),
                 fetch(`${API}/outputs`).then(r => r.json()).catch(() => ({ outputs: [] })),
                 fetch(`${API}/cost`).then(r => r.json()).catch(() => null),
                 fetch(`${API}/quality`).then(r => r.json()).catch(() => null),
+                fetch(`${API}/activity`).then(r => r.json()).catch(() => []),
+                fetch(`${API}/history`).then(r => r.json()).catch(() => []),
             ]);
             setTeams(teamsRes);
             setOutputs(outputsRes.outputs || []);
             setCost(costRes);
             setQuality(qualityRes);
+            setActivity(activityRes);
+            setHistory(historyRes);
             setLastUpdate(new Date().toLocaleTimeString());
             setLoading(false);
         } catch (e) {
@@ -177,7 +186,15 @@ export default function App() {
                                 </div>
                             )}
 
-                            {/* PANEL 2 — Output Review */}
+                            {/* PANEL 2 — Live Activity */}
+                            {activeTab === "activity" && (
+                                <div style={{ maxWidth: 800 }}>
+                                    <SectionHeader title="Live Activity" subtitle="Real-time thoughts and actions from your AI team" />
+                                    <ActivityFeed activity={activity} />
+                                </div>
+                            )}
+
+                            {/* PANEL 3 — Output Review */}
                             {activeTab === "outputs" && (
                                 <div>
                                     <SectionHeader title="Output Review" subtitle="AI-generated content awaiting your approval" />
@@ -185,20 +202,83 @@ export default function App() {
                                 </div>
                             )}
 
-                            {/* PANEL 3 — Cost Meter */}
+                            {/* PANEL 4 — Cost Meter & Tokens */}
                             {activeTab === "cost" && (
-                                <div style={{ maxWidth: 520 }}>
-                                    <SectionHeader title="Cost Meter" subtitle="Live spend vs daily budget" />
-                                    <div style={{
-                                        background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-                                        borderRadius: 20, padding: "28px 32px",
-                                    }}>
-                                        <CostMeter cost={cost} />
+                                <div style={{ maxWidth: 900 }}>
+                                    <SectionHeader title="Cost & Tokens" subtitle="Detailed spend breakdown by task and agent" />
+                                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: 24 }}>
+                                        <div style={{
+                                            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                                            borderRadius: 20, padding: "28px", height: "fit-content"
+                                        }}>
+                                            <CostMeter cost={cost} />
+                                        </div>
+                                        <div style={{
+                                            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                                            borderRadius: 20, padding: "24px", overflow: "hidden"
+                                        }}>
+                                            <h3 style={{ fontSize: 14, color: "#64748b", marginBottom: 16 }}>Detailed Transaction Log</h3>
+                                            <div style={{ maxHeight: 500, overflowY: "auto" }}>
+                                                <table style={{ width: "100%", fontSize: 12, borderCollapse: "collapse" }}>
+                                                    <thead>
+                                                        <tr style={{ textAlign: "left", color: "#475569", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                                                            <th style={{ padding: "8px 4px" }}>Agent</th>
+                                                            <th style={{ padding: "8px 4px" }}>Task</th>
+                                                            <th style={{ padding: "8px 4px" }}>Cost</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {cost?.detailed_logs?.map((log, i) => (
+                                                            <tr key={i} style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                                                                <td style={{ padding: "10px 4px", color: "#a78bfa", fontWeight: 600 }}>{log.agent}</td>
+                                                                <td style={{ padding: "10px 4px", color: "#94a3b8" }}>{log.task || "—"}</td>
+                                                                <td style={{ padding: "10px 4px", color: "#e2e8f0", fontFamily: "monospace" }}>${log.cost_usd.toFixed(4)}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}
 
-                            {/* PANEL 4 — Weekly Win Summary */}
+                            {/* PANEL 5 — Job History */}
+                            {activeTab === "history" && (
+                                <div style={{ maxWidth: 800 }}>
+                                    <SectionHeader title="Job History" subtitle="Archive of all completed and submitted tasks" />
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                                        {history.length === 0 ? (
+                                            <EmptyState icon="🕰️" text="No finished jobs in history yet." />
+                                        ) : (
+                                            history.map((job, idx) => (
+                                                <div key={idx} style={{
+                                                    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                                                    padding: "16px 20px", borderRadius: 12,
+                                                    display: "flex", alignItems: "center", gap: 20
+                                                }}>
+                                                    <div style={{ fontSize: 24 }}>✅</div>
+                                                    <div style={{ flex: 1 }}>
+                                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                                                            <h4 style={{ margin: 0, fontSize: 14, color: "#f1f5f9" }}>{job.team_id} ({job.type})</h4>
+                                                            <span style={{ fontSize: 11, color: "#475569" }}>{new Date(job.timestamp).toLocaleString()}</span>
+                                                        </div>
+                                                        <p style={{ margin: "4px 0 0", fontSize: 13, color: "#94a3b8" }}>{job.goal}</p>
+                                                    </div>
+                                                    {job.quality_score && (
+                                                        <div style={{ textAlign: "center" }}>
+                                                            <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase" }}>Quality</div>
+                                                            <div style={{ fontSize: 16, fontWeight: 700, color: "#10b981" }}>{job.quality_score}/10</div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* PANEL 6 — Weekly Win Summary */}
                             {activeTab === "weekly" && (
                                 <div style={{ maxWidth: 600 }}>
                                     <SectionHeader title="Weekly Win Summary" subtitle="This week's autonomous accomplishments" />

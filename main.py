@@ -8,6 +8,8 @@ Runs the full multi-agent hierarchy in parallel using asyncio.
 import asyncio
 import logging
 import os
+import sys
+import uvicorn
 from datetime import datetime
 
 from dotenv import load_dotenv
@@ -39,6 +41,10 @@ from customer.referral_engine import ReferralEngine
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
 logger = logging.getLogger("itappens.ai")
+
+# ── Global Shared Infrastructure ──────────────────────────────────────────────
+sprint_board = SprintBoard()
+telegram = TelegramReporter(sprint_board=sprint_board)
 
 
 # ── Product description (injected into all sales agents) ─────────────────────
@@ -82,9 +88,6 @@ async def run_company(
     # ── Step 1: Initialize infrastructure ────────────────────────────────────
     daily_budget = float(os.getenv("DAILY_BUDGET_USD", "20.00"))
     alert_threshold = float(os.getenv("ALERT_THRESHOLD_USD", "15.00"))
-
-    sprint_board = SprintBoard()
-    telegram = TelegramReporter(sprint_board=sprint_board)
     cost_tracker = CostTracker(
         daily_budget_usd=daily_budget,
         alert_threshold_usd=alert_threshold,
@@ -178,7 +181,24 @@ async def run_company(
         await telegram._send_async("🛑 *Mission Aborted:* Zenith has halted all team operations as per your instruction.")
         return {"status": "cancelled", "reason": "budget_not_approved"}
 
-    # ── Step 7: CTO and CPO issue briefs ─────────────────────────────────────
+    # ── Step 8: Spawn and run Scouting phase (Sequential if present) ──────────
+    scouting_missions = sprint_plan.get("scouting_missions", [])
+    scouting_results = {}
+    
+    if scouting_missions:
+        scout_teams = []
+        for mission in scouting_missions:
+            team_id = mission.get("team_id", f"scout_{len(scout_teams)+1}")
+            scout_teams.append(factory.spawn_scouting_team(team_id, mission.get("mission", ""), customer_id))
+        
+        logger.info("Running Scouting phase...")
+        scouting_results = await factory.run_teams_in_parallel(scout_teams)
+        
+        # Inject scouting results into CTO/CPO context for the next phase
+        combined_findings = "\n".join([str(res.get("output", "")) for res in scouting_results.values()])
+        goal = f"{goal}\n\nUSER SELECTED THIS FOCUS FROM SCOUTING:\n{combined_findings}"
+
+    # ── Step 8b: CTO and CPO issue briefs (now with scouting context) ──────────
     cto = CTOAgent(auto_router=auto_router, sprint_board=sprint_board)
     cpo = CPOAgent(auto_router=auto_router, sprint_board=sprint_board)
 
@@ -190,23 +210,28 @@ async def run_company(
         asyncio.get_event_loop().run_in_executor(None, cpo.assign_missions, cpo_missions, customer_id),
     )
 
-    # ── Step 8: Spawn all teams ───────────────────────────────────────────────
-    teams_to_run = []
+    # ── Step 9: Spawn and run Execution phase (Parallel) ─────────────────────
+    execution_teams = []
+
+    upwork_missions = sprint_plan.get("upwork_missions", [])
+    for mission in upwork_missions:
+        team_id = mission.get("team_id", f"upwork_{len(execution_teams)+1}")
+        execution_teams.append(factory.spawn_upwork_team(team_id, mission.get("mission", ""), customer_id))
 
     for brief in eng_briefs:
-        team_id = brief.get("team_id", f"eng_{len(teams_to_run)+1}")
-        mission_text = brief.get("technical_brief", "")
-        teams_to_run.append(factory.spawn_engineering_team(team_id, mission_text, customer_id))
+        team_id = brief.get("team_id", f"eng_{len(execution_teams)+1}")
+        execution_teams.append(factory.spawn_engineering_team(team_id, brief.get("technical_brief", ""), customer_id))
 
     for brief in mkt_briefs:
-        team_id = brief.get("team_id", f"mkt_{len(teams_to_run)+1}")
-        teams_to_run.append(factory.spawn_marketing_team(team_id, brief, customer_id))
+        team_id = brief.get("team_id", f"mkt_{len(execution_teams)+1}")
+        execution_teams.append(factory.spawn_marketing_team(team_id, brief, customer_id))
 
-    logger.info("Spawning %d teams in parallel.", len(teams_to_run))
-    sprint_board.update("company", "current_task", f"Running {len(teams_to_run)} teams in parallel")
-
-    # ── Step 9: Run all teams simultaneously ─────────────────────────────────
-    team_results = await factory.run_teams_in_parallel(teams_to_run)
+    logger.info("Spawning %d execution teams in parallel.", len(execution_teams))
+    team_results = await factory.run_teams_in_parallel(execution_teams)
+    
+    # Merge results
+    all_results = {**scouting_results, **team_results}
+    team_results = all_results
 
     logger.info("All teams finished. Synthesizing results.")
 
@@ -282,6 +307,11 @@ mission_store = MissionStore()
 # ── Shared Infrastructure ─────────────────────────────────────────────────────
 sprint_board = SprintBoard()
 telegram = TelegramReporter(sprint_board=sprint_board)
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Starting Telegram Bot listener...")
+    telegram.start_polling()
 
 class MissionRequest(BaseModel):
     goal: str
@@ -1156,6 +1186,10 @@ async def run_approved_mission(mission_id: str):
 # ── Entry point ────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", "10000"))
-    logger.info(f"itappens.ai SaaS Portal live on port {port}")
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    try:
+        port = int(os.getenv("PORT", "10000"))
+        logger.info("FINAL STAGE: Launching FastAPI server on port %d...", port)
+        uvicorn.run(app, host="0.0.0.0", port=port)
+    except Exception as e:
+        logger.critical("FATAL CRASH DURING SERVER INITIALIZATION: %s", e, exc_info=True)
+        sys.exit(1)

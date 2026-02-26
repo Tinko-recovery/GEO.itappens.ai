@@ -8,18 +8,6 @@ All outputs pass through the Quality Gate before delivery.
 
 import logging
 
-from crewai import Agent, Crew, Process, Task
-from crewai_tools import SerperDevTool
-
-from tools.file_tool import read_file_tool, write_file_tool
-from tools.twitter_tool import twitter_post_tool, twitter_thread_tool
-from customer.customer_brain import CustomerBrain
-
-logger = logging.getLogger(__name__)
-
-serper_tool = SerperDevTool()
-
-
 def build_marketing_crew(
     team_id: str,
     marketing_brief: dict,
@@ -27,11 +15,17 @@ def build_marketing_crew(
     auto_router,
     llm_sonnet,
     llm_haiku,
-) -> Crew:
+) -> object:
     """
     Build a 4-agent marketing crew for the given marketing brief.
     All agents receive customer context via their backstory.
     """
+    # Heavy imports moved inside for lazy loading
+    from crewai import Agent, Crew, Process, Task
+    from crewai_tools import SerperDevTool
+    from tools.file_tool import read_file_tool, write_file_tool
+    from tools.human_link import HumanLinkTool
+    
     context = CustomerBrain.get_context_prompt(customer_id)
     brain = CustomerBrain.load(customer_id)
     brand_voice = brain.get("brand_voice", "Professional, direct, no jargon")
@@ -43,8 +37,8 @@ def build_marketing_crew(
     keywords = ", ".join(marketing_brief.get("keywords", []))
     deliverables = "\n".join(f"- {d}" for d in marketing_brief.get("deliverables", [campaign_theme]))
 
-    from tools.human_link import HumanLinkTool
     human_tool = HumanLinkTool(telegram_reporter=None) # Injected by TeamFactory
+    serper_tool = SerperDevTool()
 
     # ── Agents ────────────────────────────────────────────────────────────────
 

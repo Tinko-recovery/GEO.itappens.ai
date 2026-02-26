@@ -8,20 +8,9 @@ Runs daily at 9am via APScheduler. Fully autonomous customer acquisition.
 import logging
 import os
 
-from crewai import Agent, Crew, Process, Task
-from crewai_tools import SerperDevTool
-
-from tools.gmail_tool import gmail_send_tool, gmail_check_replies_tool, gmail_follow_up_tool
-from tools.twitter_tool import (
-    twitter_post_tool, twitter_thread_tool,
-    twitter_find_leads_tool, twitter_dm_tool, twitter_mentions_tool
-)
-from tools.file_tool import read_file_tool, write_file_tool
 from customer.customer_brain import CustomerBrain
 
 logger = logging.getLogger(__name__)
-serper_tool = SerperDevTool()
-
 
 # Lead search keywords — match pain points of solo founders
 LEAD_KEYWORDS = [
@@ -35,18 +24,29 @@ LEAD_KEYWORDS = [
     "no CTO",
     "solo founder product",
 ]
-
-
 def build_sales_crew(
     product_description: str,
     llm_sonnet,
     llm_haiku,
     sprint_board=None,
-) -> Crew:
+) -> object:
     """
     Build the autonomous sales & growth crew.
     Runs independently every day — finds leads, sends outreach, manages pipeline.
     """
+    # Heavy imports moved inside for lazy loading
+    from crewai import Agent, Crew, Process, Task
+    from crewai_tools import SerperDevTool
+    from tools.gmail_tool import (
+        gmail_send_tool, gmail_check_replies_tool, gmail_follow_up_tool
+    )
+    from tools.twitter_tool import (
+        twitter_post_tool, twitter_thread_tool,
+        twitter_find_leads_tool, twitter_dm_tool, twitter_mentions_tool
+    )
+    from tools.file_tool import read_file_tool, write_file_tool
+    
+    serper_tool = SerperDevTool()
 
     # ── Agents ────────────────────────────────────────────────────────────────
 

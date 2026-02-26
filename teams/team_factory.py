@@ -8,6 +8,9 @@ Injects customer brain context and routes all outputs through Quality Gate.
 
 import asyncio
 import logging
+import json
+from datetime import datetime
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 
@@ -21,6 +24,8 @@ from memory.sprint_board import SprintBoard
 from teams.engineering_team import build_engineering_crew
 from teams.marketing_team import build_marketing_crew
 from teams.sales_team import build_sales_crew
+from teams.scouting_team import build_scouting_crew
+from teams.upwork_team import build_upwork_crew
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -56,6 +61,27 @@ class TeamFactory:
         # Format: "anthropic/<model-id>" tells LiteLLM to use the Anthropic provider.
         self._llm_sonnet = f"anthropic/{CLAUDE_SONNET}"
         self._llm_haiku = f"anthropic/{CLAUDE_HAIKU}"
+        
+        self._activity_path = Path(__file__).parent.parent / "memory" / "activity_log.json"
+        self._history_path = Path(__file__).parent.parent / "memory" / "job_history.json"
+
+    def _log_to_file(self, path: Path, entry: dict):
+        """Append an entry to a JSON log file safely."""
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if not path.exists():
+                path.write_text(json.dumps([]), encoding="utf-8")
+            
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data.append(entry)
+            # Keep log size manageable: last 500 items for activity, 1000 for history
+            limit = 500 if "activity" in path.name else 1000
+            if len(data) > limit:
+                data = data[-limit:]
+            
+            path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
+        except Exception as e:
+            logger.error(f"Failed to log to {path}: {e}")
 
     # ── Spawners ──────────────────────────────────────────────────────────────
     # ... (existing spawners)
@@ -98,6 +124,34 @@ class TeamFactory:
         )
         return ("sales_team", crew, "sales", None)
 
+    def spawn_scouting_team(
+        self, team_id: str, scouting_brief: str, customer_id: str
+    ) -> tuple:
+        """Return a (team_id, crew, type) tuple for a scouting team."""
+        crew = build_scouting_crew(
+            team_id=team_id,
+            scouting_brief=scouting_brief,
+            customer_id=customer_id,
+            auto_router=self._router,
+            llm_sonnet=self._llm_sonnet,
+            llm_haiku=self._llm_haiku,
+        )
+        return (team_id, crew, "scouting", customer_id)
+
+    def spawn_upwork_team(
+        self, team_id: str, job_target: str, customer_id: str
+    ) -> tuple:
+        """Return a (team_id, crew, type) tuple for an upfront upwork team."""
+        crew = build_upwork_crew(
+            team_id=team_id,
+            job_target=job_target,
+            customer_id=customer_id,
+            auto_router=self._router,
+            llm_sonnet=self._llm_sonnet,
+            llm_haiku=self._llm_haiku,
+        )
+        return (team_id, crew, "upwork", customer_id)
+
     # ── Parallel runner ───────────────────────────────────────────────────────
 
     async def run_teams_in_parallel(self, teams: list[tuple]) -> dict:
@@ -137,6 +191,15 @@ class TeamFactory:
                             
                             thought = str(getattr(step, "thought", "")) or str(step)
                             self._telegram.send_thought(f"{role}{tool_use}", thought)
+                            
+                            # Log to activity_log.json
+                            self._log_to_file(self._activity_path, {
+                                "timestamp": datetime.utcnow().isoformat(),
+                                "team_id": team_id,
+                                "agent": role,
+                                "action": tool_use.strip(" ()") or "Thought",
+                                "thought": thought[:500]
+                            })
                         except Exception as e:
                             logger.debug("Reporter step callback failed: %s", e)
                     
@@ -179,6 +242,17 @@ class TeamFactory:
                     self._board.update(team_id, "status", "done")
                     self._board.update(team_id, "result", result["output"][:500])
                     self._board.append_completed(team_id, f"{team_type} sprint complete")
+
+                # Log to job_history.json
+                self._log_to_file(self._history_path, {
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "team_id": team_id,
+                    "type": team_type,
+                    "customer_id": customer_id,
+                    "goal": result["output"][:200] + "...",
+                    "quality_score": result.get("quality_score"),
+                    "status": "completed"
+                })
 
                 logger.info("Team %s finished. Quality: %s", team_id, result.get("quality_score"))
                 return (team_id, result)

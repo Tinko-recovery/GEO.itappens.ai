@@ -27,6 +27,8 @@ COST_LOG_PATH     = BASE / "memory" / "cost_log.json"
 QUALITY_LOG_PATH  = BASE / "memory" / "quality_log.json"
 BRAINS_DIR        = BASE / "memory" / "customer_brains"
 OUTPUTS_PATH      = BASE / "memory" / "pending_outputs.json"
+ACTIVITY_LOG_PATH = BASE / "memory" / "activity_log.json"
+JOB_HISTORY_PATH  = BASE / "memory" / "job_history.json"
 
 app = FastAPI(title="itappens.ai Dashboard API", version="1.0.0")
 
@@ -74,6 +76,20 @@ def get_outputs():
     outputs = _read_json(OUTPUTS_PATH, [])
     pending = [o for o in outputs if o.get("status") == "pending"]
     return {"outputs": pending, "total": len(pending)}
+
+
+@app.get("/api/activity")
+def get_activity(limit: int = 50):
+    """Return the most recent agent activities."""
+    activity = _read_json(ACTIVITY_LOG_PATH, [])
+    return activity[-limit:][::-1] # Newest first
+
+
+@app.get("/api/history")
+def get_history(limit: int = 20):
+    """Return the most recent completed jobs."""
+    history = _read_json(JOB_HISTORY_PATH, [])
+    return history[-limit:][::-1] # Newest first
 
 
 @app.post("/api/outputs/{output_id}/approve")
@@ -136,6 +152,7 @@ def get_cost():
         "saved_today_vs_hiring": saved_today,
         "projected_monthly_usd": round(today_spent * 30, 2),
         "saved_monthly_vs_hiring": saved_monthly,
+        "detailed_logs": today_entries[::-1], # Newest first
     }
 
 

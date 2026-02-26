@@ -9,18 +9,6 @@ All outputs pass through the Quality Gate before delivery.
 import logging
 from typing import Optional
 
-from crewai import Agent, Crew, Process, Task
-from crewai_tools import SerperDevTool
-
-from tools.file_tool import read_file_tool, write_file_tool
-from tools.code_executor import run_python_tool, run_javascript_tool
-from customer.customer_brain import CustomerBrain
-
-logger = logging.getLogger(__name__)
-
-serper_tool = SerperDevTool()
-
-
 def build_engineering_crew(
     team_id: str,
     technical_brief: str,
@@ -28,14 +16,21 @@ def build_engineering_crew(
     auto_router,
     llm_sonnet,
     llm_haiku,
-) -> Crew:
+) -> object:
     """
     Build a 5-agent engineering crew for the given technical brief.
     All agents receive customer context via their system prompt backstory.
     """
-    context = CustomerBrain.get_context_prompt(customer_id)
-
+    # Heavy imports moved inside for lazy loading
+    from crewai import Agent, Crew, Process, Task
+    from crewai_tools import SerperDevTool
+    from tools.file_tool import read_file_tool, write_file_tool
+    from tools.code_executor import run_python_tool, run_javascript_tool
+    from tools.github_tool import github_push_tool
     from tools.human_link import HumanLinkTool
+    
+    context = CustomerBrain.get_context_prompt(customer_id)
+    serper_tool = SerperDevTool()
     human_tool = HumanLinkTool(telegram_reporter=None) # Injected by TeamFactory later
 
     # ── Agents ────────────────────────────────────────────────────────────────
@@ -55,7 +50,6 @@ def build_engineering_crew(
         allow_delegation=True,
     )
 
-    from tools.github_tool import github_push_tool
     lead_engineer = Agent(
         role="Lead Engineer",
         goal="Design the architecture and review all code for correctness and quality.",

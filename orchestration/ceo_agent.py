@@ -33,16 +33,20 @@ CRITICAL RULES:
 OUTPUT FORMAT for mission planning (respond in JSON):
 {
   "sprint_goal": "<one sentence>",
-  "budget_points": <integer estimate, 10 points per $1 expected cost>,
+  "budget_points": <integer estimate>,
+  "upwork_missions": [
+    {"team_id": "upwork_1", "mission": "<search/apply target>", "priority": "high"}
+  ],
+  "scouting_missions": [
+    {"team_id": "scout_1", "mission": "<search requirement>", "priority": "medium"}
+  ],
   "cto_missions": [
-    {"team_id": "eng_1", "mission": "<specific task>", "priority": "high"},
-    {"team_id": "eng_2", "mission": "<specific task>", "priority": "medium"}
+    {"team_id": "eng_1", "mission": "<technical task>", "priority": "high"}
   ],
   "cpo_missions": [
-    {"team_id": "mkt_1", "mission": "<specific task>", "priority": "high"},
-    {"team_id": "mkt_2", "mission": "<specific task>", "priority": "medium"}
+    {"team_id": "mkt_1", "mission": "<marketing task>", "priority": "high"}
   ],
-  "success_criteria": ["<measurable outcome 1>", "<measurable outcome 2>"]
+  "success_criteria": ["<outcome 1>", "<outcome 2>"]
 }
 """
 
