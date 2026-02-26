@@ -37,6 +37,7 @@ from customer.onboarding_agent import OnboardingAgent
 from customer.weekly_win_agent import WeeklyWinAgent
 from customer.exit_interview import ExitInterviewAgent
 from customer.referral_engine import ReferralEngine
+from billing.razorpay_handler import create_razorpay_order, verify_payment, add_to_waitlist
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
@@ -300,9 +301,9 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import BaseModel
 import uvicorn
 from memory.mission_store import MissionStore
-from billing.stripe_handler import (
-    create_checkout_session,
-    handle_webhook,
+from billing.razorpay_handler import (
+    create_razorpay_order,
+    verify_payment,
     add_to_waitlist,
 )
 
@@ -386,7 +387,8 @@ class MissionRequest(BaseModel):
 @app.get("/", response_class=HTMLResponse)
 async def landing_page():
     """Vibrant, quirky, and animated high-converting landing page."""
-    return """
+    rzp_key = os.getenv("RAZORPAY_KEY_ID", "")
+    html = """
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -838,7 +840,7 @@ async def landing_page():
                         <li>$20/day Budget</li>
                         <li>Dynamic Routing ✓</li>
                     </ul>
-                    <a href="/pricing?plan=starter" class="cta" style="width: 100%;">Get Started →</a>
+                    <button onclick="triggerRazorpay('starter')" class="cta" style="width: 100%; border:none;">Get Started →</button>
                 </div>
                 <div class="p-card popular">
                     <div style="position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); background: var(--s); color: #000; padding: 5px 20px; border-radius: 20px; font-weight: bold; font-size: 0.8rem;">MOST POPULAR</div>
@@ -852,7 +854,7 @@ async def landing_page():
                         <li>$50/day Budget</li>
                         <li>Adaptive Brain ✓</li>
                     </ul>
-                    <a href="/pricing?plan=growth" class="cta" style="width: 100%;">Get Started →</a>
+                    <button onclick="triggerRazorpay('growth')" class="cta" style="width: 100%; border:none;">Get Started →</button>
                 </div>
                 <div class="p-card">
                     <h3>SCALE</h3>
@@ -865,7 +867,7 @@ async def landing_page():
                         <li>$150/day Budget</li>
                         <li>SLA Guarantee ✓</li>
                     </ul>
-                    <a href="/pricing?plan=scale" class="cta" style="width: 100%; background: #fff; color: #000;">Talk to Sales →</a>
+                    <button onclick="triggerRazorpay('scale')" class="cta" style="width: 100%; background: #fff; color: #000; border:none;">Talk to Sales →</button>
                 </div>
             </div>
             
@@ -929,7 +931,50 @@ async def landing_page():
             </div>
         </footer>
 
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
+            async function triggerRazorpay(plan) {
+                const email = prompt("Enter your email for onboarding instructions:", "");
+                if (!email || !email.includes("@")) return;
+
+                try {
+                    const res = await fetch(`/create-order?plan=${plan}&email=${email}`);
+                    const order = await res.json();
+
+                    const options = {
+                        "key": "RAZORPAY_KEY_PLACEHOLDER",
+                        "amount": order.amount,
+                        "currency": order.currency,
+                        "name": "itappens.ai",
+                        "description": `${plan.toUpperCase()} Plan Subscription`,
+                        "order_id": order.id,
+                        "handler": async function (response) {
+                            const verifyRes = await fetch("/verify-payment", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature
+                                })
+                            });
+                            const result = await verifyRes.json();
+                            if (result.status === "ok") {
+                                window.location.href = `/success?plan=${plan}`;
+                            } else {
+                                alert("Payment verification failed. Please contact support.");
+                            }
+                        },
+                        "prefill": { "email": email },
+                        "theme": { "color": "#ff00ff" }
+                    };
+                    const rzp1 = new Razorpay(options);
+                    rzp1.open();
+                } catch (e) {
+                    alert("Error initiating payment. Please try again.");
+                }
+            }
+
             // Simple Scarcity Countdown
             let spots = 42;
             setInterval(() => {
@@ -979,6 +1024,7 @@ async def landing_page():
     </body>
     </html>
     """
+    return html.replace("RAZORPAY_KEY_PLACEHOLDER", rzp_key)
 
 @app.get("/security", response_class=HTMLResponse)
 async def security_page():
@@ -1363,37 +1409,34 @@ async def run_approved_mission(mission_id: str):
     await run_company(goal=m["goal"], customer_id=m["customer_id"])
 
 
-# ── Stripe Billing Routes ──────────────────────────────────────────────────────
+# ── Razorpay Billing Routes ────────────────────────────────────────────────────
 
-@app.get("/pricing")
-async def pricing_redirect(plan: str = "growth", email: str = ""):
-    """
-    Redirect to Stripe Checkout for the given plan.
-    Usage: /pricing?plan=starter|growth|scale&email=user@example.com
-    """
+@app.get("/create-order")
+async def create_order(plan_slug: str = "growth", email: str = ""):
+    """Create a Razorpay order for the frontend."""
     try:
-        url = create_checkout_session(plan=plan, customer_email=email)
-        return RedirectResponse(url=url, status_code=303)
-    except EnvironmentError as exc:
-        # Stripe not configured yet — send back to pricing section with message
-        logger.warning("Stripe not configured: %s", exc)
-        return RedirectResponse(url="/#pricing?msg=coming_soon", status_code=303)
+        order = create_razorpay_order(plan_slug=plan_slug, customer_email=email)
+        return order
     except Exception as exc:
-        logger.error("Stripe checkout error: %s", exc)
+        logger.error("Razorpay order error: %s", exc)
         raise HTTPException(status_code=500, detail=str(exc))
 
-
-@app.post("/webhooks/stripe")
-async def stripe_webhook(request: Request):
-    """Receive and process Stripe webhook events."""
-    payload = await request.body()
-    sig_header = request.headers.get("stripe-signature", "")
+@app.post("/verify-payment")
+async def razorpay_verify(req: RazorpayVerifyRequest):
+    """Verify Razorpay payment signature."""
     try:
-        result = handle_webhook(payload, sig_header)
-        return result
+        success = verify_payment(
+            razorpay_order_id=req.razorpay_order_id,
+            razorpay_payment_id=req.razorpay_payment_id,
+            razorpay_signature=req.razorpay_signature
+        )
+        if success:
+            return {"status": "ok"}
+        else:
+            raise HTTPException(status_code=400, detail="Invalid signature")
     except Exception as exc:
-        logger.error("Stripe webhook error: %s", exc)
-        raise HTTPException(status_code=400, detail=str(exc))
+        logger.error("Razorpay verification error: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
 
 
 # ── Lead Capture Route ────────────────────────────────────────────────────────
