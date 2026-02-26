@@ -500,20 +500,50 @@ async def landing_page():
             .faq h4 { margin: 0 0 15px 0; font-size: 1.2rem; cursor: pointer; color: var(--s); }
             .faq p { margin: 0; color: #aaa; line-height: 1.6; }
 
-            /* Stock Intelligence */
-            .stock-section { background: linear-gradient(135deg, rgba(0,255,100,0.03) 0%, rgba(0,200,80,0.06) 100%); border: 1px solid rgba(0,255,100,0.15); border-radius: 50px; padding: 80px; margin-top: 100px; }
-            .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 50px; }
-            .stock-signals { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px; }
-            .signal-pill { background: rgba(0,255,100,0.08); border: 1px solid rgba(0,255,100,0.2); border-radius: 12px; padding: 14px 18px; font-size: 0.85rem; }
-            .signal-pill .s-label { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; }
-            .signal-pill .s-val { font-weight: bold; }
-            .s-buy { color: #00ff64; } .s-sell { color: #ff4466; } .s-hold { color: #ffcc00; }
-            .tg-alert { background: #17212b; border-radius: 20px; padding: 24px; margin-top: 20px; font-family: monospace; font-size: 0.85rem; border: 1px solid #2a3a4a; }
-            .tg-alert .tg-tick { color: #00ff64; font-weight: bold; font-size: 1rem; }
-            .tg-alert .tg-meta { color: #888; font-size: 0.75rem; margin-top: 8px; }
-            .stock-features { list-style: none; padding: 0; margin-top: 30px; }
-            .stock-features li { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: flex-start; gap: 12px; color: #ccc; line-height: 1.5; }
-            .stock-features li::before { content: '▶'; color: #00ff64; font-size: 0.7rem; margin-top: 4px; flex-shrink: 0; }
+            /* Mission Library Scroller */
+            .mission-section { padding: 100px 0; overflow: hidden; position: relative; }
+            .mission-scroller-wrap { 
+                margin-top: 50px; 
+                padding: 20px 40px; 
+                overflow-x: auto; 
+                display: flex; 
+                gap: 25px; 
+                scrollbar-width: none; 
+                -ms-overflow-style: none;
+                mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            }
+            .mission-scroller-wrap::-webkit-scrollbar { display: none; }
+            
+            .mission-card { 
+                flex: 0 0 350px; 
+                background: var(--glass); 
+                border: 1px solid var(--border); 
+                border-radius: 30px; 
+                padding: 40px; 
+                position: relative; 
+                display: flex; 
+                flex-direction: column; 
+                justify-content: space-between;
+                min-height: 280px;
+                backdrop-filter: blur(10px);
+            }
+            .mission-card:hover { border-color: var(--s); transform: translateY(-10px) scale(1.02); background: rgba(255,255,255,0.08); box-shadow: 0 20px 40px rgba(0,255,255,0.1); }
+            
+            .mission-badge { 
+                display: inline-block; 
+                background: rgba(0,255,255,0.1); 
+                border: 1px solid rgba(0,255,255,0.3); 
+                color: var(--s); 
+                padding: 4px 12px; 
+                border-radius: 100px; 
+                font-size: 0.75rem; 
+                font-weight: bold; 
+                letter-spacing: 1px; 
+                margin-bottom: 15px;
+            }
+            .mission-card h3 { font-size: 1.4rem; margin: 0 0 15px 0; line-height: 1.3; }
+            .mission-card p { font-size: 0.95rem; color: #aaa; line-height: 1.6; margin: 0; }
+            .mission-icon { font-size: 2.5rem; margin-bottom: 15px; }
 
             /* Footer */
             footer { padding: 80px 40px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; max-width: 1300px; margin: 0 auto; color: #555; font-size: 0.9rem; }
@@ -523,8 +553,8 @@ async def landing_page():
                 .hero-content { text-align: center; }
                 .nav-links { display: none; }
                 .hero-image { order: -1; }
-                .stock-grid, .stock-signals { grid-template-columns: 1fr; }
-                .stock-section { padding: 40px 24px; }
+                .mission-scroller-wrap { padding: 20px; }
+                .mission-card { flex: 0 0 300px; }
             }
         </style>
     </head>
@@ -644,49 +674,111 @@ async def landing_page():
             </div>
         </section>
 
-        <!-- ── Stock Intelligence Feature ─────────────────────────────── -->
-        <section class="section">
-            <div class="stock-section">
-                <div class="center">
-                    <div style="display:inline-block; background: rgba(0,255,100,0.1); border: 1px solid rgba(0,255,100,0.3); border-radius: 100px; padding: 8px 24px; font-size: 0.85rem; color: #00ff64; margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase;">New Feature</div>
-                    <h2 style="font-size: clamp(2rem, 5vw, 3.5rem);">📈 Stock <mark style="color: #00ff64; text-shadow: 0 0 30px rgba(0,255,100,0.3);">Intelligence</mark></h2>
-                    <p style="font-size: 1.3rem; opacity: 0.7; max-width: 700px; margin: 20px auto 0;">Your personal AI finance squad — monitoring BSE &amp; NSE every day, so you never miss a move.</p>
-                </div>
-                <div class="stock-grid">
+        <!-- ── Mission Library (Use Case Scroller) ─────────────────────────── -->
+        <section class="section mission-section">
+            <div class="center">
+                <div style="display:inline-block; background: rgba(0,255,255,0.1); border: 1px solid rgba(0,255,255,0.3); border-radius: 100px; padding: 8px 24px; font-size: 0.85rem; color: var(--s); margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase;">Mission Library</div>
+                <h2 style="font-size: clamp(2rem, 5vw, 3.5rem);">What can your <mark>workforce</mark> do?</h2>
+                <p style="font-size: 1.3rem; opacity: 0.7; max-width: 700px; margin: 20px auto 0;">Scroll through pre-configured missions designed to scale your business while you focus on the big picture.</p>
+            </div>
+            
+            <div class="mission-scroller-wrap">
+                <div class="mission-card">
                     <div>
-                        <h3 style="font-size: 1.6rem; color: #00ff64;">A professional analyst, trader &amp; risk manager — working for you 24/7.</h3>
-                        <ul class="stock-features">
-                            <li>Every morning before the market opens, get a full briefing: what to sell, what to buy, and exactly why — in plain English.</li>
-                            <li>Scans thousands of stocks using RSI, MACD, and VWAP for technical signals, plus earnings, debt, and promoter activity for fundamentals.</li>
-                            <li>Watches for intraday setups during market hours and fires Telegram alerts with entry price, target, and stop-loss in real time.</li>
-                            <li>Tracks FII activity, Nifty/Sensex mood, and sector rotation — never recommends buying into a falling market.</li>
-                            <li>Every recommendation includes the full reasoning, not just the answer. You understand every call before you make it.</li>
-                        </ul>
-                        <div style="margin-top: 30px; display: flex; gap: 16px; flex-wrap: wrap;">
-                            <div style="background: rgba(0,255,100,0.08); border: 1px solid rgba(0,255,100,0.2); border-radius: 12px; padding: 12px 20px; font-size: 0.9rem;"><strong style="color:#00ff64;">BSE</strong> &amp; <strong style="color:#00ff64;">NSE</strong> covered</div>
-                            <div style="background: rgba(0,255,100,0.08); border: 1px solid rgba(0,255,100,0.2); border-radius: 12px; padding: 12px 20px; font-size: 0.9rem;"><strong style="color:#00ff64;">8:30 AM IST</strong> morning briefing</div>
-                            <div style="background: rgba(0,255,100,0.08); border: 1px solid rgba(0,255,100,0.2); border-radius: 12px; padding: 12px 20px; font-size: 0.9rem;">Live <strong style="color:#00ff64;">Telegram</strong> alerts</div>
-                        </div>
+                        <div class="mission-icon">🏗️</div>
+                        <span class="mission-badge">DEV</span>
+                        <h3>Autonomous SaaS Builder</h3>
+                        <p>Researches niches, designs databases, builds frontends, and deploys full-stack apps in a single sprint cycle.</p>
                     </div>
+                </div>
+                
+                <div class="mission-card">
                     <div>
-                        <div style="background: #0e1621; border-radius: 24px; padding: 30px; border: 1px solid #1a2a3a;">
-                            <div style="color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">Morning Briefing · Today · 08:30 IST</div>
-                            <div class="stock-signals">
-                                <div class="signal-pill"><span class="s-label">RELIANCE.NS</span><span class="s-val s-buy">▲ BUY</span><br><span style="font-size:0.75rem; color:#888;">RSI 42 · MACD crossover</span></div>
-                                <div class="signal-pill"><span class="s-label">HDFCBANK.NS</span><span class="s-val s-hold">◆ HOLD</span><br><span style="font-size:0.75rem; color:#888;">Near resistance · wait</span></div>
-                                <div class="signal-pill"><span class="s-label">INFY.NS</span><span class="s-val s-buy">▲ BUY</span><br><span style="font-size:0.75rem; color:#888;">Strong earnings, P/E cheap</span></div>
-                                <div class="signal-pill"><span class="s-label">ZOMATO.NS</span><span class="s-val s-sell">▼ EXIT</span><br><span style="font-size:0.75rem; color:#888;">Promoter selling detected</span></div>
-                            </div>
-                            <div class="tg-alert">
-                                <div class="tg-tick">🚨 Intraday Alert · 11:24 IST</div>
-                                <div style="margin-top: 10px; color: #e0e0e0;">
-                                    <strong style="color:#00ff64;">TATAMOTORS.NS</strong> breakout forming<br>
-                                    Entry: <strong>₹940</strong> · Target: <strong>₹962</strong> · SL: <strong>₹931</strong><br>
-                                    Risk/Reward: 1:2.4 · VWAP reclaim confirmed
-                                </div>
-                                <div class="tg-meta">Nifty Auto sector +1.2% · FII net buyers today</div>
-                            </div>
-                        </div>
+                        <div class="mission-icon">🕵️</div>
+                        <span class="mission-badge">INTEL</span>
+                        <h3>Deep Competitor Shadowing</h3>
+                        <p>Monitors pricing, new features, and social sentiment of your rivals. Delivers daily "War Room" tactical updates.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">💰</div>
+                        <span class="mission-badge">PROFIT</span>
+                        <h3>Passive Revenue Stream</h3>
+                        <p>Autonomously searches Upwork/Fiverr, writes winning proposals, and executes technical tasks for AI-led income.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">🌟</div>
+                        <span class="mission-badge">SOCIAL</span>
+                        <h3>Personal Brand Omnipresence</h3>
+                        <p>Creates strategy, writes posts, and handles engagement across LinkedIn/X to build your authority 24/7.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">⚖️</div>
+                        <span class="mission-badge">GROWTH</span>
+                        <h3>VC & Angel Scout</h3>
+                        <p>Identifies active investors, analyzes their "sweet spots," and drafts hyper-personalized outreach for your next round.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">🛒</div>
+                        <span class="mission-badge">ARBITRAGE</span>
+                        <h3>E-com Winning Hunter</h3>
+                        <p>Monitors viral TikTok trends, calculates margins, and prepares ready-to-launch product proposals for dropshipping.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">🌍</div>
+                        <span class="mission-badge">MARKET</span>
+                        <h3>Global Trend Arbitrage</h3>
+                        <p>Identifies working models in mature markets and blueprints their equivalent for your specific target region.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">🧹</div>
+                        <span class="mission-badge">HEALTH</span>
+                        <h3>Security & Debt Janitor</h3>
+                        <p>Audits codebases, patches vulnerabilities, and updates legacy dependencies while your core team builds features.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">🤝</div>
+                        <span class="mission-badge">RETENTION</span>
+                        <h3>Proactive Customer Success</h3>
+                        <p>Monitors usage data and proactively reaches out to at-risk customers with helpful content to prevent churn.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">📣</div>
+                        <span class="mission-badge">OUTREACH</span>
+                        <h3>Influencer Outreach Engine</h3>
+                        <p>Finds matching influencers, manages negotiations, and tracks conversions for high-ROI brand partnerships.</p>
+                    </div>
+                </div>
+
+                <div class="mission-card">
+                    <div>
+                        <div class="mission-icon">📊</div>
+                        <span class="mission-badge">FINANCE</span>
+                        <h3>Stock Intelligence</h3>
+                        <p>Your personal AI finance squad — monitoring BSE & NSE every day, so you never miss a move.</p>
                     </div>
                 </div>
             </div>
