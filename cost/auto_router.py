@@ -129,56 +129,54 @@ class AutoRouter:
             except Exception as e:
                 logger.warning("GPT-4o-mini failed for %s, falling back: %s", agent_name, e)
 
-        # Role-based routing: use pre-assigned model tiers
-        if agent_name in SONNET_AGENTS and self._gemini:
-            # Orchestration agents → Gemini Flash first (free tier, 1M tokens/day)
-            # Falls back to Claude Haiku if Gemini is unavailable
-            try:
-                logger.info("Router: %s -> Gemini Flash (orchestration, free tier)", agent_name)
-                return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
-            except Exception as e:
-                logger.warning("Gemini failed for %s (orchestration), falling back to Haiku: %s", agent_name, e)
-                preferred_model = CLAUDE_HAIKU
-        elif agent_name in SONNET_AGENTS:
-            # Gemini not configured — fall back to Haiku (cheapest Claude)
-            preferred_model = CLAUDE_HAIKU
-            logger.info("Router: %s -> Claude Haiku (Gemini unavailable, orchestration fallback)", agent_name)
-        elif agent_name in GROQ_AGENTS and self._groq:
-            try:
-                logger.info("Router: %s -> Groq Llama (speed/cost role)", agent_name)
-                return self._call_groq(agent_name, system_prompt, user_message, temperature, max_tokens)
-            except Exception as e:
-                logger.warning("Groq failed for %s, falling back to Haiku: %s", agent_name, e)
-                preferred_model = CLAUDE_HAIKU
-        elif agent_name in GEMINI_AGENTS and self._gemini:
-            try:
-                logger.info("Router: %s -> Gemini Flash (research role)", agent_name)
-                return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
-            except Exception as e:
-                logger.warning("Gemini failed for %s, falling back to Haiku: %s", agent_name, e)
-                preferred_model = CLAUDE_HAIKU
+        # ── Role-based routing: FREE TIER FIRST, Claude never used as primary ─────
+        # Priority order per agent group:
+        #   SONNET_AGENTS   → Gemini Flash → Groq → (Claude Haiku last resort)
+        #   GROQ_AGENTS     → Groq → Gemini Flash → (Claude Haiku last resort)
+        #   GEMINI_AGENTS   → Gemini Flash → Groq → (Claude Haiku last resort)
+        #   HAIKU_AGENTS    → Groq → Gemini Flash → (Claude Haiku last resort)
+        #   Unknown         → Gemini Flash → Groq → (Claude Haiku last resort)
+
+        def _try_gemini():
+            if self._gemini:
+                try:
+                    logger.info("Router: %s -> Gemini Flash (free)", agent_name)
+                    return self._call_gemini(agent_name, system_prompt, user_message, temperature, max_tokens)
+                except Exception as e:
+                    logger.warning("Gemini failed for %s: %s", agent_name, e)
+            return None
+
+        def _try_groq():
+            if self._groq:
+                try:
+                    logger.info("Router: %s -> Groq Llama (free)", agent_name)
+                    return self._call_groq(agent_name, system_prompt, user_message, temperature, max_tokens)
+                except Exception as e:
+                    logger.warning("Groq failed for %s: %s", agent_name, e)
+            return None
+
+        if agent_name in SONNET_AGENTS or agent_name in GEMINI_AGENTS:
+            result = _try_gemini() or _try_groq()
+        elif agent_name in GROQ_AGENTS or agent_name in HAIKU_AGENTS:
+            result = _try_groq() or _try_gemini()
         else:
-            # HAIKU_AGENTS or unrecognised role — use Haiku (cheapest Claude)
-            preferred_model = CLAUDE_HAIKU
-            logger.info("Router: %s -> Claude Haiku (default/content role)", agent_name)
+            result = _try_gemini() or _try_groq()
 
-        # Fallback to OpenAI if Anthropic is in cooldown
-        if self._in_fallback_mode and time.time() < self._fallback_until and self._openai:
-            logger.info("Router: %s -> GPT-4o-mini (Anthropic cooldown)", agent_name)
-            return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
+        if result is not None:
+            return result
 
+        # Last resort: Claude Haiku (only if all free options failed)
+        logger.warning("Router: %s -> Claude Haiku (free tier exhausted, last resort)", agent_name)
         try:
             return self._call_anthropic(
-                agent_name, preferred_model, system_prompt, user_message,
+                agent_name, CLAUDE_HAIKU, system_prompt, user_message,
                 cache_system_prompt, temperature, max_tokens, task_description
             )
         except Exception as exc:
-            if not self._fallback_enabled or not self._openai:
-                raise
-            logger.warning("Claude API error for %s — switching to GPT-4o-mini fallback: %s", agent_name, exc)
-            self._log_fallback(agent_name, preferred_model, str(exc))
-            self._enter_fallback_mode()
-            return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
+            if self._openai:
+                logger.warning("Claude also failed for %s — GPT-4o-mini fallback: %s", agent_name, exc)
+                return self._call_openai(agent_name, system_prompt, user_message, max_tokens, task_description)
+            raise RuntimeError(f"All models failed for {agent_name}. Last error: {exc}") from exc
 
     # ── Private: Anthropic ──────────────────────────────────────────────────
 
