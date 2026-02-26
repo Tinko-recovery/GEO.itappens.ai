@@ -1323,7 +1323,8 @@ async def landing_page():
                             });
                             const result = await verifyRes.json();
                             if (result.status === "ok") {
-                                window.location.href = `/success?plan=${plan}`;
+                                // Redirect to dashboard - user is now a paid member
+                                window.location.href = "/dashboard";
                             } else {
                                 alert("Payment verification failed. Please contact support.");
                             }
@@ -1966,6 +1967,44 @@ async def get_cost_api():
         return data
     except: return {"total_spent": 0.0}
 
+@app.get("/api/subscription-status")
+async def get_subscription_status(request: Request):
+    """Check if the authenticated user has an active paid subscription."""
+    try:
+        user = await get_current_user(request)
+        user_id = user.get("user_id", "")
+
+        # Dev/test fallback: no Supabase configured
+        if not supabase_client or user_id == "test_user":
+            return {"active": True, "plan": "dev_mode", "customer_id": "default_user"}
+
+        # Query Supabase for active subscription
+        result = supabase_client.table("subscriptions") \
+            .select("plan, status, created_at") \
+            .eq("user_id", user_id) \
+            .eq("status", "active") \
+            .order("created_at", desc=True) \
+            .limit(1) \
+            .execute()
+
+        if result.data:
+            sub = result.data[0]
+            customer_id = user_id.replace("-", "")[:12]
+            return {
+                "active": True,
+                "plan": sub["plan"],
+                "customer_id": customer_id,
+            }
+
+        return {"active": False, "plan": None, "customer_id": None}
+    except Exception as e:
+        logger.error(f"Subscription status check failed: {e}")
+        # Fail open in dev, fail closed in prod
+        if not supabase_client:
+            return {"active": True, "plan": "dev_mode", "customer_id": "default_user"}
+        return {"active": False, "plan": None, "customer_id": None}
+
+
 @app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard_page(customer_id: str = None):
     """Real-time Founder Dashboard — No build required."""
@@ -1980,8 +2019,8 @@ async def dashboard_page(customer_id: str = None):
     # Load customer info for personalization
     try:
         from customer.customer_brain import CustomerBrain
-        brain = CustomerBrain.load(customer_id)
-        customer_name = brain.data.get("user_name", "Commander")
+        brain = CustomerBrain.load(customer_id)  # returns plain dict
+        customer_name = brain.get("user_name", "Commander")
     except:
         customer_name = "Commander"
 
@@ -2011,9 +2050,12 @@ async def dashboard_page(customer_id: str = None):
                     <p class="text-[10px] uppercase tracking-widest opacity-50">Founder Dashboard</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3 glass px-4 py-2 rounded-full border-cyan-500/20">
-                <div class="live-dot"></div>
-                <span class="text-xs font-semibold uppercase tracking-tighter">Live Systems Active</span>
+            <div class="flex items-center gap-3">
+                <span id="plan-badge" style="display:none;" class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(0,255,255,0.15); border:1px solid rgba(0,255,255,0.3); color:#00ffff;"></span>
+                <div class="flex items-center gap-3 glass px-4 py-2 rounded-full border-cyan-500/20">
+                    <div class="live-dot"></div>
+                    <span class="text-xs font-semibold uppercase tracking-tighter">Live Systems Active</span>
+                </div>
             </div>
         </nav>
 
@@ -2059,8 +2101,52 @@ async def dashboard_page(customer_id: str = None):
             </div>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
         <script>
-            // Onboarding customer info
+            // ── Auth & Subscription Gate ────────────────────────────────
+            let _supa = null;
+            try {
+                const _u = "SUPABASE_URL_PLACEHOLDER";
+                const _k = "SUPABASE_ANON_PLACEHOLDER";
+                if (_u && _k) _supa = supabase.createClient(_u, _k);
+            } catch(e) {}
+
+            async function checkAccess() {
+                try {
+                    let token = "";
+                    if (_supa) {
+                        const { data } = await _supa.auth.getSession();
+                        if (!data.session) {
+                            // Not logged in → go home
+                            window.location.href = "/?auth=required";
+                            return;
+                        }
+                        token = data.session.access_token;
+                    }
+
+                    const res = await fetch('/api/subscription-status', {
+                        headers: token ? { 'Authorization': 'Bearer ' + token } : {}
+                    });
+                    const sub = await res.json();
+
+                    if (!sub.active) {
+                        // No active subscription → redirect to pricing
+                        window.location.href = "/#pricing";
+                        return;
+                    }
+
+                    // Access granted — show username and plan
+                    if (sub.plan && sub.plan !== 'dev_mode') {
+                        document.getElementById('plan-badge').textContent = sub.plan.toUpperCase();
+                        document.getElementById('plan-badge').style.display = 'inline-block';
+                    }
+                } catch(e) {
+                    console.warn('Access check failed silently:', e);
+                }
+            }
+
+            // ── Dashboard Data ──────────────────────────────────────────
+            // Customer info injected server-side
             const customerId = "CUSTOMER_ID_PLACEHOLDER";
             const customerName = "CUSTOMER_NAME_PLACEHOLDER";
 
@@ -2116,16 +2202,21 @@ async def dashboard_page(customer_id: str = None):
             }
 
             setInterval(refresh, 5000);
+            checkAccess(); // Gate: redirect if not paid
             refresh();
         </script>
     </body>
     </html>
     """
 
-    # Inject customer_id and customer_name into dashboard JS
+    # Inject customer_id and customer_name and Supabase creds into dashboard JS
+    supa_url = os.getenv("SUPABASE_URL", "")
+    supa_anon = os.getenv("SUPABASE_ANON_KEY", "")
     html = (html
         .replace("CUSTOMER_ID_PLACEHOLDER", customer_id)
         .replace("CUSTOMER_NAME_PLACEHOLDER", customer_name)
+        .replace("SUPABASE_URL_PLACEHOLDER", supa_url)
+        .replace("SUPABASE_ANON_PLACEHOLDER", supa_anon)
     )
     return html
 
