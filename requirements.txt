@@ -34,8 +34,8 @@ pandas>=2.2.0
 websockets>=12.0
 
 # Billing
-stripe>=7.0.0
 razorpay>=1.4.1
+supabase>=2.0.0
 
 # Utilities
 python-dotenv>=1.0.1

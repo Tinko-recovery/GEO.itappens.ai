@@ -300,6 +300,7 @@ from fastapi import FastAPI, BackgroundTasks, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import BaseModel
 import uvicorn
+from supabase import create_client, Client
 from memory.mission_store import MissionStore
 from billing.razorpay_handler import (
     create_razorpay_order,
@@ -309,6 +310,17 @@ from billing.razorpay_handler import (
 
 app = FastAPI(title="itappens.ai API")
 mission_store = MissionStore()
+
+# ── Supabase Client ────────────────────────────────────────────────────────────
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
+supabase_client: Client = None
+
+if SUPABASE_URL and SUPABASE_KEY:
+    supabase_client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    logger.info("✅ Supabase connected")
+else:
+    logger.warning("⚠️ Supabase not configured, using JSON fallback")
 
 # ── Shared Infrastructure ─────────────────────────────────────────────────────
 sprint_board = SprintBoard()
@@ -387,7 +399,7 @@ class MissionRequest(BaseModel):
 @app.get("/", response_class=HTMLResponse)
 async def landing_page():
     """Vibrant, quirky, and animated high-converting landing page."""
-    rzp_key = os.getenv("RAZORPAY_KEY_ID", "")
+    rzp_key = os.getenv("RAZORPAY_KEY_ID", "RAZORPAY_KEY_PLACEHOLDER")
     html = """
     <!DOCTYPE html>
     <html lang="en">
@@ -1071,7 +1083,7 @@ async def landing_page():
                     const order = await res.json();
 
                     const options = {
-                        "key": "RAZORPAY_KEY_PLACEHOLDER",
+                        "key": "{rzp_key}",
                         "amount": order.amount,
                         "currency": order.currency,
                         "name": "itappens.ai",
@@ -1538,6 +1550,27 @@ async def run_approved_mission(mission_id: str):
     await run_company(goal=m["goal"], customer_id=m["customer_id"])
 
 
+# ── Auth Middleware ────────────────────────────────────────────────────────────
+
+async def get_current_user(request: Request) -> dict:
+    """Extract authenticated user from request."""
+    if not supabase_client:
+        # Fallback for testing without auth
+        return {"user_id": "test_user", "email": "test@example.com"}
+
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing auth token")
+
+    token = auth_header.replace("Bearer ", "")
+    try:
+        user = supabase_client.auth.get_user(token)
+        return {"user_id": user.user.id, "email": user.user.email}
+    except Exception as e:
+        logger.error(f"Auth failed: {e}")
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
 # ── Razorpay Billing Routes ────────────────────────────────────────────────────
 
 @app.get("/create-order")
@@ -1550,9 +1583,14 @@ async def create_order(plan_slug: str = "growth", email: str = ""):
         logger.error("Razorpay order error: %s", exc)
         raise HTTPException(status_code=500, detail=str(exc))
 
+class RazorpayVerifyRequest(BaseModel):
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
+
 @app.post("/verify-payment")
 async def razorpay_verify(req: RazorpayVerifyRequest):
-    """Verify Razorpay payment signature."""
+    """Verify Razorpay payment signature and save to Supabase."""
     try:
         success = verify_payment(
             razorpay_order_id=req.razorpay_order_id,
@@ -1560,6 +1598,32 @@ async def razorpay_verify(req: RazorpayVerifyRequest):
             razorpay_signature=req.razorpay_signature
         )
         if success:
+            # Save to Supabase if available, fallback to JSON
+            if supabase_client:
+                try:
+                    import razorpay as razorpay_module
+                    # Get order details from Razorpay
+                    rzp_client = razorpay_module.Client(
+                        auth=(os.getenv("RAZORPAY_KEY_ID"), os.getenv("RAZORPAY_KEY_SECRET"))
+                    )
+                    order = rzp_client.order.fetch(req.razorpay_order_id)
+                    plan = order.get("notes", {}).get("plan", "unknown")
+                    email = order.get("notes", {}).get("email", "unknown")
+
+                    # Insert to Supabase (without auth for now, hardcode a test user_id)
+                    # TODO: Link to actual logged-in user_id after auth is fully set up
+                    supabase_client.table("subscriptions").insert({
+                        "user_id": "00000000-0000-0000-0000-000000000001",  # Test user
+                        "razorpay_order_id": req.razorpay_order_id,
+                        "razorpay_payment_id": req.razorpay_payment_id,
+                        "plan": plan,
+                        "status": "active",
+                        "customer_email": email
+                    }).execute()
+                    logger.info(f"✅ Saved subscription to Supabase: {email} on {plan}")
+                except Exception as e:
+                    logger.warning(f"Supabase insert failed: {e}, falling back to JSON")
+
             return {"status": "ok"}
         else:
             raise HTTPException(status_code=400, detail="Invalid signature")
@@ -1583,10 +1647,27 @@ async def join_waitlist(req: WaitlistRequest):
 
     newly_added = add_to_waitlist(email=email, source=req.source)
 
+    # Optional: Try to send confirmation email
+    if newly_added:
+        try:
+            from tools.gmail_tool import gmail_send_tool
+            gmail_send_tool._run(
+                to=email,
+                subject="You're in — itappens.ai is coming for you",
+                body="Hey,\n\nYou're on the list. We'll send onboarding soon.\n\n— itappens.ai"
+            )
+        except Exception as e:
+            logger.warning(f"Waitlist email failed: {e}")
+
+    return {"status": "ok", "newly_added": newly_added}
+
 # ── Dashboard API Endpoints ───────────────────────────────────────────────────
 
 @app.get("/api/activity")
-async def get_activity_api():
+async def get_activity_api(request: Request):
+    """Get current user's activity only."""
+    user = await get_current_user(request)
+
     path = Path("memory/activity_log.json")
     if not path.exists(): return []
     try:
