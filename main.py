@@ -690,6 +690,7 @@ async def landing_page():
                         <h3>Autonomous SaaS Builder</h3>
                         <p>Researches niches, designs databases, builds frontends, and deploys full-stack apps in a single sprint cycle.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Build a full-stack SaaS MVP for a subscription-based coffee delivery service')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -699,6 +700,7 @@ async def landing_page():
                         <h3>Deep Competitor Shadowing</h3>
                         <p>Monitors pricing, new features, and social sentiment of your rivals. Delivers daily "War Room" tactical updates.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Analyze top 3 competitors in the AI CRM space and report on their last 30 days of features')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -708,6 +710,7 @@ async def landing_page():
                         <h3>Passive Revenue Stream</h3>
                         <p>Autonomously searches Upwork/Fiverr, writes winning proposals, and executes technical tasks for AI-led income.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Search Upwork for Python web scraping jobs, draft proposals, and prepare local execution bot')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -717,6 +720,7 @@ async def landing_page():
                         <h3>Personal Brand Omnipresence</h3>
                         <p>Creates strategy, writes posts, and handles engagement across LinkedIn/X to build your authority 24/7.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Create a 14-day thought leadership content strategy for X and LinkedIn around AI agents')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -726,6 +730,7 @@ async def landing_page():
                         <h3>VC & Angel Scout</h3>
                         <p>Identifies active investors, analyzes their "sweet spots," and drafts hyper-personalized outreach for your next round.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Scout top 50 Angel investors interested in B2B SaaS and draft personalized outreach sequences')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -735,6 +740,7 @@ async def landing_page():
                         <h3>E-com Winning Hunter</h3>
                         <p>Monitors viral TikTok trends, calculates margins, and prepares ready-to-launch product proposals for dropshipping.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Hunt for 5 viral e-commerce products on TikTok with high margin and low competition')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -744,6 +750,7 @@ async def landing_page():
                         <h3>Global Trend Arbitrage</h3>
                         <p>Identifies working models in mature markets and blueprints their equivalent for your specific target region.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Identify 3 successful US-based AI micro-SaaS models and blueprint for the Indian market')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -753,6 +760,7 @@ async def landing_page():
                         <h3>Security & Debt Janitor</h3>
                         <p>Audits codebases, patches vulnerabilities, and updates legacy dependencies while your core team builds features.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Scan current repository for security vulnerabilities and outdated dependencies')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -762,6 +770,7 @@ async def landing_page():
                         <h3>Proactive Customer Success</h3>
                         <p>Monitors usage data and proactively reaches out to at-risk customers with helpful content to prevent churn.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Analyze customer usage and send churn prevention emails to at-risk users')">Launch Pilot →</button>
                 </div>
                 
                 <div class="mission-card">
@@ -771,6 +780,7 @@ async def landing_page():
                         <h3>Influencer Outreach Engine</h3>
                         <p>Finds matching influencers, manages negotiations, and tracks conversions for high-ROI brand partnerships.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Identify and outreach to 50 matching influencers on Instagram/X')">Launch Pilot →</button>
                 </div>
 
                 <div class="mission-card">
@@ -780,6 +790,7 @@ async def landing_page():
                         <h3>Stock Intelligence</h3>
                         <p>Your personal AI finance squad — monitoring BSE & NSE every day, so you never miss a move.</p>
                     </div>
+                    <button class="cta" style="padding: 10px 20px; font-size: 0.8rem; width: 100%; margin-top: 20px;" onclick="launchMission('Detailed stock analysis for BSE/NSE morning briefing')">Launch Pilot →</button>
                 </div>
             </div>
         </section>
@@ -1025,6 +1036,32 @@ async def landing_page():
 
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
+            window.launchMission = async (goal) => {
+                const btn = event.target;
+                const originalText = btn.innerText;
+                btn.innerText = 'Initializing...';
+                btn.disabled = true;
+                
+                try {
+                    const res = await fetch('/missions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ customer_id: 'founder_1', goal: goal })
+                    });
+                    const data = await res.json();
+                    if (data.mission_id) {
+                        window.location.href = '/dashboard';
+                    } else {
+                        alert('Mission limit reached. Check dashboard.');
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }
+                } catch (e) {
+                    alert('Neural link interrupted. Try again.');
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            };
             async function triggerRazorpay(plan) {
                 const email = prompt("Enter your email for onboarding instructions:", "");
                 if (!email || !email.includes("@")) return;
@@ -1545,6 +1582,171 @@ async def join_waitlist(req: WaitlistRequest):
         raise HTTPException(status_code=422, detail="Invalid email address")
 
     newly_added = add_to_waitlist(email=email, source=req.source)
+
+# ── Dashboard API Endpoints ───────────────────────────────────────────────────
+
+@app.get("/api/activity")
+async def get_activity_api():
+    path = Path("memory/activity_log.json")
+    if not path.exists(): return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        # Reverse to get latest first
+        return data[::-1][:50]
+    except: return []
+
+@app.get("/api/history")
+async def get_history_api():
+    path = Path("memory/job_history.json")
+    if not path.exists(): return []
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except: return []
+
+@app.get("/api/cost")
+async def get_cost_api():
+    path = Path("memory/cost_log.json")
+    if not path.exists(): return {"total_spent": 0.0, "daily_budget": 20.0}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data
+    except: return {"total_spent": 0.0}
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def dashboard_page():
+    """Real-time Founder Dashboard — No build required."""
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>itappens.ai | Dashboard</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+        <style>
+            :root { --p: #ff00ff; --s: #00ffff; --bg: #08090d; }
+            body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #e2e8f0; }
+            h1, h2, h3 { font-family: 'Unbounded'; }
+            .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); }
+            @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+            .live-dot { height: 8px; width: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; animation: pulse-glow 2s infinite; }
+        </style>
+    </head>
+    <body class="p-6 md:p-12">
+        <nav class="flex justify-between items-center mb-12">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-cyan-500 rounded-xl flex items-center justify-center text-xl">⚡</div>
+                <div>
+                    <h1 class="text-xl font-bold">itappens.ai</h1>
+                    <p class="text-[10px] uppercase tracking-widest opacity-50">Founder Dashboard</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 glass px-4 py-2 rounded-full border-cyan-500/20">
+                <div class="live-dot"></div>
+                <span class="text-xs font-semibold uppercase tracking-tighter">Live Systems Active</span>
+            </div>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left: Live Activity -->
+            <div class="lg:col-span-2 space-y-8">
+                <div class="glass p-8 rounded-[40px] min-h-[400px]">
+                    <h2 class="text-2xl mb-8 flex items-center gap-3">🧠 <mark class="bg-transparent text-cyan-400">Live Agent Activity</mark></h2>
+                    <div id="activity-feed" class="space-y-4">
+                        <p class="text-slate-500 italic">Initializing neural link...</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="glass p-8 rounded-[40px]">
+                        <h3 class="text-lg mb-4 opacity-70">💰 Cost Efficiency</h3>
+                        <div class="text-4xl font-bold mb-2" id="total-cost">$0.00</div>
+                        <p class="text-xs text-slate-500 uppercase tracking-widest">Optimized via Auto-Router</p>
+                    </div>
+                    <div class="glass p-8 rounded-[40px]">
+                        <h3 class="text-lg mb-4 opacity-70">🤖 Active Workforce</h3>
+                        <div class="text-4xl font-bold mb-2">12 Agents</div>
+                        <p class="text-xs text-slate-500 uppercase tracking-widest">Parallel execution active</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Job History & Queue -->
+            <div class="space-y-8">
+                <div class="glass p-8 rounded-[40px] border-fuchsia-500/20">
+                    <h2 class="text-xl mb-6">🏁 Recent <mark class="bg-transparent text-fuchsia-400">Wins</mark></h2>
+                    <div id="job-history" class="space-y-4">
+                        <p class="text-slate-500 text-sm">No completed jobs yet.</p>
+                    </div>
+                </div>
+                
+                <div class="glass p-8 rounded-[40px]">
+                    <h2 class="text-xl mb-6">⚙️ Active <mark class="bg-transparent text-cyan-400">Pipelines</mark></h2>
+                    <ul class="text-sm space-y-4 opacity-80" id="board-status">
+                        <li class="p-4 border-b border-white/5">CEO → Planning Mission...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            async function refresh() {
+                try {
+                    // Update Board/Teams
+                    const boardRes = await fetch('/status/board');
+                    const board = await boardRes.json();
+                    const bList = document.getElementById('board-status');
+                    bList.innerHTML = Object.entries(board).map(([agent, info]) => `
+                        <li class="pb-2 flex justify-between">
+                            <span class="font-bold opacity-60">${agent}:</span>
+                            <span class="text-right text-cyan-400">${info.current_task || 'Idle'}</span>
+                        </li>
+                    `).join('');
+
+                    // Update Activity
+                    const actRes = await fetch('/api/activity');
+                    const act = await actRes.json();
+                    const aFeed = document.getElementById('activity-feed');
+                    if(act.length > 0) {
+                        aFeed.innerHTML = act.map(entry => `
+                            <div class="p-4 rounded-2xl bg-white/5 border-l-2 border-fuchsia-500 animate-in fade-in duration-500">
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-bold text-fuchsia-400 text-sm uppercase italic">${entry.agent}</span>
+                                    <span class="text-[10px] opacity-40">${new Date(entry.timestamp).toLocaleTimeString()}</span>
+                                </div>
+                                <div class="text-xs opacity-60 italic mb-1">${entry.action}</div>
+                                <p class="text-sm">${entry.thought}</p>
+                            </div>
+                        `).join('');
+                    }
+
+                    // Update Cost
+                    const costRes = await fetch('/api/cost');
+                    const cost = await costRes.json();
+                    document.getElementById('total-cost').innerText = `$${(cost.total_spent || 0).toFixed(2)}`;
+
+                    // Update History
+                    const histRes = await fetch('/api/history');
+                    const hist = await histRes.json();
+                    const hList = document.getElementById('job-history');
+                    if(hist.length > 0) {
+                        hList.innerHTML = hist.map(job => `
+                            <div class="p-4 rounded-xl border border-white/5 text-sm">
+                                <span class="font-bold">✓ Job #${job.job_id.slice(-4)}</span>
+                                <p class="opacity-60 text-xs mt-1 font-mono">${job.status} in ${job.result_duration || '2.4s'}</p>
+                            </div>
+                        `).join('');
+                    }
+
+                } catch(e) { console.error(e); }
+            }
+
+            setInterval(refresh, 5000);
+            refresh();
+        </script>
+    </body>
+    </html>
+    """
 
     # Best-effort Gmail confirmation — never block response on email failure
     if newly_added:
