@@ -603,6 +603,18 @@ async def landing_page():
             </div>
         </div>
 
+        <!-- Onboarding Modal -->
+        <div id="onboarding-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9998; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+            <div style="background:#0d0d1a; border:1px solid rgba(255,0,255,0.3); border-radius:20px; padding:40px; max-width:420px; width:90%; position:relative; box-shadow:0 0 60px rgba(255,0,255,0.15);">
+                <h2 style="font-family:'Unbounded'; font-size:1.3rem; margin-bottom:5px; background:linear-gradient(to right, var(--p), var(--s)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Welcome to itappens.ai 🚀</h2>
+                <p style="color:#888; font-size:0.85rem; margin-bottom:25px;">Tell us about you so we can personalize your experience</p>
+                <div id="onboarding-error" style="display:none; color:#ff4466; font-size:0.85rem; margin-bottom:15px; padding:10px; background:rgba(255,68,102,0.1); border-radius:8px;"></div>
+                <input id="onboarding-name" type="text" placeholder="Your name" style="width:100%; padding:14px 16px; margin-bottom:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:0.95rem; outline:none;" />
+                <input id="onboarding-company" type="text" placeholder="Company name" style="width:100%; padding:14px 16px; margin-bottom:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-size:0.95rem; outline:none;" />
+                <button id="onboarding-submit-btn" onclick="submitOnboarding()" style="width:100%; padding:14px; background:linear-gradient(45deg, var(--p), #6600ff); border:none; color:#fff; border-radius:100px; cursor:pointer; font-weight:bold; font-size:1rem;">Let's go →</button>
+            </div>
+        </div>
+
         <section class="section hero">
             <div class="hero-content">
                 <h1>it appens<br><mark>when you sleep.</mark></h1>
@@ -1066,6 +1078,63 @@ async def landing_page():
 
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
+            // ── Onboarding ──────────────────────────────────────────────
+            async function showOnboardingModal() {
+                document.getElementById('onboarding-modal').style.display = 'flex';
+                document.getElementById('onboarding-name').focus();
+            }
+
+            function closeOnboardingModal() {
+                document.getElementById('onboarding-modal').style.display = 'none';
+            }
+
+            async function submitOnboarding() {
+                const name = document.getElementById('onboarding-name').value.trim();
+                const company = document.getElementById('onboarding-company').value.trim();
+                const errEl = document.getElementById('onboarding-error');
+                const btn = document.getElementById('onboarding-submit-btn');
+
+                if (!name || !company) {
+                    errEl.textContent = 'Both name and company are required.';
+                    errEl.style.display = 'block';
+                    return;
+                }
+
+                btn.textContent = 'Setting up...';
+                btn.disabled = true;
+                errEl.style.display = 'none';
+
+                try {
+                    const session = await getSession();
+                    const res = await fetch('/auth/profile', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + session.access_token
+                        },
+                        body: JSON.stringify({ name, company })
+                    });
+
+                    if (!res.ok) {
+                        const err = await res.json();
+                        errEl.textContent = err.detail || 'Failed to save profile.';
+                        errEl.style.display = 'block';
+                        btn.textContent = 'Let\'s go →';
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    const data = await res.json();
+                    closeOnboardingModal();
+                    window.location.href = `/dashboard?customer_id=${data.customer_id}`;
+                } catch (e) {
+                    errEl.textContent = 'Network error. Try again.';
+                    errEl.style.display = 'block';
+                    btn.textContent = 'Let\'s go →';
+                    btn.disabled = false;
+                }
+            }
+
             // ── Supabase Auth ───────────────────────────────────────────
             const supa = supabase.createClient("SUPABASE_URL_PLACEHOLDER", "SUPABASE_ANON_PLACEHOLDER");
             let authRedirectUrl = null;
@@ -1151,14 +1220,9 @@ async def landing_page():
                         return;
                     }
 
-                    // Success — close modal and proceed
+                    // Success — show onboarding modal
                     closeAuthModal();
-
-                    if (authPendingPlan) {
-                        triggerRazorpay(authPendingPlan);
-                    } else if (authRedirectUrl) {
-                        window.location.href = authRedirectUrl;
-                    }
+                    showOnboardingModal();
                 } catch (e) {
                     errEl.textContent = 'Something went wrong. Try again.';
                     errEl.style.display = 'block';
@@ -1784,6 +1848,40 @@ async def razorpay_verify(req: RazorpayVerifyRequest, request: Request):
         raise HTTPException(status_code=500, detail=str(exc))
 
 
+# ── Onboarding Profile Route ──────────────────────────────────────────────────
+
+class ProfileRequest(BaseModel):
+    name: str
+    company: str
+
+@app.post("/auth/profile")
+async def save_profile(req: ProfileRequest, request: Request):
+    """Save user profile (name + company) after signup."""
+    user = await get_current_user(request)
+    user_id = user.get("user_id", "")
+
+    if not user_id or user_id == "test_user":
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    # Use user_id as customer_id (strip hyphens, take first 12 chars)
+    customer_id = user_id.replace("-", "")[:12] if user_id else "guest_user"
+
+    try:
+        from customer.customer_brain import CustomerBrain
+        brain = CustomerBrain.load(customer_id)
+        brain.data["user_name"] = req.name.strip()
+        brain.data["company_name"] = req.company.strip()
+        brain.data["onboarding_complete"] = True
+        brain.data["onboarding_completed_at"] = datetime.utcnow().isoformat()
+        brain.save()
+
+        logger.info(f"Profile saved: {customer_id} ({req.name}, {req.company})")
+        return {"status": "ok", "customer_id": customer_id}
+    except Exception as e:
+        logger.error(f"Profile save failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to save profile")
+
+
 # ── Lead Capture Route ────────────────────────────────────────────────────────
 
 class WaitlistRequest(BaseModel):
@@ -1855,9 +1953,25 @@ async def get_cost_api():
     except: return {"total_spent": 0.0}
 
 @app.get("/dashboard", response_class=HTMLResponse)
-async def dashboard_page():
+async def dashboard_page(customer_id: str = None):
     """Real-time Founder Dashboard — No build required."""
-    return """
+    # Get customer_id from query param or fallback to authenticated user
+    if not customer_id:
+        try:
+            # For now, use a default customer_id if not provided
+            customer_id = "default_user"
+        except:
+            customer_id = "default_user"
+
+    # Load customer info for personalization
+    try:
+        from customer.customer_brain import CustomerBrain
+        brain = CustomerBrain.load(customer_id)
+        customer_name = brain.data.get("user_name", "Commander")
+    except:
+        customer_name = "Commander"
+
+    html = """
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -1932,6 +2046,10 @@ async def dashboard_page():
         </div>
 
         <script>
+            // Onboarding customer info
+            const customerId = "CUSTOMER_ID_PLACEHOLDER";
+            const customerName = "CUSTOMER_NAME_PLACEHOLDER";
+
             async function refresh() {
                 try {
                     // Update Board/Teams
@@ -1990,27 +2108,12 @@ async def dashboard_page():
     </html>
     """
 
-    # Best-effort Gmail confirmation — never block response on email failure
-    if newly_added:
-        try:
-            from tools.gmail_tool import gmail_send_tool
-            gmail_send_tool._run(
-                to=email,
-                subject="You're in — itappens.ai is coming for you",
-                body=(
-                    "Hey,\n\n"
-                    "You're on the list. We're giving early access to a small group of founders first.\n\n"
-                    "When you get in, you'll have 12 AI specialists — engineers, marketers, salespeople — "
-                    "shipping work for your startup while you sleep.\n\n"
-                    "No hiring. No management. Just tap Approve on Telegram.\n\n"
-                    "We'll be in touch shortly.\n\n"
-                    "— The itappens.ai team"
-                ),
-            )
-        except Exception as exc:
-            logger.warning("Waitlist confirmation email failed: %s", exc)
-
-    return {"status": "ok", "newly_added": newly_added}
+    # Inject customer_id and customer_name into dashboard JS
+    html = (html
+        .replace("CUSTOMER_ID_PLACEHOLDER", customer_id)
+        .replace("CUSTOMER_NAME_PLACEHOLDER", customer_name)
+    )
+    return html
 
 
 @app.get("/success", response_class=HTMLResponse)
