@@ -1119,7 +1119,7 @@ async def landing_page():
                         const err = await res.json();
                         errEl.textContent = err.detail || 'Failed to save profile.';
                         errEl.style.display = 'block';
-                        btn.textContent = 'Let\'s go →';
+                        btn.textContent = "Let's go \u2192";
                         btn.disabled = false;
                         return;
                     }
@@ -1130,20 +1130,32 @@ async def landing_page():
                 } catch (e) {
                     errEl.textContent = 'Network error. Try again.';
                     errEl.style.display = 'block';
-                    btn.textContent = 'Let\'s go →';
+                    btn.textContent = "Let's go \u2192";
                     btn.disabled = false;
                 }
             }
 
             // ── Supabase Auth ───────────────────────────────────────────
-            const supa = supabase.createClient("SUPABASE_URL_PLACEHOLDER", "SUPABASE_ANON_PLACEHOLDER");
+            let supa = null;
+            try {
+                const _supaUrl = "SUPABASE_URL_PLACEHOLDER";
+                const _supaAnon = "SUPABASE_ANON_PLACEHOLDER";
+                if (_supaUrl && _supaUrl !== "" && _supaAnon && _supaAnon !== "") {
+                    supa = supabase.createClient(_supaUrl, _supaAnon);
+                }
+            } catch(e) {
+                console.warn("Supabase not configured:", e.message);
+            }
             let authRedirectUrl = null;
             let authPendingPlan = null;
             let authIsSignup = true;
 
             async function getSession() {
-                const { data } = await supa.auth.getSession();
-                return data.session;
+                if (!supa) return null;
+                try {
+                    const { data } = await supa.auth.getSession();
+                    return data.session;
+                } catch(e) { return null; }
             }
 
             function showAuthModal(redirectAfter, plan) {
@@ -1232,6 +1244,11 @@ async def landing_page():
             }
 
             async function gotoProtected(url) {
+                // If Supabase not configured, allow direct navigation
+                if (!supa) {
+                    window.location.href = url;
+                    return;
+                }
                 const session = await getSession();
                 if (session) {
                     window.location.href = url;
