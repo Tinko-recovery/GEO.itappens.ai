@@ -13,6 +13,7 @@ from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -204,9 +205,26 @@ def health():
 
 # ── Static frontend ────────────────────────────────────────────────────────────
 
-frontend_dir = Path(__file__).parent.parent / "frontend" / "dist"
-if frontend_dir.exists():
-    app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="static")
+_FRONTEND = Path(__file__).parent.parent / "frontend"
+
+
+@app.get("/landing")
+def serve_landing_page():
+    """New marketing landing page (dashboard/frontend/landing.html)."""
+    path = _FRONTEND / "landing.html"
+    if path.exists():
+        return FileResponse(path)
+    return {"error": "landing.html not found — create dashboard/frontend/landing.html"}
+
+
+@app.get("/dashboard")
+def serve_dashboard_page():
+    """Product dashboard (dashboard/frontend/index.html)."""
+    return FileResponse(_FRONTEND / "index.html")
+
+
+# Serve static assets (images, fonts, etc.) from the frontend folder
+app.mount("/static", StaticFiles(directory=str(_FRONTEND)), name="static")
 
 
 if __name__ == "__main__":
