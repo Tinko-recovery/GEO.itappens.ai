@@ -326,11 +326,49 @@ else:
 sprint_board = SprintBoard()
 telegram = TelegramReporter(sprint_board=sprint_board)
 
+# ── Founder Notification Helpers ───────────────────────────────────────────────
+
+FOUNDER_EMAIL = os.getenv("FOUNDER_EMAIL", "founder@tinko.in")
+FOUNDER_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+
+def _notify_founder_email(subject: str, body: str) -> None:
+    """Send an email notification to the founder via SendGrid."""
+    try:
+        import sendgrid as sg_module
+        from sendgrid.helpers.mail import Mail
+        api_key = os.getenv("SENDGRID_API_KEY", "")
+        if not api_key:
+            logger.warning("SENDGRID_API_KEY not set — skipping founder email")
+            return
+        sg = sg_module.SendGridAPIClient(api_key=api_key)
+        msg = Mail(
+            from_email=FOUNDER_EMAIL,
+            to_emails=FOUNDER_EMAIL,
+            subject=subject,
+            plain_text_content=body,
+        )
+        sg.send(msg)
+        logger.info("Founder email sent: %s", subject)
+    except Exception as e:
+        logger.warning("Founder email failed: %s", e)
+
+async def _notify_founder_telegram(message: str) -> None:
+    """Send a Telegram message directly to the founder's chat."""
+    try:
+        if not FOUNDER_CHAT_ID:
+            return
+        from telegram import Bot
+        bot = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN", ""))
+        await bot.send_message(chat_id=FOUNDER_CHAT_ID, text=message, parse_mode="Markdown")
+    except Exception as e:
+        logger.warning("Founder Telegram notification failed: %s", e)
+
 @app.on_event("startup")
 async def startup_event():
     logger.info("Starting Telegram Bot listener...")
     telegram.start_polling()
     _start_stock_scheduler()
+    _start_marketing_scheduler()
 
 
 # ── Stock Intelligence Scheduler ──────────────────────────────────────────────
@@ -391,6 +429,101 @@ async def _run_intraday_scan_job():
         auto_router=auto_router,
         telegram_notifier=telegram,
     )
+
+
+# ── Daily Marketing Content Scheduler ─────────────────────────────────────────
+
+def _start_marketing_scheduler():
+    """
+    Schedules a daily marketing content generation job.
+    09:00 AM IST (03:30 UTC) — generates LinkedIn post + Twitter thread,
+    sends draft to founder via Telegram, and auto-posts to Twitter if keys are set.
+    """
+    from apscheduler.schedulers.asyncio import AsyncIOScheduler
+    from apscheduler.triggers.cron import CronTrigger
+
+    mkt_scheduler = AsyncIOScheduler(timezone="UTC")
+    mkt_scheduler.add_job(
+        _run_daily_marketing_job,
+        CronTrigger(hour=3, minute=30),   # 09:00 AM IST
+        id="daily_marketing_content",
+        replace_existing=True,
+    )
+    mkt_scheduler.start()
+    logger.info("Marketing scheduler started — daily content at 09:00 AM IST")
+
+
+async def _run_daily_marketing_job():
+    """Generate LinkedIn post + Twitter thread daily and send to founder for review."""
+    try:
+        from groq import Groq
+        groq_client = Groq(api_key=os.getenv("GROQ_API_KEY", ""))
+
+        prompt = (
+            "You are a content strategist for itappens.ai — an autonomous AI workforce platform "
+            "where 12 AI specialists (engineers, marketers, salespeople) work 24/7 for startups "
+            "and founders. The product costs $997/month vs $15,000/month to hire humans.\n\n"
+            "Generate TODAY's marketing content:\n\n"
+            "1) LINKEDIN POST (200-250 words): Hook with a pain point, show the solution, "
+            "end with a CTA to visit itappens.ai. Founder voice, no corporate fluff.\n\n"
+            "2) TWITTER THREAD (5 tweets, each under 280 chars): Start with a bold claim, "
+            "build curiosity, share a specific insight, show proof, end with CTA.\n\n"
+            "Format exactly as:\n---LINKEDIN---\n[post]\n---TWITTER---\nTweet 1: [text]\nTweet 2: [text]\n..."
+        )
+
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=1500,
+        )
+        content = response.choices[0].message.content.strip()
+
+        # Parse LinkedIn and Twitter sections
+        linkedin_post = ""
+        twitter_thread = []
+        if "---LINKEDIN---" in content and "---TWITTER---" in content:
+            parts = content.split("---TWITTER---")
+            linkedin_part = parts[0].replace("---LINKEDIN---", "").strip()
+            twitter_part = parts[1].strip() if len(parts) > 1 else ""
+            linkedin_post = linkedin_part
+            twitter_thread = [
+                line.split(": ", 1)[1].strip()
+                for line in twitter_part.splitlines()
+                if line.strip().lower().startswith("tweet") and ": " in line
+            ]
+        else:
+            linkedin_post = content
+
+        # Send draft to founder via Telegram
+        draft_msg = (
+            f"📝 *Daily Marketing Draft — {datetime.utcnow().strftime('%d %b %Y')}*\n\n"
+            f"*📌 LinkedIn Post:*\n{linkedin_post[:800]}{'...' if len(linkedin_post) > 800 else ''}\n\n"
+            f"*🐦 Twitter Thread ({len(twitter_thread)} tweets):*\n"
+            + "\n".join(f"{i+1}. {t[:200]}" for i, t in enumerate(twitter_thread[:5]))
+        )
+        await _notify_founder_telegram(draft_msg[:4096])
+
+        # Auto-post to Twitter if API keys are configured
+        twitter_key = os.getenv("TWITTER_API_KEY", "")
+        if twitter_key and twitter_thread:
+            try:
+                from tools.twitter_tool import PostThreadTool
+                thread_tool = PostThreadTool()
+                result = thread_tool._run(tweets=twitter_thread[:5])
+                await _notify_founder_telegram(f"✅ Twitter thread auto-posted!\n{result}")
+                logger.info("Daily Twitter thread posted: %s", result)
+            except Exception as e:
+                logger.warning("Twitter auto-post failed: %s", e)
+        else:
+            await _notify_founder_telegram(
+                "💡 Add TWITTER_API_KEY to .env to enable auto-posting"
+            )
+
+        logger.info("Daily marketing content job complete")
+    except Exception as e:
+        logger.error("Daily marketing job failed: %s", e)
+        await _notify_founder_telegram(f"⚠️ Daily marketing job failed: {e}")
+
 
 class MissionRequest(BaseModel):
     goal: str
@@ -578,6 +711,7 @@ async def landing_page():
                 <a href="#how">How it works</a>
                 <a href="#pricing">Pricing</a>
                 <a href="/security">Security</a>
+                <a href="mailto:founder@tinko.in" style="color: #00ffff;">Contact</a>
                 <a href="#" onclick="gotoProtected('/dashboard'); return false;" class="cta" style="padding: 12px 30px; font-size: 0.9rem; margin: 0;">Launch Your Team →</a>
             </div>
         </nav>
@@ -1069,6 +1203,7 @@ async def landing_page():
                 <a href="/security" style="color: inherit;">Security</a>
                 <a href="#" style="color: inherit;">Twitter</a>
                 <a href="#" style="color: inherit;">Terms</a>
+                <a href="mailto:founder@tinko.in" style="color: #00ffff; font-weight: 600;">founder@tinko.in</a>
             </div>
         </footer>
 
@@ -1538,7 +1673,8 @@ async def security_page():
         </div>
 
         <footer>
-            © 2026 itappens.ai — by blocks and loops technologies
+            © 2026 itappens.ai — by blocks and loops technologies &nbsp;|&nbsp;
+            <a href="mailto:founder@tinko.in" style="color: #00ffff;">founder@tinko.in</a>
         </footer>
     </body>
     </html>
@@ -1854,6 +1990,16 @@ async def razorpay_verify(req: RazorpayVerifyRequest, request: Request):
                 except Exception as e:
                     logger.warning(f"Supabase insert failed: {e}, falling back to JSON")
 
+            # Notify founder via email + Telegram
+            _notify_founder_email(
+                subject=f"💰 New payment received — {plan} plan!",
+                body=f"New customer just paid!\n\nEmail: {email}\nPlan: {plan}\nOrder ID: {req.razorpay_order_id}\nPayment ID: {req.razorpay_payment_id}\nTime: {datetime.utcnow().isoformat()}"
+            )
+            import asyncio
+            asyncio.create_task(_notify_founder_telegram(
+                f"💰 *New payment received!*\n\n📧 `{email}`\n📦 Plan: *{plan}*\n🆔 `{req.razorpay_order_id}`\n⏰ {datetime.utcnow().strftime('%H:%M UTC')}"
+            ))
+
             return {"status": "ok"}
         else:
             raise HTTPException(status_code=400, detail="Invalid signature")
@@ -1912,26 +2058,23 @@ async def join_waitlist(req: WaitlistRequest):
 
     newly_added = add_to_waitlist(email=email, source=req.source)
 
-    # Send confirmation + owner notification
+    # Send confirmation + founder notifications
     if newly_added:
-        try:
-            from tools.gmail_tool import gmail_send_tool
-            # Confirmation to user
-            gmail_send_tool._run(
-                to=email,
-                subject="You're in — itappens.ai is coming for you",
-                body="Hey,\n\nYou're on the list. We'll send onboarding soon.\n\n— itappens.ai"
-            )
-            # Notification to owner
-            owner_email = os.getenv("OWNER_EMAIL", "")
-            if owner_email:
-                gmail_send_tool._run(
-                    to=owner_email,
-                    subject=f"New waitlist signup: {email}",
-                    body=f"New waitlist signup!\n\nEmail: {email}\nSource: {req.source}\nTime: {datetime.utcnow().isoformat()}"
-                )
-        except Exception as e:
-            logger.warning(f"Waitlist email failed: {e}")
+        # Confirmation email to user via SendGrid
+        _notify_founder_email(
+            subject="You're in — itappens.ai is coming for you",
+            body=f"Hey,\n\nYou're on the list. We'll send onboarding soon.\n\n— itappens.ai"
+        )
+        # Notify founder via SendGrid email
+        _notify_founder_email(
+            subject=f"🎉 New waitlist signup: {email}",
+            body=f"New waitlist signup!\n\nEmail: {email}\nSource: {req.source}\nTime: {datetime.utcnow().isoformat()}"
+        )
+        # Notify founder via Telegram immediately
+        import asyncio
+        asyncio.create_task(_notify_founder_telegram(
+            f"🎉 *New waitlist signup!*\n\n📧 `{email}`\n🔗 Source: {req.source}\n⏰ {datetime.utcnow().strftime('%H:%M UTC')}"
+        ))
 
     return {"status": "ok", "newly_added": newly_added}
 
