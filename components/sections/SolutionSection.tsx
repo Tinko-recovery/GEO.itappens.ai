@@ -1,210 +1,153 @@
 'use client';
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const pillars = [
     {
+        num: '01',
         icon: '🧬',
+        tag: 'Pillar One',
         title: 'Semantic Identity Seeding',
-        description: 'Establishing brand entities within the LLM latent space through redundant semantic signals and knowledge graph blueprints. No longer just a keyword — your brand becomes a known entity.',
-        metric: '3.8× higher entity confidence scores',
+        body: "AI models don't find you by keyword — they recognise you as a known entity. We build the structured knowledge definition that makes AI models say your brand's name with confidence when answering questions in your category.",
+        result: '→ Your brand becomes a named entity, not just text'
     },
     {
+        num: '02',
         icon: '⚡',
-        title: 'Information Gain Sprint',
-        description: 'Engineering 40-60 word "Golden Snippets" that provide unique data points. These are verbatim-liftable segments designed for AI reasoning engine extraction.',
-        metric: '87% verbatim extraction rate in testing',
+        tag: 'Pillar Two',
+        title: 'Information Gain Content',
+        body: "AI models cite sources that provide unique, data-dense information — not generic blog posts. We engineer 12–18 high-value content pieces specifically designed to be extracted and quoted by AI reasoning engines when answering your category's queries.",
+        result: '→ Most clients achieve citations within 8–12 weeks'
     },
     {
+        num: '03',
         icon: '🏗️',
+        tag: 'Pillar Three',
         title: 'Machine-Readable Infrastructure',
-        description: 'Deep JSON-LD Schema (Organization, Service, FAQ) that provides the mathematical corroboration AI models require to verify entity claims.',
-        metric: '100% semantic verification on deployment',
+        body: "Deep JSON-LD Schema (Organisation, Service, FAQ, LocalBusiness) that gives AI crawlers like PerplexityBot the mathematical proof they need to trust and cite your brand. Without this, your site is readable to humans but invisible to AI.",
+        result: '→ Full schema coverage on deployment'
     },
     {
+        num: '04',
         icon: '📈',
+        tag: 'Pillar Four',
         title: 'AI Citation Auditing',
-        description: 'Continuous monitoring across ChatGPT, Gemini, and Perplexity. We audit where brand citation is lost and recover brand presence through iterative GEO loops.',
-        metric: 'Bi-weekly AI Presence Delta reports',
-    },
+        body: "We run 200+ targeted prompts across ChatGPT, Perplexity, Gemini and Claude every two weeks to measure your brand's citation frequency. When AI model updates affect your visibility, we know within days and respond with targeted content.",
+        result: '→ Bi-weekly AI presence delta reports'
+    }
 ];
 
-const engines = ['ChatGPT', 'Perplexity', 'Gemini', 'Claude', 'Grok'];
-
 export default function SolutionSection() {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-60px' });
-
-    const fadeUp = (delay = 0) => ({
-        hidden: { y: 40, opacity: 0 },
-        visible: { y: 0, opacity: 1, transition: { duration: 0.8, delay } },
-    });
-
     return (
-        <section id="system" className="section-padding section-alt" ref={ref}>
-            <div className="container-wide">
-                {/* Header */}
-                <motion.div
-                    variants={fadeUp(0)}
-                    initial="hidden"
-                    animate={isInView ? 'visible' : 'hidden'}
-                    style={{ textAlign: 'center', marginBottom: 80 }}
-                >
-                    <span className="eyebrow" style={{ color: 'var(--accent)', marginBottom: 20 }}>
-                        The Solution Stack
-                    </span>
-                    <h2 className="headline-lg" style={{ maxWidth: 850, margin: '0 auto 20px' }}>
-                        The 4-Pillar Framework for <span style={{ color: 'var(--accent)' }}>AI-Cited Brands.</span>
-                    </h2>
-                    <p className="body-lg" style={{ maxWidth: 640, margin: '0 auto' }}>
-                        In 2026, brands are no longer ranked; they are cited. Our GEO stack transition your digital presence from invisible text to <strong style={{ color: 'var(--accent)' }}>authoritative knowledge.</strong>
-                    </p>
-                </motion.div>
-
-                {/* Generative Engine Visual */}
-                <motion.div
-                    variants={fadeUp(0.2)}
-                    initial="hidden"
-                    animate={isInView ? 'visible' : 'hidden'}
-                    style={{ display: 'flex', justifyContent: 'center', marginBottom: 100 }}
-                >
-                    <div style={{ position: 'relative', width: 440, height: 440 }}>
-                        {/* Center core - The Brand Identity */}
-                        <motion.div
-                            animate={{ scale: [0.98, 1.05, 0.98] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                            style={{
-                                position: 'absolute', top: '50%', left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: 120, height: 120, borderRadius: '50%',
-                                background: 'radial-gradient(circle, rgba(0, 245, 255, 0.15) 0%, transparent 70%)',
-                                border: '1px solid var(--accent-border)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                zIndex: 10,
-                                backdropFilter: 'blur(16px)',
-                                boxShadow: '0 0 60px rgba(0, 245, 255, 0.15)'
-                            }}
-                        >
-                            <img src="/logo.png" alt="itappens.ai" style={{ width: '65%', height: '65%', objectFit: 'contain', borderRadius: '50%' }} />
-                        </motion.div>
-
-                        {/* Orbit rings */}
-                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 260, height: 260, borderRadius: '50%', border: '1px solid var(--border-lo)', opacity: 0.5 }} />
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-                            style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 340, height: 340, borderRadius: '50%', border: '1px dashed var(--accent-border)', opacity: 0.2 }}
-                        />
-
-                        {/* Rotating Node Container */}
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
-                            style={{ position: 'absolute', inset: 0 }}
-                        >
-                            {engines.map((engine, i) => {
-                                const angle = (i / engines.length) * 360;
-                                const rad = (angle * Math.PI) / 180;
-                                const radius = 175;
-                                const x = 220 + radius * Math.cos(rad);
-                                const y = 220 + radius * Math.sin(rad);
-                                return (
-                                    <motion.div
-                                        key={engine}
-                                        style={{
-                                            position: 'absolute',
-                                            left: x,
-                                            top: y,
-                                            transform: 'translate(-50%, -50%)',
-                                        }}
-                                    >
-                                        <motion.div
-                                            animate={{ rotate: -360 }}
-                                            transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
-                                            style={{
-                                                padding: '8px 16px',
-                                                borderRadius: 20,
-                                                background: 'rgba(255, 255, 255, 0.03)',
-                                                border: '1px solid var(--border)',
-                                                backdropFilter: 'blur(8px)',
-                                                fontFamily: 'var(--font-sans)',
-                                                fontSize: '0.75rem',
-                                                fontWeight: 700,
-                                                color: 'var(--text-h)',
-                                                whiteSpace: 'nowrap',
-                                                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                                            }}
-                                            whileHover={{ scale: 1.1, borderColor: 'var(--accent)', color: 'var(--accent)' }}
-                                        >
-                                            {engine}
-                                        </motion.div>
-                                    </motion.div>
-                                );
-                            })}
-                        </motion.div>
-
-                        <motion.svg
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
-                            style={{ position: 'absolute', inset: 0, width: 440, height: 440, pointerEvents: 'none', opacity: 0.2 }}
-                        >
-                            {engines.map((engine, i) => {
-                                const angle = (i / engines.length) * 360;
-                                const rad = (angle * Math.PI) / 180;
-                                const radius = 175;
-                                const x2 = 220 + radius * Math.cos(rad);
-                                const y2 = 220 + radius * Math.sin(rad);
-                                return (
-                                    <line
-                                        key={engine}
-                                        x1="220" y1="220" x2={x2} y2={y2}
-                                        stroke="url(#lineGradient)"
-                                        strokeWidth="1"
-                                        strokeDasharray="4 4"
-                                    />
-                                );
-                            })}
-                            <defs>
-                                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor="var(--accent)" stopOpacity="0" />
-                                    <stop offset="100%" stopColor="var(--accent)" stopOpacity="1" />
-                                </linearGradient>
-                            </defs>
-                        </motion.svg>
-                    </div>
-                </motion.div>
-
-                {/* Pillars */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
-                    {pillars.map((p, i) => (
-                        <motion.div
-                            key={p.title}
-                            variants={fadeUp(0.3 + i * 0.1)}
-                            initial="hidden"
-                            animate={isInView ? 'visible' : 'hidden'}
-                            className="phase-card"
-                            style={{ background: 'rgba(255, 255, 255, 0.015)', borderColor: 'rgba(255,255,255,0.05)' }}
-                        >
-                            <div style={{ fontSize: '2rem', marginBottom: 16, opacity: 0.8 }}>{p.icon}</div>
-                            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 600, color: 'var(--text-h)', marginBottom: 12, fontStyle: 'italic' }}>
-                                {p.title}
-                            </h3>
-                            <p className="body-lg" style={{ fontSize: '0.95rem', lineHeight: 1.8, marginBottom: 20, opacity: 0.8 }}>
-                                {p.description}
-                            </p>
-                            <div style={{
-                                padding: '10px 16px', borderRadius: 10,
-                                background: 'var(--accent-dim)',
-                                border: '1px solid var(--accent-border)',
-                                fontFamily: 'var(--font-sans)',
-                                fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent)',
-                                display: 'inline-flex', alignItems: 'center', gap: 8
-                            }}>
-                                <span style={{ fontSize: '1rem' }}>📈</span> {p.metric}
-                            </div>
-                        </motion.div>
-                    ))}
+        <section id="system" style={{ paddingBottom: '80px' }}>
+            <div style={{ padding: '80px 48px 0', display: 'flex', alignItems: 'flex-start', gap: '48px', marginBottom: '48px' }}>
+                <div style={{ fontSize: '10px', letterSpacing: '2px', color: 'var(--muted2)', paddingTop: '4px', minWidth: '32px' }}>
+                    01
                 </div>
+                <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>
+                        The 4-Pillar System
+                    </div>
+                    <h2 className="headline-lg">
+                        How your brand becomes
+                        <span style={{ display: 'block', paddingLeft: '56px', color: 'var(--text2)' }}>
+                            the <span style={{ color: 'var(--accent)' }}>default answer.</span>
+                        </span>
+                    </h2>
+                    <p style={{
+                        fontSize: '13px', color: 'var(--text2)', maxWidth: '480px', lineHeight: '1.8',
+                        marginTop: '20px', borderLeft: '2px solid var(--surface3)', paddingLeft: '20px'
+                    }}>
+                        In 2026, brands are no longer ranked — they are cited. Traditional SEO gets you on Google Page 1. GEO gets you named by AI. These are two completely different games. We play the new one.
+                    </p>
+                </div>
+            </div>
+
+            <div style={{
+                margin: '0 48px',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                border: '1px solid var(--border2)'
+            }}>
+                {pillars.map((p, idx) => (
+                    <div
+                        key={idx}
+                        style={{
+                            padding: '40px 36px',
+                            borderRight: idx % 2 === 0 ? '1px solid var(--border)' : 'none',
+                            borderBottom: idx < 2 ? '1px solid var(--border)' : 'none',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}
+                        className="pillar-hover"
+                    >
+                        <div style={{
+                            position: 'absolute', top: -10, right: 16,
+                            fontFamily: 'var(--font-display)', fontSize: '80px', fontWeight: 800,
+                            color: 'rgba(232, 213, 163, 0.03)', lineHeight: 1, pointerEvents: 'none'
+                        }}>
+                            {p.num}
+                        </div>
+                        <div style={{ fontSize: '24px', marginBottom: '16px' }}>{p.icon}</div>
+                        <div style={{ fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '10px' }}>
+                            {p.tag}
+                        </div>
+                        <h3 style={{
+                            fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px',
+                            color: 'var(--text)', marginBottom: '12px', lineHeight: 1.2
+                        }}>
+                            {p.title}
+                        </h3>
+                        <p style={{ fontSize: '12px', color: 'var(--text2)', lineHeight: 1.8, marginBottom: '16px' }}>
+                            {p.body}
+                        </p>
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '8px',
+                            fontSize: '10px', color: 'var(--accent)', border: '1px solid var(--accent-border)',
+                            padding: '5px 12px', background: 'var(--accent-dim)'
+                        }}>
+                            {p.result}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="section-divider" style={{ marginTop: '48px', height: '1px', background: 'linear-gradient(to right, transparent, var(--border2), transparent)', margin: '48px 48px 0' }} />
+
+            <div style={{
+                margin: '48px 48px 0',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                border: '1px solid var(--border2)',
+                overflow: 'hidden'
+            }}>
+                {[
+                    { val: '<200', label: 'Indian brands\nGEO-ready today' },
+                    { val: '90 days', label: 'To first verified\nAI citations', acc: true },
+                    { val: '5x', label: 'Growth in AI search\nvs traditional search' },
+                    { val: '0', label: 'Indian agencies\nGEO-first before us', acc: true }
+                ].map((s, idx) => (
+                    <div
+                        key={idx}
+                        style={{
+                            padding: '28px 24px',
+                            borderRight: idx === 3 ? 'none' : '1px solid var(--border)',
+                            background: 'var(--bg)'
+                        }}
+                    >
+                        <div style={{
+                            fontFamily: 'var(--font-display)', fontSize: '40px', fontWeight: 800,
+                            color: s.acc ? 'var(--accent)' : 'var(--text)', lineHeight: 1, marginBottom: '6px'
+                        }}>
+                            {s.val}
+                        </div>
+                        <div style={{
+                            fontSize: '10px', color: 'var(--muted)', letterSpacing: '1.5px',
+                            textTransform: 'uppercase', lineHeight: 1.5, whiteSpace: 'pre-line'
+                        }}>
+                            {s.label}
+                        </div>
+                    </div>
+                ))}
             </div>
         </section>
     );

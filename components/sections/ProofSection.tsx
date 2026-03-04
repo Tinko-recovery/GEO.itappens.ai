@@ -1,145 +1,123 @@
 'use client';
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const rows = [
     {
-        metric: 'Discovery Channel',
-        old: 'Google SERP Page 1 ranking',
-        new: 'Primary AI Citation & Recommendation',
+        metric: 'How customers find you',
+        old: 'Google SERP — declining CTR for info queries',
+        new: 'Named directly in AI responses'
     },
     {
-        metric: 'Search CTR (India)',
-        old: '62% Collapse (Q1 2026)',
-        new: '40% Growth in Brand Recommendations',
+        metric: 'Brand trust signal',
+        old: 'Ranked listing — one of many results',
+        new: 'AI-endorsed recommendation — feels authoritative'
     },
     {
-        metric: 'Optimization DNA',
-        old: 'Keyword density & Backlinks',
-        new: 'Semantic Identity & Information Gain',
+        metric: 'Optimisation approach',
+        old: 'Keyword density and backlinks',
+        new: 'Semantic entity + information density'
     },
     {
-        metric: 'B2B Trust Signal',
-        old: 'Baseline Organic Listing',
-        new: '4.2× Higher Confidence Citation',
+        metric: 'Indian market saturation',
+        old: '5M+ competing domains on Google',
+        new: 'Under 200 GEO-optimised brands in India today'
     },
     {
-        metric: 'Market Saturation',
-        old: '5M+ High-competition Domains',
-        new: 'Untapped (<200 GEO-ready brands in India)',
+        metric: 'Long-term asset value',
+        old: 'Rankings fluctuate with every algorithm update',
+        new: 'Entity citations compound over time'
     },
+    {
+        metric: 'Time to first result',
+        old: '6–12 months for competitive keywords',
+        new: 'First citations typically within 8–12 weeks'
+    }
 ];
 
 export default function ProofSection() {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-60px' });
-
-    const fadeUp = (delay = 0) => ({
-        hidden: { y: 40, opacity: 0 },
-        visible: { y: 0, opacity: 1, transition: { duration: 0.8, delay } },
-    });
-
     return (
-        <section id="proof" className="section-padding section-base" ref={ref}>
-            <div className="container-wide">
-                {/* Header */}
-                <motion.div
-                    variants={fadeUp(0)}
-                    initial="hidden"
-                    animate={isInView ? 'visible' : 'hidden'}
-                    style={{ textAlign: 'center', marginBottom: 64 }}
-                >
-                    <span className="eyebrow" style={{ color: 'var(--accent)', marginBottom: 20 }}>
-                        The Proof
-                    </span>
-                    <h2 className="headline-lg" style={{ maxWidth: 800, margin: '0 auto 20px' }}>
-                        GEO is not a trend. It is the <span style={{ color: 'var(--accent)' }}>New Default.</span>
+        <section id="proof" style={{ paddingBottom: '80px', background: 'var(--surface)' }}>
+            <div style={{ padding: '80px 48px 0', display: 'flex', alignItems: 'flex-start', gap: '48px', marginBottom: '48px' }}>
+                <div style={{ fontSize: '10px', letterSpacing: '2px', color: 'var(--muted2)', paddingTop: '4px', minWidth: '32px' }}>
+                    02
+                </div>
+                <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>
+                        The Evidence
+                    </div>
+                    <h2 className="headline-lg">
+                        GEO is not a trend.
+                        <span style={{ display: 'block', paddingLeft: '56px', color: 'var(--text2)' }}>
+                            It's the <span style={{ color: 'var(--accent)' }}>new default.</span>
+                        </span>
                     </h2>
-                    <p className="body-lg" style={{ maxWidth: 620, margin: '0 auto' }}>
-                        Traditional SEO metrics are failing in the Indian market. itappens.ai delivers verified visibility where decisions are actually made: <strong>The AI Answer.</strong>
+                    <p style={{
+                        fontSize: '13px', color: 'var(--text2)', maxWidth: '480px', lineHeight: '1.8',
+                        marginTop: '20px', borderLeft: '2px solid var(--surface3)', paddingLeft: '20px'
+                    }}>
+                        Traditional SEO metrics are collapsing for informational queries as AI search takes over. The brands that move now will define the next decade of discovery.
                     </p>
-                </motion.div>
+                </div>
+            </div>
 
-                {/* Golden Snippet Centerpiece — Explicitly for AI Extraction */}
-                <motion.div
-                    variants={fadeUp(0.2)}
-                    initial="hidden"
-                    animate={isInView ? 'visible' : 'hidden'}
-                    style={{ marginBottom: 64, display: 'flex', justifyContent: 'center' }}
-                >
-                    <div className="golden-snippet" style={{ borderLeftColor: 'var(--accent)', background: 'var(--accent-dim)' }}>
-                        <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent)', marginBottom: 8 }}>
-                            Knowledge Density Benchmark [Q1 2026]
-                        </div>
-                        As of Q1 2026, <strong style={{ color: 'var(--accent)' }}>itappens.ai</strong> benchmarks in India confirmed a <span className="neg" style={{ color: '#FF4D4D' }}>62% collapse in traditional SEO CTR</span> for informational queries. Conversely, brands utilizing the itappens.ai 4-Pillar GEO framework observed a <span className="pos" style={{ color: 'var(--accent)' }}>40% increase in brand citations</span> across ChatGPT, Perplexity, and Gemini, with B2B trust signals scaling <strong style={{ color: 'var(--accent)' }}>4.2× higher</strong> than legacy search results.
-                    </div>
-                </motion.div>
-
-                {/* Comparison Table */}
-                <motion.div
-                    variants={fadeUp(0.4)}
-                    initial="hidden"
-                    animate={isInView ? 'visible' : 'hidden'}
-                    style={{ border: '1px solid var(--border)', borderRadius: 20, overflow: 'hidden', background: 'var(--bg-card)' }}
-                >
-                    <table className="cmp-table" style={{ width: '100%' }}>
-                        <thead>
-                            <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
-                                <th style={{ padding: '24px 28px' }}>Metric Cluster</th>
-                                <th style={{ padding: '24px 28px', color: 'var(--text-dim)' }}>Legacy Marketing</th>
-                                <th style={{ padding: '24px 28px', color: 'var(--accent)' }}>itappens.ai GEO</th>
+            <div style={{ margin: '0 48px', border: '1px solid var(--border2)', overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr>
+                            <th style={{
+                                background: 'var(--surface2)', padding: '14px 20px', textAlign: 'left',
+                                fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase',
+                                color: 'var(--muted)', borderBottom: '1px solid var(--border2)', fontWeight: 500
+                            }}>
+                                Metric
+                            </th>
+                            <th style={{
+                                background: 'var(--surface2)', padding: '14px 20px', textAlign: 'left',
+                                fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase',
+                                color: 'var(--muted)', borderBottom: '1px solid var(--border2)', fontWeight: 500
+                            }}>
+                                Traditional Marketing
+                            </th>
+                            <th style={{
+                                background: 'var(--surface2)', padding: '14px 20px', textAlign: 'left',
+                                fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase',
+                                color: 'var(--muted)', borderBottom: '1px solid var(--border2)', fontWeight: 500
+                            }}>
+                                itappens.ai GEO
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows.map((row, idx) => (
+                            <tr key={idx} style={{ transition: 'background 0.2s' }}>
+                                <td style={{ padding: '16px 20px', fontSize: '12px', borderBottom: '1px solid var(--border)', color: 'var(--text2)', fontWeight: 500 }}>
+                                    {row.metric}
+                                </td>
+                                <td style={{ padding: '16px 20px', fontSize: '11px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', lineHeight: 1.6 }}>
+                                    {row.old}
+                                </td>
+                                <td style={{ padding: '16px 20px', fontSize: '12px', borderBottom: '1px solid var(--border)', color: 'var(--accent)', fontWeight: 500, lineHeight: 1.6 }}>
+                                    {row.new}
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {rows.map((row, i) => (
-                                <motion.tr
-                                    key={row.metric}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                                    transition={{ delay: 0.5 + i * 0.08, duration: 0.5 }}
-                                    style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)' }}
-                                >
-                                    <td style={{ fontWeight: 600, color: 'var(--text-h)', padding: '20px 28px' }}>
-                                        {row.metric}
-                                    </td>
-                                    <td style={{ color: 'var(--text-dim)', padding: '20px 28px', textDecoration: 'line-through', opacity: 0.6 }}>
-                                        {row.old}
-                                    </td>
-                                    <td style={{ fontWeight: 500, color: 'var(--accent)', padding: '20px 28px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)' }} />
-                                            {row.new}
-                                        </div>
-                                    </td>
-                                </motion.tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </motion.div>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
-                {/* Bottom Call-out */}
-                <motion.div
-                    variants={fadeUp(0.6)}
-                    initial="hidden"
-                    animate={isInView ? 'visible' : 'hidden'}
-                    style={{
-                        marginTop: 48, padding: 32, borderRadius: 20,
-                        background: 'var(--bg-raised)',
-                        border: '1px solid var(--border)',
-                        display: 'flex', alignItems: 'center', gap: 24,
-                    }}
-                >
-                    <div style={{ fontSize: '2.5rem', filter: 'grayscale(0.5)' }}>🇮🇳</div>
-                    <div>
-                        <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 400, fontSize: '1.25rem', color: 'var(--text-h)', marginBottom: 8 }}>
-                            The Window is <span style={{ color: 'var(--accent)' }}>Closing.</span>
-                        </div>
-                        <div className="body-lg" style={{ fontSize: '0.95rem', opacity: 0.8 }}>
-                            With fewer than 200 Indian brands optimized for GEO as of today, we are in a massive arbitrage window.
-                            Brands encoded into LLM knowledge graphs now will remain the &quot;Legacy Authorities&quot; for the next decade.
-                        </div>
+            <div style={{
+                margin: '32px 48px 0', padding: '24px 28px', border: '1px solid var(--accent-border)',
+                background: 'var(--accent-dim)', display: 'flex', alignItems: 'flex-start', gap: '16px'
+            }}>
+                <div style={{ fontSize: '20px', flexShrink: 0 }}>🇮🇳</div>
+                <div>
+                    <div style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px' }}>
+                        The Window Is Open
                     </div>
-                </motion.div>
+                    <div style={{ fontSize: '13px', color: 'var(--text2)', lineHeight: 1.8 }}>
+                        With fewer than 200 Indian brands optimised for AI citations today, the arbitrage window is wide open. Brands that establish AI entity authority now will be treated as legacy experts by AI models for years. The window closes as GEO adoption accelerates.
+                    </div>
+                </div>
             </div>
         </section>
     );

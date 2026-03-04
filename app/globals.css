@@ -5,34 +5,37 @@
    Inspired by: Linear, Vercel, Framer — premium dark SaaS
    ─────────────────────────────────────────────────── */
 :root {
-  /* Backgrounds — deep navy/purple with depth */
-  --bg-base: #02040A;
-  --bg-raised: #050714;
-  --bg-card: rgba(255, 255, 255, 0.02);
-  --bg-card-hover: rgba(255, 255, 255, 0.04);
-
-  /* Primary accent — Cyan / Electric Blue */
-  --accent: #00F5FF;
-  --accent-dim: rgba(0, 245, 255, 0.1);
-  --accent-border: rgba(0, 245, 255, 0.2);
-
-  /* Data accents */
-  --emerald: #10B981;
-  --rose: #F43F5E;
-
-  /* Text */
-  --text-h: #F8FAFC;
-  --text-body: #94A3B8;
-  --text-dim: #64748B;
+  /* Backgrounds — deep earthy tones */
+  --bg: #0c0b08;
+  --bg2: #111009;
+  --surface: #161410;
+  --surface2: #1c1a14;
+  --surface3: #242018;
 
   /* Borders */
-  --border: rgba(255, 255, 255, 0.06);
-  --border-lo: rgba(255, 255, 255, 0.03);
+  --border: rgba(232, 213, 163, 0.06);
+  --border2: rgba(232, 213, 163, 0.12);
+  --border3: rgba(232, 213, 163, 0.2);
+
+  /* Text & Accents */
+  --text: #e8d5a3;
+  --text2: #a89870;
+  --muted: #5a5040;
+  --muted2: #3a3020;
+
+  --accent: #ff6b1a;
+  /* Orange */
+  --accent2: #ff8c42;
+  --accent-dim: rgba(255, 107, 26, 0.08);
+  --accent-border: rgba(255, 107, 26, 0.25);
+
+  --gold: #c8a84a;
+  --gold-dim: rgba(200, 168, 74, 0.08);
 
   /* Fonts */
-  --font-display: 'Inter', system-ui, sans-serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-body: 'DM Mono', monospace;
+  --font-sans: 'Syne', system-ui, sans-serif;
 }
 
 /* ─── RESET ───────────────────────────────────────── */
@@ -51,15 +54,15 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--bg-base);
-  color: var(--text-body);
+  background-color: var(--bg);
+  color: var(--text);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(129, 140, 248, 0.25);
-  color: var(--indigo);
+  background: var(--accent-dim);
+  color: var(--accent);
 }
 
 ::-webkit-scrollbar {
@@ -67,11 +70,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-base);
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--indigo);
+  background: var(--accent);
   border-radius: 1px;
 }
 
@@ -95,20 +98,20 @@ body {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 60% 50% at 20% 15%, rgba(129, 140, 248, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 80% 85%, rgba(52, 211, 153, 0.04) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(12, 13, 26, 0.5) 0%, transparent 100%),
-    linear-gradient(165deg, #07080F 0%, #0C0D1A 35%, #090A14 65%, #07080F 100%);
+    radial-gradient(ellipse 60% 50% at 20% 15%, rgba(255, 107, 26, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 85%, rgba(200, 168, 74, 0.03) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(12, 11, 8, 0.8) 0%, transparent 100%),
+    linear-gradient(165deg, #0c0b08 0%, #111009 35%, #0c0b08 100%);
 }
 
 /* ─── GRAIN ───────────────────────────────────────── */
 .grain-overlay {
   position: fixed;
   inset: 0;
-  z-index: 3;
+  z-index: 1000;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  opacity: 0.75;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity: 0.5;
   mix-blend-mode: overlay;
 }
 
@@ -119,17 +122,16 @@ body {
   z-index: 2;
   pointer-events: none;
   background: radial-gradient(circle 500px at var(--cursor-x, 50%) var(--cursor-y, 50%),
-      rgba(129, 140, 248, 0.04) 0%, transparent 70%);
+      rgba(255, 107, 26, 0.03) 0%, transparent 70%);
 }
 
 /* ─── SECTION BGs — solid to block fixed bg ────────── */
-/* Every section must have a solid bg — no more transparent sections */
 .section-base {
-  background: var(--bg-base);
+  background: var(--bg);
 }
 
 .section-alt {
-  background: var(--bg-raised);
+  background: var(--surface);
 }
 
 /* ─── LAYOUT ─────────────────────────────────────────── */
@@ -161,45 +163,52 @@ body {
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-family: var(--font-sans);
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--indigo);
-  margin-bottom: 20px;
+  color: var(--accent);
+  margin-bottom: 28px;
 }
 
-.eyebrow::before,
-.eyebrow::after {
-  content: '';
-  width: 22px;
+.eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.eyebrow-div {
+  width: 40px;
   height: 1px;
-  background: var(--indigo);
-  opacity: 0.4;
+  background: var(--muted2);
 }
 
 /* ─── TYPOGRAPHY ─────────────────────────────────────── */
 .headline-xl {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 7.5vw, 6.5rem);
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: 0.1em;
-  line-height: 1.0;
-  color: var(--text-h);
+  font-size: clamp(48px, 7.5vw, 96px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  color: var(--text);
 }
 
 .headline-lg {
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: 0.04em;
-  line-height: 1.15;
-  color: var(--text-h);
-  margin-bottom: 20px;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1.5px;
+  color: var(--text);
+}
+
+.text-sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.8;
 }
 
 .headline-sm {

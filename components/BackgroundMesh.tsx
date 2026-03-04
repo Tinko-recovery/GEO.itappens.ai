@@ -51,7 +51,7 @@ export default function BackgroundMesh() {
                         <motion.circle
                             key={s.id}
                             cx={`${s.x}%`} cy={`${s.y}%`} r={`${s.r * 0.22}%`}
-                            fill="#00F5FF"
+                            fill="var(--accent)"
                             initial={{ opacity: 0.1 }}
                             animate={{ opacity: [0.1, 0.6, 0.1] }}
                             transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: 'easeInOut' }}
