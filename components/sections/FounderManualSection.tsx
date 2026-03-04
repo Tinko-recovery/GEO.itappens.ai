@@ -4,7 +4,7 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 
 const phases = [
     {
-        n: '01', rev: '₹0 → Start',
+        n: '01',
         title: 'AI Presence Audit',
         hook: 'Diagnose the gap',
         desc: '200+ targeted prompts across ChatGPT, Perplexity, Gemini, and Claude measure your baseline citation rate. Unoptimised brands typically appear in 0–3% of relevant AI responses. The audit makes the invisible visible.',
@@ -12,7 +12,7 @@ const phases = [
         out: 'Citation Frequency Report · Competitor Gap Map',
     },
     {
-        n: '02', rev: '₹0 → ₹1L',
+        n: '02',
         title: 'Entity Architecture',
         hook: 'Build the AI identity',
         desc: 'We design your semantic entity — the structured knowledge definition AI models use when reasoning about your brand. This is the foundation your category\'s AI answers will reference for years.',
@@ -20,7 +20,7 @@ const phases = [
         out: 'Brand Entity Document · Knowledge Graph Blueprint',
     },
     {
-        n: '03', rev: '₹1L → ₹10L',
+        n: '03',
         title: 'Golden Snippet Sprint',
         hook: 'Plant flags in AI memory',
         desc: '12–18 high-information-gain content pieces, each engineered with 40-60 word, data-dense paragraphs that AI models tend to extract verbatim when answering related queries.',
@@ -28,7 +28,7 @@ const phases = [
         out: '18 GEO assets · Liftability score report',
     },
     {
-        n: '04', rev: '₹10L → ₹30L',
+        n: '04',
         title: 'Schema & Technical Layer',
         hook: "Speak the machine's language",
         desc: 'Full JSON-LD deployment: Organization, Service, and FAQPage schemas. AI crawlers like PerplexityBot and OAI-SearchBot consume these directly, corroborating what your content claims.',
@@ -36,7 +36,7 @@ const phases = [
         out: '100% schema coverage · Structured data validation',
     },
     {
-        n: '05', rev: '₹30L → ₹75L',
+        n: '05',
         title: 'Citation Amplification',
         hook: 'Build the corroboration network',
         desc: '15+ authoritative third-party references corroborating your entity claims. AI models weight multi-source confirmation heavily when forming answers — we engineer that confirmation.',
@@ -44,7 +44,7 @@ const phases = [
         out: '15+ entity references · Source map',
     },
     {
-        n: '06', rev: '₹75L → ₹1Cr',
+        n: '06',
         title: 'GEO Intelligence Layer',
         hook: 'Compound the asset',
         desc: 'Monthly citation dashboards, quarterly entity refreshes, and real-time alerts when AI model updates affect your citation posture. GEO is not a one-time project — it is a compounding strategic asset.',
@@ -158,16 +158,8 @@ export default function FounderManualSection() {
 function PhaseContent({ p }: { p: typeof phases[0] }) {
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4, gap: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', marginBottom: 4, gap: 8 }}>
                 <div className="phase-num">{p.n}</div>
-                <span style={{
-                    background: 'var(--indigo-dim)', border: '1px solid var(--indigo-border)',
-                    borderRadius: 100, padding: '3px 10px',
-                    fontFamily: 'var(--font-sans)', fontSize: '0.63rem',
-                    fontWeight: 700, color: 'var(--indigo)', letterSpacing: '0.06em', whiteSpace: 'nowrap',
-                }}>
-                    {p.rev}
-                </span>
             </div>
             <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.6rem', fontWeight: 700, color: 'var(--indigo)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 6 }}>
                 {p.hook}

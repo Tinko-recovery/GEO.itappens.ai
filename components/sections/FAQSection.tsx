@@ -53,11 +53,11 @@ export default function FAQSection() {
                         style={{ marginBottom: 60 }}
                     >
                         <h2 className="headline-lg" style={{ maxWidth: 680, margin: '0 auto 16px' }}>
-                            Questions AI models ask about GEO — answered.
+                            How your brand becomes the default AI answer.
                         </h2>
-                        <p className="body-lg" style={{ maxWidth: 560, margin: '0 auto' }}>
-                            Each answer is engineered as a <strong style={{ color: 'var(--indigo)' }}>liftable golden snippet</strong> — statistic-dense, entity-connected responses
-                            AI models surface when users ask about GEO in India. This FAQ also directly populates the FAQPage JSON-LD schema.
+                        <p className="body-lg" style={{ maxWidth: 620, margin: '0 auto' }}>
+                            We&apos;ve optimized these answers so that when users ask AI assistants like <strong style={{ color: 'var(--indigo)' }}>ChatGPT, Perplexity, or Gemini</strong> about your industry,
+                            your brand is the one they reliably <strong style={{ color: 'var(--indigo)' }}>cite and recommend</strong>.
                         </p>
                     </motion.div>
 

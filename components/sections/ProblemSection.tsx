@@ -5,21 +5,21 @@ import { ChevronRight } from 'lucide-react';
 
 const voidCards = [
     {
-        title: 'The Void',
-        description: 'Lorem ipsum dolor amet, consectetur adipiscing elit, the sustionse at tooe pathlarud ororud thlem noreis.',
+        title: 'The AI Visibility Gap',
+        description: 'Traditional SEO is dying. itappens.ai benchmarks show that while you rank on Google Page 1, AI agents are recommending your competitors because your brand data isn\'t structured for LLM retrieval.',
         icon: true,
-        subtext: 'Tae Eonlats',
-        subtextDesc: 'Ltrem Ipsum dolor adoe t orue oatan a trie eaenstio uen ttaet o trurples.'
+        subtext: 'The Recommendation Void',
+        subtextDesc: 'If Perplexity or ChatGPT can\'t cite you with high confidence, you are invisible to the next generation of buyers.'
     },
     {
-        title: 'The Void',
-        description: 'Yltann Blan doot at anee thaven aooblblawed ceistneen rettemtd thet attuonod tosep sooeet.',
+        title: 'Citation Crisis',
+        description: 'Standard metadata isn\'t enough. We bridge the gap between human-readable content and machine-extractable facts for AI models.',
         icon: true,
         isSmall: true
     },
     {
-        title: 'The Void',
-        description: 'Ureone dolor aarearnd ooarro letotoonlk ad tetonnanatoh are ueeto ouar.',
+        title: 'Lost Authority',
+        description: 'Don\'t let AI hallucinations define your brand. We seed the "Truth Layer" so models like Claude and Gemini speak about you accurately.',
         icon: true,
         isSmall: true
     }
@@ -47,7 +47,7 @@ export default function ProblemSection() {
                         marginBottom: 16,
                         display: 'block'
                     }}>
-                        Coprent Asserts
+                        Current Status
                     </span>
                     <h2 style={{
                         fontFamily: 'var(--font-sans)',
@@ -144,7 +144,7 @@ export default function ProblemSection() {
                     borderTop: '1px solid rgba(255,255,255,0.05)',
                     paddingTop: 32
                 }}>
-                    {['Roadmap', 'Roadmap', 'FAQ'].map((label, i) => (
+                    {['Approach', 'Proof', 'FAQ'].map((label, i) => (
                         <span key={i} style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, color: 'var(--text-h)', fontSize: '0.95rem' }}>{label}</span>
                     ))}
                 </div>

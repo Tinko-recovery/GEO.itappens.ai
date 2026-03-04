@@ -62,68 +62,25 @@ export default function NavBar() {
                         </span>
                     </a>
 
-                    {/* Middle: Search Bar (Glassmorphism) */}
-                    <div style={{
-                        flex: 1,
-                        maxWidth: 400,
-                        margin: '0 40px',
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center'
-                    }}>
-                        <div style={{
-                            width: '100%',
-                            height: 42,
-                            borderRadius: 21,
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            backdropFilter: 'blur(10px)',
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
-                            padding: '0 16px 0 44px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            color: 'var(--text-body)',
-                            fontSize: '0.9rem',
-                            transition: 'all 0.3s ease',
-                        }}>
-                            itappens.ai
-                        </div>
-                        <Search
-                            size={18}
-                            style={{ position: 'absolute', left: 16, color: 'rgba(255,255,255,0.4)' }}
-                        />
-                        <Search
-                            size={18}
-                            style={{ position: 'absolute', right: 16, color: 'rgba(255,255,255,0.6)' }}
-                        />
-                    </div>
-
-                    {/* Right: Hamburger Menu */}
-                    <button style={{
-                        background: 'none', border: 'none', color: 'var(--text-h)',
-                        cursor: 'pointer', display: 'flex', alignItems: 'center'
-                    }}>
-                        <Menu size={28} />
-                    </button>
-                </div>
-
-                {/* Second Navigation Row (Mockup style) */}
-                <div style={{
-                    maxWidth: 1200, margin: '20px auto 0', padding: '0 24px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
-                    gap: 32
-                }}>
+                    {/* Right: Navigation Links */}
                     <div style={{ display: 'flex', gap: 32 }}>
-                        {['How', 'Analysis', 'Sone'].map((item) => (
+                        {['System', 'Proof', 'Roadmap', 'FAQ'].map((item) => (
                             <a
                                 key={item}
                                 href={`#${item.toLowerCase()}`}
                                 style={{
-                                    textDecoration: 'none', color: 'var(--accent)',
-                                    fontFamily: 'var(--font-sans)', fontSize: '0.85rem',
-                                    fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4
+                                    textDecoration: 'none',
+                                    color: 'var(--accent)',
+                                    fontFamily: 'var(--font-sans)',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 600,
+                                    letterSpacing: '0.02em',
+                                    transition: 'opacity 0.2s',
                                 }}
+                                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+                                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
                             >
-                                {item} {item === 'Sone' && <ChevronDown size={14} />}
+                                {item}
                             </a>
                         ))}
                     </div>

@@ -91,7 +91,7 @@ export default function HeroSection() {
                     justifyContent: 'center'
                 }}
             >
-                {['Roadmap', 'Roadmap', 'FAQ'].map((link, i) => (
+                {['Approach', 'Proof', 'Roadmap', 'FAQ'].map((link, i) => (
                     <a
                         key={i}
                         href={`#${link.toLowerCase()}`}
