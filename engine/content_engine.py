@@ -31,11 +31,8 @@ class ContentEngine:
         hook = data.get("hook", "")
         category = data.get("category", "General")
         
-        # Dynamic Footer
-        footer = (
-            f"\n\nMeta note: This post was autonomously created by an AI agent I built @ {self.company_name} — testing what's possible. {self.footer_branding}\n\n"
-            "Disclaimer: Content is AI-generated and fact-checked by me. This is an independent personal experiment."
-        )
+        # Simplied Footer as per user request
+        footer = "\n\n- This post was autonomously posted by an AI agent built by Sadish Sugumaran"
         sheet_footer = data.get("footer", "")
         if sheet_footer:
             footer = f"\n\n{sheet_footer}\n" + footer
@@ -56,13 +53,15 @@ class ContentEngine:
             f"Suggested Hook: {hook}\n"
             f"{directive_context}\n\n"
             "Generate four things:\n"
-            "1. A Personal LinkedIn post: Write in your natural, human voice. No selling. Focus on the raw insight, the 'why', and a thought-provoking question. "
-            "Keep it strictly educational and relatable. Use 'I' and 'you'. NO MENTION of services.\n"
-            f"2. An Agency LinkedIn post: Write as the founder of {self.company_name}. Mention the transformation we provide for clients. "
-            "Include a strong call to action (e.g., 'This is exactly what we automate for our clients... link in bio').\n"
+            "1. A Personal LinkedIn post: Write in your natural, human voice. Focus on a raw, vulnerable insight or a 'lightbulb moment'. "
+            "STRICT RULE: Do NOT mention 'itappens.ai', 'automation services', or any company name. This is 100% human thought-leadership. "
+            "Use 'I' and 'you'. Focus on the 'why' and end with a genuine question. NO SELLING.\n"
+            f"2. An Agency LinkedIn post: Write as the founder of {self.company_name}. Focus on the business value of automation. "
+            "Mention how we solve this specific problem for clients. Include a clear call to action (e.g., 'DM to see our workflow').\n"
             "CRITICAL: Both LinkedIn posts must be STRICTLY UNDER 900 characters.\n"
-            "3. An Instagram caption: Scroll-stopping human emotion hook. Fast-paced. CTA to DM 'AUTOMATE'. 5-8 hashtags.\n"
-            "4. A DALL-E Image Prompt: Cinematic, evocative visual (no text).\n\n"
+            "3. An Instagram caption: Fast-paced, high-energy hook. Focus on the emotional win. CTA to DM 'AUTOMATE'. 5 hashtags.\n"
+            "4. A DALL-E Image Prompt: A cinematic, high-end visual that represents the CORE METAPHOR of this topic. "
+            "Avoid literal office shots. Use dramatic lighting, surrealism, or high-fashion aesthetics. NO WORDS in the image.\n\n"
             "Format the output EXACTLY as follows:\n"
             "---LINKEDIN_PERSONAL---\n"
             "[Personal Content]\n"
@@ -173,7 +172,7 @@ class ContentEngine:
             "For each slide provide:\n"
             "- HEADING: A provocative or deep-insight line (max 6 words)\n"
             "- TEXT: A companion insight that challenges the reader (max 15 words)\n"
-            "- IMAGE_PROMPT: A DALL-E prompt for a cinematic, high-quality visual background (no text, evocative, dramatic lighting)\n\n"
+            "- IMAGE_PROMPT: A DALL-E prompt for a cinematic, high-end visual background (surreal, metaphoric, dramatic lighting, 8k resolution, no text, moody atmosphere)\n\n"
             f"Also provide a REEL_CAPTION: A short, compelling description ending with '{self.reel_cta}' + 5 hashtags.\n\n"
             "Format EXACTLY as:\n"
             "---SLIDE_1---\n"
