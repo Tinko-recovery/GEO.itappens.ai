@@ -1,0 +1,10 @@
+anthropic
+openai
+requests
+python-dotenv
+python-telegram-bot
+flask
+gunicorn
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib

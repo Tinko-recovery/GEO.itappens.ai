@@ -5,13 +5,13 @@ import CursorSpotlight from "@/components/CursorSpotlight";
 import BackgroundMesh from "@/components/BackgroundMesh";
 
 export const metadata: Metadata = {
-  title: "itappens.ai — India's GEO Practice | Generative Engine Optimization",
+  title: "itappens.ai — AI Brand Visibility & Content Automation",
   description:
-    "When your customer asks ChatGPT who to trust in your industry — your name should be the answer. itappens.ai engineers AI citations for Indian brands.",
+    "Engineering AI citations for ChatGPT and automating human-first social media content. itappens.ai is India's pioneer in GEO and Zero-Touch content marketing.",
   keywords: [
-    "GEO agency India", "Generative Engine Optimization India", "AI citation growth",
+    "GEO agency India", "itcontents", "content automation India",
     "ChatGPT brand visibility", "itappens ai", "Blocks and Loops Technologies",
-    "AI search optimization India 2026", "generative engine optimization",
+    "generative engine optimization", "AI social media marketing"
   ],
   icons: {
     icon: [

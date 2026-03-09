@@ -12,11 +12,11 @@ export default function NavBar() {
     }, []);
 
     const navLinks = [
+        { name: 'itcontents', href: '/itcontents' },
         { name: 'System', href: '#system' },
         { name: 'Proof', href: '#proof' },
         { name: 'Roadmap', href: '#roadmap' },
         { name: 'Founder', href: '#founder' },
-        { name: 'FAQ', href: '#faq' },
     ];
 
     return (
