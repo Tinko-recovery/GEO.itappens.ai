@@ -2,8 +2,16 @@
 import { useState } from 'react';
 
 export default function CTASection() {
+    const [status, setStatus] = useState<'idle' | 'success'>('idle');
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Simulate submission
+        setStatus('success');
+    };
+
     return (
-        <section id="cta" style={{
+        <section id="cta" className="cta-section" style={{
             margin: '0 48px 80px',
             border: '1px solid var(--accent-border)',
             background: 'var(--accent-dim)',
@@ -45,59 +53,81 @@ export default function CTASection() {
 
             <div className="reveal reveal-delay-2">
                 <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', padding: '40px' }}>
-                    <form style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>
-                                Corporate Email
-                            </label>
-                            <input
-                                type="email"
-                                placeholder="name@company.com"
-                                style={{
-                                    width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)',
-                                    padding: '16px', color: 'var(--text)', fontSize: '14px', outline: 'none'
-                                }}
-                            />
+                    {status === 'success' ? (
+                        <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                            <div style={{ color: 'var(--accent)', fontSize: '32px', marginBottom: '16px' }}>✔</div>
+                            <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: '12px' }}>Audit Requested</h3>
+                            <p style={{ fontSize: '12px', color: 'var(--muted)' }}>We've received your data. Sadish will review this and reach out to your corporate email within 24 hours.</p>
                         </div>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>
-                                Website URL
-                            </label>
-                            <input
-                                type="url"
-                                placeholder="https://yourbrand.com"
-                                style={{
-                                    width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)',
-                                    padding: '16px', color: 'var(--text)', fontSize: '14px', outline: 'none'
-                                }}
-                            />
-                        </div>
-                        <div>
-                            <label style={{ display: 'block', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>
-                                Primary Competitor URL
-                            </label>
-                            <input
-                                type="url"
-                                placeholder="https://competitor.com"
-                                style={{
-                                    width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)',
-                                    padding: '16px', color: 'var(--text)', fontSize: '14px', outline: 'none'
-                                }}
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="btn-primary"
-                            style={{ width: '100%', padding: '18px', fontSize: '11px', letterSpacing: '3px' }}
-                        >
-                            Request AI Audit →
-                        </button>
-                        <div style={{ textAlign: 'center', fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px' }}>
-                            Founder @ itappens.ai will review this personally.
-                        </div>
-                    </form>
+                    ) : (
+                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>
+                                    Corporate Email
+                                </label>
+                                <input
+                                    required
+                                    type="email"
+                                    placeholder="name@company.com"
+                                    style={{
+                                        width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)',
+                                        padding: '16px', color: 'var(--text)', fontSize: '14px', outline: 'none'
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>
+                                    Website URL
+                                </label>
+                                <input
+                                    required
+                                    type="url"
+                                    placeholder="https://yourbrand.com"
+                                    style={{
+                                        width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)',
+                                        padding: '16px', color: 'var(--text)', fontSize: '14px', outline: 'none'
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>
+                                    Primary Competitor URL
+                                </label>
+                                <input
+                                    required
+                                    type="url"
+                                    placeholder="https://competitor.com"
+                                    style={{
+                                        width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)',
+                                        padding: '16px', color: 'var(--text)', fontSize: '14px', outline: 'none'
+                                    }}
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="btn-primary"
+                                style={{ width: '100%', padding: '18px', fontSize: '11px', letterSpacing: '3px' }}
+                            >
+                                Request AI Audit →
+                            </button>
+                            <div style={{ textAlign: 'center', fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px' }}>
+                                Founder @ itappens.ai will review this personally.
+                            </div>
+                        </form>
+                    )}
                 </div>
             </div>
+
+            <style jsx>{`
+                @media (max-width: 1024px) {
+                    .cta-section { 
+                        grid-template-columns: 1fr; 
+                        margin: 0 24px 80px !important;
+                        padding: 60px 24px !important;
+                        gap: 48px !important;
+                    }
+                }
+            `}</style>
         </section>
     );
 }

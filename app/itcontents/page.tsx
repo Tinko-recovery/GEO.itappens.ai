@@ -39,6 +39,7 @@ export default function itcontents() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="hero-eyebrow"
+                    style={{ zIndex: 1 }}
                 >
                     <div className="eyebrow-dot" />
                     <span className="hero-eyebrow-text">itcontents — Premium AI Automation</span>
@@ -48,13 +49,14 @@ export default function itcontents() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.35 }}
-                    className="headline-xl"
+                    className="headline-xl hero-headline"
+                    style={{ zIndex: 1 }}
                 >
                     <span style={{ display: 'block' }}>Your Social Media</span>
-                    <span style={{ display: 'block', paddingLeft: 'clamp(32px, 6vw, 80px)', color: 'var(--text2)' }}>
+                    <span className="headline-indent-1" style={{ display: 'block', color: 'var(--text2)' }}>
                         on Autopilot.
                     </span>
-                    <span style={{ display: 'block', paddingLeft: 'clamp(64px, 12vw, 160px)' }}>
+                    <span className="headline-indent-2" style={{ display: 'block' }}>
                         <span style={{ color: 'var(--accent)' }}>Zero-Touch</span> Quality.
                     </span>
                 </motion.h1>
@@ -64,35 +66,52 @@ export default function itcontents() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.55 }}
                     style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 340px',
-                        gap: '48px',
-                        marginTop: '48px',
-                        alignItems: 'end',
                         zIndex: 1
                     }}
-                    className="hero-sub-row"
+                    className="hero-sub-row-container"
                 >
-                    <div className="text-sub" style={{ maxWidth: 480 }}>
-                        Stop spending 20 hours a week on content that barely gets seen.<br /><br />
-                        itcontents uses an agentic engine to research trends, write human-first copy, and generate premium Ken Burns video content—all approved by you in Telegram.
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                        <a href="https://t.me/itcontents_ai" target="_blank" className="btn-primary">View the Showroom →</a>
-                        <div style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px', textAlign: 'center' }}>
-                            A Product of itappens.ai
+                    <div className="hero-sub-row" style={{
+                        display: 'grid',
+                        gap: '48px',
+                        marginTop: '48px',
+                        alignItems: 'end'
+                    }}>
+                        <div className="text-sub hero-description" style={{ maxWidth: 480 }}>
+                            Stop spending 20 hours a week on content that barely gets seen.<br /><br />
+                            itcontents uses an agentic engine to research trends, write human-first copy, and generate premium Ken Burns video content—all approved by you in Telegram.
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                            <a href="https://t.me/itcontents_ai" target="_blank" className="btn-primary">View the Showroom →</a>
+                            <div style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px', textAlign: 'center' }}>
+                                A Product of itappens.ai
+                            </div>
                         </div>
                     </div>
                 </motion.div>
+
+                <style jsx>{`
+                    .headline-indent-1 { padding-left: clamp(32px, 6vw, 80px); }
+                    .headline-indent-2 { padding-left: clamp(64px, 12vw, 160px); }
+                    .hero-sub-row { grid-template-columns: 1fr 340px; }
+
+                    @media (max-width: 900px) {
+                        .hero-sub-row { grid-template-columns: 1fr; }
+                        .headline-indent-1, .headline-indent-2 { padding-left: 0; }
+                    }
+                    @media (max-width: 600px) {
+                        section { padding: 120px 24px 60px !important; }
+                        .hero-headline { font-size: 42px !important; }
+                    }
+                `}</style>
             </section>
 
-            <section className="section-base section-padding">
+            <section className="section-base section-padding itcontents-workflow">
                 <div className="container-wide">
                     <div className="eyebrow">
                         <div className="eyebrow-dot" />
                         <span>The itcontents Workflow</span>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px', marginTop: '48px' }}>
+                    <div className="workflow-grid" style={{ display: 'grid', gap: '32px', marginTop: '48px' }}>
                         {[
                             { step: '01', title: 'Data Feed', desc: 'Connect your Google Sheet. One row = One topic.' },
                             { step: '02', title: 'AI Orchestration', desc: 'Our engine generates premium text, images, and videos.' },
@@ -106,6 +125,13 @@ export default function itcontents() {
                         ))}
                     </div>
                 </div>
+                <style jsx>{`
+                    .workflow-grid { grid-template-columns: repeat(3, 1fr); }
+                    @media (max-width: 900px) {
+                        .workflow-grid { grid-template-columns: 1fr; }
+                        .itcontents-workflow { padding: 80px 24px !important; }
+                    }
+                `}</style>
             </section>
 
             <footer style={{ padding: '40px 48px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
