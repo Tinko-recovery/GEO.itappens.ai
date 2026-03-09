@@ -31,8 +31,18 @@ class ContentEngine:
         hook = data.get("hook", "")
         category = data.get("category", "General")
         
-        # Simplied Footer as per user request
-        footer = "\n\n- This post was autonomously posted by an AI agent built by Sadish Sugumaran"
+        # Refined Footer with Citation and Disclaimer
+        source_url = data.get("source_url")
+        citation = f"\nSource: {source_url}" if source_url else ""
+        
+        disclaimer = "\nDisclaimer: This content is AI-generated and fact-checked by me."
+        
+        footer = (
+            f"{citation}"
+            f"{disclaimer}\n\n"
+            "- This post was autonomously posted by an AI agent built by Sadish Sugumaran"
+        )
+        
         sheet_footer = data.get("footer", "")
         if sheet_footer:
             footer = f"\n\n{sheet_footer}\n" + footer
