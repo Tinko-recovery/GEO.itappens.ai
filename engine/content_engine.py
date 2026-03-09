@@ -153,6 +153,9 @@ class ContentEngine:
 
     async def generate_reel_slides(self, data):
         """Generates 5 slide scripts + per-slide DALL-E prompts for an Instagram Reel."""
+        title = data.get("title", "AI Innovation")
+        hook = data.get("hook", "")
+        category = data.get("category", "General")
         directive = data.get("directive", "").strip()
         directive_context = ""
         if directive:
