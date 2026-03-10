@@ -4,10 +4,9 @@ import HeroSection from "@/components/sections/HeroSection";
 import SolutionSection from "@/components/sections/SolutionSection";
 import PackagesSection from "@/components/sections/PackagesSection";
 import ProofSection from "@/components/sections/ProofSection";
-import RoadmapSection from "@/components/sections/RoadmapSection";
-import FounderSection from "@/components/sections/FounderSection";
 import FAQSection from "@/components/sections/FAQSection";
 import CTASection from "@/components/sections/CTASection";
+import BlogTeaser from "@/components/sections/BlogTeaser";
 
 export default function Home() {
   return (
@@ -19,23 +18,30 @@ export default function Home() {
         <SolutionSection />
         <PackagesSection />
         <ProofSection />
-        <RoadmapSection />
-        <FounderSection />
+        <BlogTeaser />
         <FAQSection />
         <CTASection />
       </div>
 
-      <footer style={{ padding: '40px 48px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <footer style={{ padding: '40px 48px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }} className="site-footer">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
           <div style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px' }}>
             © 2026 itappens.ai — Blocks and Loops Technologies Pvt Ltd. All rights reserved.
           </div>
-          <div style={{ display: 'flex', gap: '24px' }}>
+          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+            <a href="/blog" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>Blog</a>
+            <a href="/pricing" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>Pricing</a>
             <a href="/privacy" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>Privacy Policy</a>
-            <a href="mailto:hello@itappens.ai" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>hello@itappens.ai</a>
+            <a href="mailto:founder@tinko.in" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>founder@tinko.in</a>
           </div>
         </div>
       </footer>
+
+      <style jsx>{`
+        @media (max-width: 600px) {
+          .site-footer { padding: 32px 20px !important; }
+        }
+      `}</style>
     </main>
   );
 }

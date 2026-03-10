@@ -5,47 +5,48 @@ import CursorSpotlight from "@/components/CursorSpotlight";
 import BackgroundMesh from "@/components/BackgroundMesh";
 
 export const metadata: Metadata = {
-  title: "itappens.ai — AI Brand Visibility & Content Automation",
+  title: "itappens.ai — AI Content Automation & GEO Platform",
   description:
-    "Engineering AI citations for ChatGPT and automating human-first social media content. itappens.ai is India's pioneer in GEO and Zero-Touch content marketing.",
+    "Your brand, on every platform, every day. Automatically. itappens.ai automates your social media content across LinkedIn, Instagram, Twitter/X and YouTube — and engineers your brand into AI search answers.",
   keywords: [
-    "GEO agency India", "itcontents", "content automation India",
-    "ChatGPT brand visibility", "itappens ai", "Blocks and Loops Technologies",
-    "generative engine optimization", "AI social media marketing"
+    "GEO agency India", "AI content automation", "social media automation India",
+    "ChatGPT brand visibility", "itappens ai", "LinkedIn automation India",
+    "generative engine optimization", "AI social media marketing", "content automation SaaS"
   ],
   icons: {
     icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/logo.png', type: 'image/png' },
     ],
     apple: '/logo.png',
   },
   openGraph: {
-    title: "itappens.ai — India's GEO Practice",
-    description: "When your customer asks ChatGPT who to trust in your industry — your name should be the answer.",
+    title: "itappens.ai — Your Brand on Every Platform, Every Day",
+    description: "AI-powered content automation + GEO. We generate, schedule, and publish daily content across all your channels while you focus on your business.",
     url: "https://itappens.ai", siteName: "itappens.ai", type: "website", locale: "en_IN",
     images: [{ url: '/logo.png', width: 512, height: 512, alt: 'itappens.ai logo' }],
   },
-  twitter: { card: "summary_large_image", title: "itappens.ai — Generative Engine Optimization", description: "India's pioneer in GEO. Be found where AI answers." },
+  twitter: { card: "summary_large_image", title: "itappens.ai — AI Content Automation", description: "Your brand, on every platform, every day. Automatically." },
   robots: { index: true, follow: true },
 };
 
-/* ── JSON-LD: ProfessionalService Schema ── */
+/* ── JSON-LD: SoftwareApplication Schema ── */
 const identitySchema = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
+  "@type": "SoftwareApplication",
   "name": "itappens.ai",
-  "description": "India's GEO (Generative Engine Optimisation) practice. We engineer AI citations so your brand appears in ChatGPT, Perplexity, Gemini and Claude recommendations.",
+  "applicationCategory": "BusinessApplication",
+  "description": "AI-powered content automation platform. itappens.ai generates and publishes daily social media content across LinkedIn, Instagram, Twitter/X and YouTube, and engineers brand presence into AI search engines like ChatGPT and Perplexity.",
   "url": "https://itappens.ai",
   "logo": "https://itappens.ai/logo.png",
-  "founder": {
-    "@type": "Person",
-    "@id": "https://itappens.ai/#sadish",
-    "name": "Sadish Sugumaran",
-    "jobTitle": "Founder"
-  },
-  "serviceType": ["Generative Engine Optimisation", "GEO", "AI Brand Visibility", "AI Citation Engineering"],
-  "areaServed": ["India", "Tamil Nadu", "Chennai", "Bangalore", "Mumbai", "Hosur"],
-  "knowsAbout": ["GEO", "AI Search Optimisation", "ChatGPT brand visibility", "Perplexity citations"]
+  "offers": [
+    { "@type": "Offer", "name": "Growth", "price": "4999", "priceCurrency": "INR", "billingDuration": "P1M" },
+    { "@type": "Offer", "name": "Pro", "price": "9999", "priceCurrency": "INR", "billingDuration": "P1M" },
+    { "@type": "Offer", "name": "Pro + GEO", "price": "19999", "priceCurrency": "INR", "billingDuration": "P1M" }
+  ],
+  "operatingSystem": "Web",
+  "areaServed": ["India"],
+  "keywords": ["content automation", "GEO", "AI social media", "LinkedIn automation", "AI search presence"]
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

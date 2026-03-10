@@ -13,11 +13,11 @@ export default function NavBar() {
     }, []);
 
     const navLinks = [
+        { name: 'Blog', href: '/blog' },
         { name: 'Pricing', href: '/pricing' },
+        { name: 'How It Works', href: '/#system' },
         { name: 'Packages', href: '/#packages' },
-        { name: 'System', href: '/#system' },
-        { name: 'Proof', href: '/#proof' },
-        { name: 'Founder', href: '/#founder' },
+        { name: 'Contact', href: 'mailto:founder@tinko.in' },
     ];
 
     return (
@@ -62,7 +62,7 @@ export default function NavBar() {
                         ))}
                     </div>
                     <a
-                        href="/#cta"
+                        href="/pricing"
                         className="nav-cta"
                         style={{
                             background: 'var(--accent)',
@@ -79,7 +79,7 @@ export default function NavBar() {
                         onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--accent2)')}
                         onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--accent)')}
                     >
-                        Free Audit →
+                        Get Started →
                     </a>
 
                     {/* Mobile Toggle */}
@@ -138,7 +138,7 @@ export default function NavBar() {
                         </a>
                     ))}
                     <a
-                        href="/#cta"
+                        href="/pricing"
                         onClick={() => setMobileMenuOpen(false)}
                         style={{
                             background: 'var(--accent)',
@@ -152,7 +152,7 @@ export default function NavBar() {
                             textTransform: 'uppercase'
                         }}
                     >
-                        Free Audit →
+                        Get Started →
                     </a>
                 </motion.div>
             )}

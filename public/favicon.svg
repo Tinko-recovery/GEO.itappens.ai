@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#0A0D14" rx="12"/>
+  
+  <!-- Node network icon - central circle + 6 spokes with dots -->
+  <!-- Center circle -->
+  <circle cx="32" cy="32" r="4" fill="#FFFFFF"/>
+  
+  <!-- Spokes (lines from center) -->
+  <line x1="32" y1="32" x2="32" y2="14" stroke="#F97316" stroke-width="1.8"/>
+  <line x1="32" y1="32" x2="47" y2="22" stroke="#F97316" stroke-width="1.8"/>
+  <line x1="32" y1="32" x2="47" y2="42" stroke="#F97316" stroke-width="1.8"/>
+  <line x1="32" y1="32" x2="32" y2="50" stroke="#F97316" stroke-width="1.8"/>
+  <line x1="32" y1="32" x2="17" y2="42" stroke="#F97316" stroke-width="1.8"/>
+  <line x1="32" y1="32" x2="17" y2="22" stroke="#F97316" stroke-width="1.8"/>
+  
+  <!-- Endpoint dots -->
+  <circle cx="32" cy="14" r="3" fill="#F97316"/>
+  <circle cx="47" cy="22" r="3" fill="#F97316"/>
+  <circle cx="47" cy="42" r="3" fill="#F97316"/>
+  <circle cx="32" cy="50" r="3" fill="#F97316"/>
+  <circle cx="17" cy="42" r="3" fill="#F97316"/>
+  <circle cx="17" cy="22" r="3" fill="#F97316"/>
+</svg>
