@@ -437,3 +437,38 @@ body {
     transform: translateY(-7px);
   }
 }
+
+/* ─── RESPONSIVE — all media queries centralised here ── */
+/* NavBar */
+@media (min-width: 768px) {
+  .nav-links, .nav-cta { display: flex !important; }
+  nav button.nav-hamburger { display: none !important; }
+}
+
+/* Packages / Plans grid */
+@media (max-width: 860px) {
+  .plans-grid { grid-template-columns: 1fr !important; }
+  .blog-grid { grid-template-columns: 1fr !important; }
+  .blog-teaser-section { padding: 60px 20px !important; }
+}
+
+/* Pricing page grid */
+@media (max-width: 900px) {
+  .pricing-grid { grid-template-columns: 1fr !important; }
+}
+
+/* CTA section */
+@media (max-width: 1024px) {
+  .cta-section {
+    grid-template-columns: 1fr !important;
+    margin: 0 24px 80px !important;
+    padding: 60px 24px !important;
+    gap: 48px !important;
+  }
+}
+
+/* Blog row */
+@media (max-width: 600px) {
+  .blog-row { grid-template-columns: 1fr !important; }
+  .site-footer { padding: 32px 20px !important; }
+}

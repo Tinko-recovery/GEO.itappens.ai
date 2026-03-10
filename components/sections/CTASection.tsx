@@ -132,16 +132,6 @@ export default function CTASection() {
                 </div>
             </div>
 
-            <style>{`
-                @media (max-width: 1024px) {
-                    .cta-section { 
-                        grid-template-columns: 1fr; 
-                        margin: 0 24px 80px !important;
-                        padding: 60px 24px !important;
-                        gap: 48px !important;
-                    }
-                }
-            `}</style>
         </section>
     );
 }

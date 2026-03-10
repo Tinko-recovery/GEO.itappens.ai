@@ -92,11 +92,6 @@ export default function BlogPage() {
                     </div>
                 </div>
 
-                <style>{`
-                    @media (max-width: 600px) {
-                        .blog-row { grid-template-columns: 1fr !important; }
-                    }
-                `}</style>
             </main>
         </>
     );

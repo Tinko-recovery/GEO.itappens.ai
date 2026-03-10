@@ -69,12 +69,6 @@ export default function BlogTeaser() {
                 </div>
             </div>
 
-            <style>{`
-                @media (max-width: 860px) {
-                    .blog-grid { grid-template-columns: 1fr !important; }
-                    .blog-teaser-section { padding: 60px 20px !important; }
-                }
-            `}</style>
         </section>
     );
 }
