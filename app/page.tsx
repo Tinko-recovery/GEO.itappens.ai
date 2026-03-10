@@ -37,7 +37,7 @@ export default function Home() {
         </div>
       </footer>
 
-      <style jsx>{`
+      <style>{`
         @media (max-width: 600px) {
           .site-footer { padding: 32px 20px !important; }
         }

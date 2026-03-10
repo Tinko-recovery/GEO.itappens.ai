@@ -157,7 +157,7 @@ export default function NavBar() {
                 </motion.div>
             )}
 
-            <style jsx>{`
+            <style>{`
                 @media (min-width: 768px) {
                     .nav-links, .nav-cta { display: flex !important; }
                     button { display: none !important; }

@@ -1,3 +1,4 @@
+'use client';
 import { getAllPosts } from '@/lib/posts';
 import { motion } from 'framer-motion';
 
@@ -68,7 +69,7 @@ export default function BlogTeaser() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 @media (max-width: 860px) {
                     .blog-grid { grid-template-columns: 1fr !important; }
                     .blog-teaser-section { padding: 60px 20px !important; }

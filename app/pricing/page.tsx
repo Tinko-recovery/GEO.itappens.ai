@@ -195,7 +195,7 @@ export default function PricingPage() {
                 </div>
             </main>
 
-            <style jsx global>{`
+            <style>{`
                 @media (max-width: 900px) {
                     .pricing-grid { grid-template-columns: 1fr !important; }
                 }

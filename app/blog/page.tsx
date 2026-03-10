@@ -1,11 +1,6 @@
+'use client';
 import { getAllPosts } from '@/lib/posts';
 import NavBar from '@/components/NavBar';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: 'Blog — itappens.ai',
-    description: 'Insights on GEO, AI content automation, and building an AI-visible brand. Written by the itappens.ai team.',
-};
 
 export default function BlogPage() {
     const posts = getAllPosts();
@@ -97,7 +92,7 @@ export default function BlogPage() {
                     </div>
                 </div>
 
-                <style jsx>{`
+                <style>{`
                     @media (max-width: 600px) {
                         .blog-row { grid-template-columns: 1fr !important; }
                     }

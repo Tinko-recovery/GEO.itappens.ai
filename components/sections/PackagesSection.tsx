@@ -109,7 +109,7 @@ export default function PackagesSection() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 @media (max-width: 860px) {
                     .plans-grid { grid-template-columns: 1fr !important; }
                 }

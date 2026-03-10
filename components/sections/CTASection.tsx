@@ -132,7 +132,7 @@ export default function CTASection() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 @media (max-width: 1024px) {
                     .cta-section { 
                         grid-template-columns: 1fr; 
