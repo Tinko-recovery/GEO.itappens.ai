@@ -71,7 +71,7 @@ export default function CTASection() {
                         <div style={{ textAlign: 'center', padding: '40px 0' }}>
                             <div style={{ color: 'var(--accent)', fontSize: '32px', marginBottom: '16px' }}>✔</div>
                             <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: '12px' }}>Audit Requested</h3>
-                            <p style={{ fontSize: '12px', color: 'var(--muted)' }}>We've received your data. Sadish will review this and reach out to your corporate email within 24 hours.</p>
+                            <p style={{ fontSize: '12px', color: 'var(--muted)' }}>We've received your request. Our team will review it and reach out to your corporate email within 24 hours.</p>
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

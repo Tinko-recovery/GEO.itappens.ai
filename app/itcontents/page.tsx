@@ -78,10 +78,10 @@ export default function itcontents() {
                     }}>
                         <div className="text-sub hero-description" style={{ maxWidth: 480 }}>
                             Stop spending 20 hours a week on content that barely gets seen.<br /><br />
-                            itcontents uses an agentic engine to research trends, write human-first copy, and generate premium Ken Burns video content—all approved by you in Telegram.
+                            itcontents uses an agentic engine to research trends, write human-first copy, and generate premium Ken Burns video content — reviewed and approved by you before anything goes live.
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                            <a href="https://t.me/itcontents_ai" target="_blank" className="btn-primary">View the Showroom →</a>
+                            <a href="/itcontents/onboard" className="btn-primary">Try Free Demo →</a>
                             <div style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px', textAlign: 'center' }}>
                                 A Product of itappens.ai
                             </div>
@@ -115,7 +115,7 @@ export default function itcontents() {
                         {[
                             { step: '01', title: 'Data Feed', desc: 'Connect your Google Sheet. One row = One topic.' },
                             { step: '02', title: 'AI Orchestration', desc: 'Our engine generates premium text, images, and videos.' },
-                            { step: '03', title: 'Telegram Approval', desc: 'Approve or edit with a single tap on your phone.' }
+                            { step: '03', title: 'Approval Portal', desc: 'Review and approve content via email or your client dashboard before it goes live.' }
                         ].map((item) => (
                             <div key={item.step} className="phase-card">
                                 <div className="phase-num">{item.step}</div>

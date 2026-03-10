@@ -36,7 +36,7 @@ export default function NavBar() {
                     alignItems: 'center',
                     textDecoration: 'none'
                 }}>
-                    <img src="/logo.png" alt="itappens.ai" style={{ height: '24px', width: 'auto' }} />
+                    <img src="/logo.png" alt="itappens.ai" style={{ height: '40px', width: 'auto' }} />
                 </a>
 
                 {/* Desktop Nav */}

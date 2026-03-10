@@ -39,7 +39,7 @@ const plans = [
             'Instagram Reels (AI video, daily)',
             'YouTube Shorts (same video, auto-posted)',
             'Cinematic 9:16 video with transitions + music',
-            'Telegram preview before each post',
+            'Email preview before each post',
             'Priority support',
         ],
         notIncluded: ['GEO audit & strategy'],

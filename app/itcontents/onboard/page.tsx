@@ -178,7 +178,7 @@ export default function OnboardPage() {
                             <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '24px', maxWidth: '400px', margin: '0 auto 24px' }}>
                                 itappens Content automates this across all your channels — LinkedIn, Instagram Reels, YouTube Shorts, and Twitter/X.
                             </p>
-                            <a href="mailto:founder@tinko.in?subject=itappens Content Enquiry&body=Hi Sadish, I just tried itappens Content and I'm interested in automating my social media. My company is: ..."
+                            <a href="mailto:founder@tinko.in?subject=itappens Content Enquiry&body=Hi itappens team, I just tried itappens Content and I'm interested in automating my social media. My company is: ..."
                                 style={{
                                     display: 'inline-block', background: 'var(--accent)', color: 'var(--bg)',
                                     padding: '14px 32px', fontSize: '11px', letterSpacing: '2px',
@@ -187,7 +187,7 @@ export default function OnboardPage() {
                                 Start itappens Content →
                             </a>
                             <div style={{ marginTop: '12px', fontSize: '11px', color: 'var(--muted)' }}>
-                                founder@tinko.in — Sadish replies within 24h
+                                founder@tinko.in — we reply within 24h
                             </div>
                         </div>
                     </motion.div>

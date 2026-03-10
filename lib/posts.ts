@@ -96,7 +96,7 @@ The result: 5x weekly posts, zero daily effort, compounding brand visibility.
         content: `
 Every morning at 6 AM, our engine wakes up.
 
-It scans HackerNews, Reddit, and industry feeds for the most relevant AI and business stories. It picks the strongest signal. It writes a LinkedIn post, a tweet, and an Instagram caption — in itappens.ai's brand voice. A preview arrives on Telegram. One tap to approve. Done.
+It scans HackerNews, Reddit, and industry feeds for the most relevant AI and business stories. It picks the strongest signal. It writes a LinkedIn post, a tweet, and an Instagram caption — in itappens.ai's brand voice. A preview arrives by email. One click to approve. Done.
 
 We don't have a content team. We have a content engine.
 

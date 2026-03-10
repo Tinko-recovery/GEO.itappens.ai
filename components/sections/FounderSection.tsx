@@ -12,26 +12,28 @@ export default function FounderSection() {
             gap: '80px',
             alignItems: 'center',
             background: 'var(--surface)'
-        }}>
+        }} className="founder-grid">
             <div className="reveal">
                 <div style={{
                     fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase',
                     color: 'var(--accent)', marginBottom: '20px'
                 }}>
-                    // From the Founder
+                    // Why itappens.ai
                 </div>
                 <div style={{
                     fontFamily: 'var(--font-display)', fontWeight: 700,
                     fontSize: 'clamp(22px, 3vw, 34px)', lineHeight: 1.2,
                     color: 'var(--text)', letterSpacing: '-0.5px', marginBottom: '24px'
                 }}>
-                    "I built the product on myself first.<br />
-                    My own brand appears in <em style={{ color: 'var(--accent)', fontStyle: 'normal' }}>Perplexity</em>.<br />
-                    Now I build it for yours."
+                    "We built the product on ourselves first.<br />
+                    Our own brand appears in <em style={{ color: 'var(--accent)', fontStyle: 'normal' }}>Perplexity</em>.<br />
+                    Now we build it for yours."
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text2)', lineHeight: 1.8, maxWidth: '440px' }}>
-                    I'm Sadish Sugumaran — I built itappens.ai because I watched businesses with incredible products get ignored by AI while mediocre competitors got recommended simply because their data was better structured.<br /><br />
-                    I tested every GEO principle on my own brand before offering it to clients. The system works. itappens.ai is the proof. Now it's your turn.
+                    itappens.ai was built because brands with incredible products get ignored by AI
+                    while mediocre competitors get recommended — simply because their data is better structured.<br /><br />
+                    We tested every GEO principle on our own brand before offering it to clients. The system works.
+                    itappens.ai is the proof. Now it&apos;s your turn.
                 </div>
                 <div style={{
                     padding: '20px 28px', background: 'var(--accent-dim)',
@@ -42,10 +44,10 @@ export default function FounderSection() {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         {[
-                            'Founder-direct engagement — no junior teams, no templates',
-                            'Live proof: itappens.ai itself ranks in GEO for our target queries',
-                            'India-first strategy — built for Indian brands, Indian cities, Indian buyers',
-                            'Small client roster per quarter — deep work, not volume'
+                            'Direct engagement — no junior teams, no templates',
+                            'Live proof: itappens.ai itself ranks in GEO for target queries',
+                            'India-first strategy — built for Indian brands and buyers',
+                            'Focused client roster — deep work, not volume'
                         ].map((item, idx) => (
                             <div key={idx} style={{ fontSize: '11px', color: 'var(--text2)', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                                 <span style={{ color: 'var(--accent)', flexShrink: 0, fontSize: '10px', paddingTop: '1px' }}>→</span>
@@ -58,27 +60,7 @@ export default function FounderSection() {
 
             <div className="reveal reveal-delay-2">
                 <div style={{ border: '1px solid var(--border2)', display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ padding: '28px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        <div style={{
-                            width: '56px', height: '56px', borderRadius: '4px', background: 'var(--surface3)',
-                            border: '1px solid var(--border2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800, color: 'var(--accent)', flexShrink: 0
-                        }}>
-                            SS
-                        </div>
-                        <div>
-                            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '3px' }}>
-                                Sadish Sugumaran
-                            </div>
-                            <div style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '6px' }}>
-                                Founder, itappens.ai
-                            </div>
-                            <div style={{ fontSize: '11px', color: 'var(--text2)', lineHeight: 1.6 }}>
-                                Building India's GEO practice under Blocks & Loops Technologies Pvt Ltd. Based in Hosur, Tamil Nadu.
-                            </div>
-                        </div>
-                    </div>
-                    <div style={{ padding: '20px 28px', background: 'var(--surface3)' }}>
+                    <div style={{ padding: '28px', borderBottom: '1px solid var(--border)' }}>
                         <div style={{ fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '16px' }}>
                             Verify itappens.ai in AI right now
                         </div>
@@ -91,7 +73,25 @@ export default function FounderSection() {
                                     <span style={{ color: 'var(--accent)', fontSize: '9px', letterSpacing: '1px', display: 'block', marginBottom: '4px' }}>
                                         {v.platform} →
                                     </span>
-                                    "{v.query}"
+                                    &quot;{v.query}&quot;
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div style={{ padding: '20px 28px', background: 'var(--surface3)' }}>
+                        <div style={{ fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '12px' }}>
+                            itappens.ai by the numbers
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            {[
+                                { val: '50+', label: 'AI Audits completed' },
+                                { val: '90', label: 'Days to citation authority' },
+                                { val: '40%', label: 'Avg citation increase' },
+                                { val: '4.2×', label: 'Higher AI trust signal' },
+                            ].map((s, i) => (
+                                <div key={i}>
+                                    <div style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>{s.val}</div>
+                                    <div style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '1px', marginTop: '4px' }}>{s.label}</div>
                                 </div>
                             ))}
                         </div>
