@@ -26,87 +26,77 @@ class ContentEngine:
         self.reel_cta = os.getenv("REEL_CTA", "Limited slots for March automation coaching. Link in bio.")
 
     async def generate_content(self, data):
-        """Generates content using Title, Hook, and Category from the sheet."""
+        """Generates agency brand content for itappens.ai across all channels."""
         title = data.get("title", "AI Innovation")
         hook = data.get("hook", "")
         category = data.get("category", "General")
-        
-        # Refined Footer with Citation and Disclaimer
+
         source_url = data.get("source_url")
         citation = f"\nSource: {source_url}" if source_url else ""
-        
-        disclaimer = "\nDisclaimer: This content is AI-generated and fact-checked by me."
-        
         footer = (
-            f"{citation}"
-            f"{disclaimer}\n\n"
-            "- This post was autonomously posted by an AI agent built by Sadish Sugumaran"
+            f"{citation}\n"
+            f"Disclaimer: This content is AI-generated and posted by our own engine.\n\n"
+            f"— itappens.ai | AI brand visibility + content automation\n"
+            f"📧 founder@tinko.in"
         )
-        
-        sheet_footer = data.get("footer", "")
-        if sheet_footer:
-            footer = f"\n\n{sheet_footer}\n" + footer
-
-        directive = data.get("directive", "").strip()
-        directive_context = ""
-        if directive:
-            directive_context = (
-                f"\n🚨 HIGH PRIORITY CLIENT DIRECTIVE: {directive}\n"
-                "The client has requested to focus specifically on this. Skip generic trends—make this the star of the post."
-            )
 
         prompt = (
-            f"PERSONA: {self.persona}\n"
-            f"VOICE: {self.brand_voice}\n\n"
-            f"Context: We are in a 30-day series about {category}.\n"
-            f"Main Topic/Title: {title}\n"
-            f"Suggested Hook: {hook}\n"
-            f"{directive_context}\n\n"
-            "Generate four things:\n"
-            "1. A Personal LinkedIn post: Write in your natural, human voice. Focus on a raw, vulnerable insight or a 'lightbulb moment'. "
-            "STRICT RULE: Do NOT mention 'itappens.ai', 'automation services', or any company name. This is 100% human thought-leadership. "
-            "Use 'I' and 'you'. Focus on the 'why' and end with a genuine question. NO SELLING.\n"
-            f"2. An Agency LinkedIn post: Write as the founder of {self.company_name}. Focus on the business value of automation. "
-            "Mention how we solve this specific problem for clients. Include a clear call to action (e.g., 'DM to see our workflow').\n"
-            "CRITICAL: Both LinkedIn posts must be STRICTLY UNDER 900 characters.\n"
-            "3. An Instagram caption: Fast-paced, high-energy hook. Focus on the emotional win. CTA to DM 'AUTOMATE'. 5 hashtags.\n"
-            "4. A DALL-E Image Prompt: A cinematic, high-end visual that represents the CORE METAPHOR of this topic. "
-            "Avoid literal office shots. Use dramatic lighting, surrealism, or high-fashion aesthetics. NO WORDS in the image.\n\n"
-            "Format the output EXACTLY as follows:\n"
-            "---LINKEDIN_PERSONAL---\n"
-            "[Personal Content]\n"
-            "---LINKEDIN_AGENCY---\n"
-            "[Agency Content]\n"
+            f"You are the content voice of itappens.ai — India's first AI brand visibility agency.\n"
+            f"itappens.ai has two services: GEO (making brands appear in AI answers like ChatGPT/Perplexity) "
+            f"and itcontents (AI-powered social media automation).\n"
+            f"Voice: Confident, data-led, founder-direct. Provocative but not arrogant. "
+            f"Your audience is Indian B2B founders and marketing heads.\n\n"
+            f"Today's trending topic: {title}\n"
+            f"Hook angle: {hook}\n"
+            f"Industry category: {category}\n\n"
+            "Generate THREE pieces of brand content:\n\n"
+            "1. LINKEDIN_COMPANY post (as itappens.ai):\n"
+            "   - Open with a strong data point or contrarian take\n"
+            "   - Connect the trend to AI brand visibility or content automation\n"
+            "   - Position itappens.ai as the solution\n"
+            "   - End with CTA: 'DM or email founder@tinko.in to audit your brand's AI presence'\n"
+            "   - UNDER 1200 characters. No fluff.\n\n"
+            "2. TWITTER post:\n"
+            "   - Punchy 1-2 lines max. Under 240 characters.\n"
+            "   - Either a hot take, a stat, or a 'did you know' that makes someone stop scrolling\n"
+            "   - End with: itappens.ai\n\n"
+            "3. INSTAGRAM caption:\n"
+            "   - Hook in first line (make them tap 'more')\n"
+            "   - 3-4 lines of value\n"
+            "   - CTA: 'DM AUDIT for a free AI presence check'\n"
+            "   - 5 relevant hashtags\n\n"
+            "4. DALL-E IMAGE PROMPT:\n"
+            "   - Cinematic, metaphoric, moody. No text in image.\n"
+            "   - Represents the core idea of the trend visually\n"
+            "   - Dark aesthetic, dramatic lighting, 8K quality\n\n"
+            "Format EXACTLY as:\n"
+            "---LINKEDIN_COMPANY---\n"
+            "[Content]\n"
+            "---TWITTER---\n"
+            "[Content]\n"
             "---INSTAGRAM---\n"
-            "[Instagram Content]\n"
+            "[Content]\n"
             "---IMAGE_PROMPT---\n"
-            "[Image Prompt Text]"
+            "[Prompt]"
         )
 
         response = await self.ant_client.messages.create(
             model=self.model,
             max_tokens=4000,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
+            messages=[{"role": "user", "content": prompt}]
         )
-        
+
         content_text = response.content[0].text
         parsed = self._parse_content(content_text)
 
-        # Append footer AFTER parsing — enforcing hard char limits
-        LI_BODY_LIMIT = 1000  # leaves ~248 chars for footer within LinkedIn's 124cap
-        li_p_body = parsed.get("linkedin_personal", "")[:LI_BODY_LIMIT]
-        li_a_body = parsed.get("linkedin_agency", "")[:LI_BODY_LIMIT]
-        parsed["linkedin_personal"] = li_p_body + footer
-        parsed["linkedin_agency"] = li_a_body + footer
+        # Append footer to text posts
+        for key in ["linkedin_company", "twitter", "instagram"]:
+            if parsed.get(key):
+                parsed[key] = parsed[key] + "\n\n" + footer
 
-        # Instagram: just append footer (2200 cap is generous)
-        ig_body = parsed.get("instagram", "")
-        parsed["instagram"] = ig_body + footer
-
+        # Generate brand image
         if parsed.get("image_prompt"):
-            print(f"Generating image with prompt: {parsed['image_prompt']}")
+            print(f"🎨 Generating image...")
             try:
                 img_res = await self.oa_client.images.generate(
                     model="dall-e-3",
@@ -116,20 +106,14 @@ class ContentEngine:
                     n=1
                 )
                 temp_url = img_res.data[0].url
-                print("Image generated successfully! Uploading to permanent host...")
-                
-                # Re-upload to Imgur for a permanent URL (DALL-E URLs expire in ~1 hour)
+                print("✅ Image generated! Uploading to permanent host...")
                 permanent_url = self._reupload_to_imgur(temp_url)
                 parsed["image_url"] = permanent_url or temp_url
-                
-                if permanent_url:
-                    print(f"Image permanently hosted at: {permanent_url}")
-                else:
-                    print("Warning: Imgur upload failed. Using temp DALL-E URL (may expire).")
+                print(f"📸 Image hosted at: {parsed['image_url']}")
             except Exception as e:
-                print(f"Failed to generate image: {e}")
+                print(f"❌ Image generation failed: {e}")
                 parsed["image_url"] = None
-        
+
         return parsed
 
     def _reupload_to_imgur(self, image_url):
@@ -242,31 +226,24 @@ class ContentEngine:
         return {"slides": slides, "caption": caption}
 
     def _parse_content(self, content):
-        # Handle dual LinkedIn sections
-        print("--- DEBUG: Parsing multi-account content... ---")
-        
-        li_p_match = content.split("---LINKEDIN_PERSONAL---")[1].split("---LINKEDIN_AGENCY---")
-        li_p_section = li_p_match[0].strip()
-        
-        li_a_match = li_p_match[1].split("---INSTAGRAM---")
-        li_a_section = li_a_match[0].strip()
-        
-        ig_section = ""
-        img_prompt = ""
-        
-        rest = li_a_match[1].split("---IMAGE_PROMPT---")
-        ig_section = rest[0].strip()
-        if len(rest) > 1:
-            img_prompt = rest[1].strip()
-        
-        img_prompt = img_prompt.replace("```", "").replace("text", "").strip()
-        
-        return {
-            "linkedin_personal": li_p_section,
-            "linkedin_agency": li_a_section,
-            "instagram": ig_section,
-            "image_prompt": img_prompt
+        """Parse Claude's agency content output."""
+        import re
+        result = {}
+
+        sections = {
+            "linkedin_company": r"---LINKEDIN_COMPANY---\s*(.*?)(?=---TWITTER---|---INSTAGRAM---|---IMAGE_PROMPT---|$)",
+            "twitter": r"---TWITTER---\s*(.*?)(?=---INSTAGRAM---|---IMAGE_PROMPT---|$)",
+            "instagram": r"---INSTAGRAM---\s*(.*?)(?=---IMAGE_PROMPT---|$)",
+            "image_prompt": r"---IMAGE_PROMPT---\s*(.*?)$",
         }
+
+        for key, pattern in sections.items():
+            match = re.search(pattern, content, re.DOTALL)
+            result[key] = match.group(1).strip() if match else ""
+
+        result["image_prompt"] = result["image_prompt"].replace("```", "").strip()
+        print(f"✅ Parsed content keys: {[k for k, v in result.items() if v]}")
+        return result
 
 if __name__ == "__main__":
     # Test generation

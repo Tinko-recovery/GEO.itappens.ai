@@ -5,7 +5,6 @@ import json
 from datetime import datetime
 from dotenv import load_dotenv
 
-from google_sheets_handler import GoogleSheetsHandler
 from content_engine import ContentEngine
 from telegram_handler import TelegramHandler
 from buffer_poster import BufferPoster
@@ -18,8 +17,11 @@ load_dotenv()
 class ContentEngineAPP:
     def __init__(self, mock=False):
         self.mock = mock
+        # CONTENT_MODE: 'trending' = auto-fetch hot topic (default) | 'sheet' = Google Sheets
+        self.content_mode = os.getenv("CONTENT_MODE", "trending").lower()
+        print(f"🚀 Content mode: {self.content_mode}")
+
         if not mock:
-            self.gs_handler = GoogleSheetsHandler()
             self.content_engine = ContentEngine()
             self.telegram_handler = TelegramHandler()
             self.buffer_poster = BufferPoster()
@@ -28,11 +30,17 @@ class ContentEngineAPP:
                 ant_client=self.content_engine.ant_client,
                 model=self.content_engine.model
             )
+            # Only load Google Sheets handler if needed (avoids OAuth crash in trending mode)
+            if self.content_mode == "sheet":
+                from google_sheets_handler import GoogleSheetsHandler
+                self.gs_handler = GoogleSheetsHandler()
+                print("📊 Google Sheets handler initialized.")
+            else:
+                self.gs_handler = None
+                print("⚡ Trending mode: Google Sheets not loaded.")
+
         self.approval_store = "approvals.json"
-        # CONTENT_MODE: 'trending' = auto-fetch hot topic | 'sheet' = use Google Sheets
-        self.content_mode = os.getenv("CONTENT_MODE", "trending").lower()
-        print(f"Content mode: {self.content_mode}")
-        
+
     def _clean_text(self, text):
         """Removes surrogate characters for safe Telegram transmission."""
         if not text:
@@ -275,36 +283,32 @@ class ContentEngineAPP:
                 content_data = stored_data[content_id]["content"]
 
                 if action == "approve":
-                    # Generic approve (legacy/fallback)
-                    # We'll map this to "all channels"
-                    platforms = ["li_p", "li_a", "ig", "yt"]
+                    platforms = ["li", "tw", "ig", "yt"]
                     await query.edit_message_text(text=f"⏳ <b>Scheduling ALL channels for {content_id}...</b>", parse_mode='HTML')
                 elif action == "reject":
                     await query.edit_message_text(text=f"❌ <b>Rejected:</b> {content_id} will not be posted.", parse_mode='HTML')
                     return
                 else:
-                    # Platform specific approvals
-                    # Data looks like: approve_li_p_day_1
-                    if "approve_li_p" in query.data: p_key, label = "li_p", "Personal LinkedIn"
-                    elif "approve_li_a" in query.data: p_key, label = "li_a", "Agency LinkedIn"
-                    elif "approve_ig" in query.data: p_key, label = "ig", "Instagram"
-                    elif "approve_yt" in query.data: p_key, label = "yt", "YouTube"
+                    if "approve_li_" in query.data: p_key, label = "li", "LinkedIn Company Page"
+                    elif "approve_tw_" in query.data: p_key, label = "tw", "Twitter/X"
+                    elif "approve_ig" in query.data: p_key, label = "ig", "Instagram Reel"
+                    elif "approve_yt" in query.data: p_key, label = "yt", "YouTube Short"
                     elif "approve_all" in query.data: p_key, label = "all", "All Channels"
                     else: return
 
                     await query.edit_message_text(text=f"⏳ <b>Scheduling {label} for {content_id}...</b>", parse_mode='HTML')
-                    
-                    # Calculate peak times
+
                     import datetime as dt
                     tomorrow_date = dt.date.today() + dt.timedelta(days=1)
-                    li_time = dt.datetime.combine(tomorrow_date, dt.time(9, 0)).isoformat() + "Z"
+                    li_time = dt.datetime.combine(tomorrow_date, dt.time(8, 30)).isoformat() + "Z"
+                    tw_time = dt.datetime.combine(tomorrow_date, dt.time(9, 0)).isoformat() + "Z"
                     ig_time = dt.datetime.combine(tomorrow_date, dt.time(11, 0)).isoformat() + "Z"
                     yt_time = dt.datetime.combine(tomorrow_date, dt.time(13, 0)).isoformat() + "Z"
-                    
+
                     image_url = content_data.get("image_url")
                     reel_url = content_data.get("reel_video_url")
                     reel_caption = content_data.get("reel_caption", content_data.get("instagram", ""))
-                    yt_title = content_data.get("title", "AI Insights")
+                    yt_title = content_data.get("title", "AI Insights — itappens.ai")
 
                     # Handle Reel Wait
                     if (p_key in ["ig", "yt", "all"]) and not reel_url and content_id in pending_reel_tasks:
@@ -314,47 +318,47 @@ class ContentEngineAPP:
                             try:
                                 await asyncio.wait_for(asyncio.shield(task), timeout=60)
                             except: pass
-                        
+
                         if os.path.exists(self.approval_store):
                             with open(self.approval_store, "r") as f:
                                 fresh = json.load(f)
                             reel_url = fresh.get(content_id, {}).get("content", {}).get("reel_video_url")
 
                     status_msg = f"✅ <b>Scheduled {label}!</b>\n\n"
-                    
-                    if p_key in ["li_p", "all"]:
-                        res = self.buffer_poster.post_to_linkedin(content_data["linkedin_personal"], profile_type="personal", image_url=image_url, scheduled_at=li_time)
-                        status_msg += f"📅 Personal LI: {'Scheduled ✅' if res and 'data' in res else 'FAILED ❌'}\n"
-                        # 🔥 CROSS-POST TO PORTFOLIO
-                        if res and 'data' in res:
-                            asyncio.create_task(self.telegram_handler.send_to_portfolio(content_data, label=content_data.get("title", "Insight")))
-                    
-                    if p_key in ["li_a", "all"]:
-                        res = self.buffer_poster.post_to_linkedin(content_data["linkedin_agency"], profile_type="agency", image_url=image_url, scheduled_at=li_time)
-                        status_msg += f"📅 Agency LI: {'Scheduled ✅' if res and 'data' in res else 'FAILED ❌'}\n"
+
+                    if p_key in ["li", "all"]:
+                        res = self.buffer_poster.post_to_linkedin(content_data.get("linkedin_company", ""), profile_type="agency", image_url=image_url, scheduled_at=li_time)
+                        status_msg += f"📅 LinkedIn Company: {'Scheduled ✅' if res and 'data' in res else 'FAILED ❌'}\n"
+
+                    if p_key in ["tw", "all"]:
+                        tw_text = content_data.get("twitter", "")
+                        if hasattr(self.buffer_poster, 'post_to_twitter'):
+                            res = self.buffer_poster.post_to_twitter(tw_text, scheduled_at=tw_time)
+                            status_msg += f"📅 Twitter/X: {'Scheduled ✅' if res and 'data' in res else 'FAILED ❌'}\n"
+                        else:
+                            status_msg += "📅 Twitter/X: Not configured yet ⚠️\n"
 
                     if p_key in ["ig", "all"]:
                         if reel_url:
                             res = self.buffer_poster.post_reel_to_instagram(reel_caption, reel_url, scheduled_at=ig_time)
                         else:
-                            res = self.buffer_poster.post_to_instagram(content_data["instagram"], image_url=image_url, scheduled_at=ig_time)
+                            res = self.buffer_poster.post_to_instagram(content_data.get("instagram", ""), image_url=image_url, scheduled_at=ig_time)
                         status_msg += f"📅 Instagram: {'Scheduled ✅' if res and 'data' in res else 'FAILED ❌'}\n"
 
                     if p_key in ["yt", "all"]:
                         if reel_url:
                             res = self.buffer_poster.post_shorts_to_youtube(yt_title, reel_caption, reel_url, scheduled_at=yt_time)
-                            status_msg += f"📅 YouTube: {'Scheduled ✅' if res and 'data' in res else 'FAILED ❌'}\n"
+                            status_msg += f"📅 YouTube Short: {'Scheduled ✅' if res and 'data' in res else 'FAILED ❌'}\n"
                         else:
-                            status_msg += "📅 YouTube: Skipped (no video) ⚠️\n"
+                            status_msg += "📅 YouTube Short: Skipped (no video yet) ⚠️\n"
 
                     await query.edit_message_text(text=status_msg, parse_mode='HTML')
-                    
-                    # Update status
+
                     stored_data[content_id]["status"] = "approved"
                     with open(self.approval_store, "w") as f:
                         json.dump(stored_data, f)
                     return
-                    
+
             except Exception as e:
                 print(f"--- DEBUG: EXCEPTION in callback: {e} ---")
                 try:

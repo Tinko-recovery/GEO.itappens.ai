@@ -2,12 +2,26 @@
 import { useState } from 'react';
 
 export default function CTASection() {
-    const [status, setStatus] = useState<'idle' | 'success'>('idle');
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [form, setForm] = useState({ name: '', email: '', website: '', competitor: '' });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate submission
-        setStatus('success');
+        setStatus('loading');
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            });
+            if (res.ok) {
+                setStatus('success');
+            } else {
+                setStatus('error');
+            }
+        } catch {
+            setStatus('error');
+        }
     };
 
     return (

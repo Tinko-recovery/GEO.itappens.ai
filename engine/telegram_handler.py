@@ -71,24 +71,28 @@ class TelegramHandler:
         pass
 
     async def send_for_approval(self, content_id, content: dict, day_num: int):
-        """Sends content to Telegram with Approve/Reject buttons."""
+        """Sends itappens.ai brand content to Telegram with approval buttons."""
         image_url = content.get("image_url")
-        
+
+        li_preview = content.get('linkedin_company', '')[:300]
+        tw_preview = content.get('twitter', '')[:200]
+        ig_preview = content.get('instagram', '')[:200]
+
         text = (
-            f"🚀 <b>New Content Ready for Approval!</b> (Day {day_num})\n\n"
-            f"📢 <b>PERSONAL LINKEDIN (Generic):</b>\n{content.get('linkedin_personal', '')[:300]}...\n\n"
-            f"🏢 <b>AGENCY LINKEDIN (Marketing):</b>\n{content.get('linkedin_agency', '')[:300]}...\n\n"
-            f"📸 <b>INSTAGRAM:</b>\n{content.get('instagram', '')[:200]}..."
+            f"🚀 <b>itappens.ai Content Ready!</b> (Day {day_num})\n\n"
+            f"🏢 <b>LINKEDIN (Company Page):</b>\n{li_preview}...\n\n"
+            f"🐦 <b>TWITTER/X:</b>\n{tw_preview}...\n\n"
+            f"📸 <b>INSTAGRAM:</b>\n{ig_preview}..."
         )
-        
+
         keyboard = [
             [
-                InlineKeyboardButton("✅ Personal LI", callback_data=f"approve_li_p_{content_id}"),
-                InlineKeyboardButton("✅ Agency LI", callback_data=f"approve_li_a_{content_id}"),
+                InlineKeyboardButton("✅ LinkedIn", callback_data=f"approve_li_{content_id}"),
+                InlineKeyboardButton("✅ Twitter/X", callback_data=f"approve_tw_{content_id}"),
             ],
             [
-                InlineKeyboardButton("🎥 Instagram", callback_data=f"approve_ig_{content_id}"),
-                InlineKeyboardButton("📺 YouTube", callback_data=f"approve_yt_{content_id}"),
+                InlineKeyboardButton("🎥 Instagram Reel", callback_data=f"approve_ig_{content_id}"),
+                InlineKeyboardButton("📺 YouTube Short", callback_data=f"approve_yt_{content_id}"),
             ],
             [
                 InlineKeyboardButton("🚀 APPROVE ALL", callback_data=f"approve_all_{content_id}"),
@@ -98,35 +102,43 @@ class TelegramHandler:
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        
+
         if self.app:
             try:
-                # 1. Send the photo with full context
-                await self.app.bot.send_photo(
-                    chat_id=self.chat_id,
-                    photo=image_url,
-                    caption=self._clean_text(text),
-                    parse_mode='HTML',
-                    reply_markup=reply_markup
-                )
-                
-                # 2. Send the FULL text content in a second message for easy copy-paste
-                full_text = (
-                    f"📄 <b>Full Preview: {content_id}</b>\n\n"
-                    f"<b>(Personal) LinkedIn:</b>\n{content.get('linkedin_personal')}\n\n"
-                    f"<b>(Agency) LinkedIn:</b>\n{content.get('linkedin_agency')}\n\n"
-                    f"<b>Instagram Caption:</b>\n{content.get('instagram')}"
-                )
-                
-                # Split if too long (Telegram limit ~4000)
-                if len(full_text) > 4000:
-                    await self.app.bot.send_message(chat_id=self.chat_id, text=full_text[:4000], parse_mode='HTML')
-                    await self.app.bot.send_message(chat_id=self.chat_id, text=full_text[4000:], parse_mode='HTML')
+                send_fn = self.app.bot.send_photo if image_url else self.app.bot.send_message
+                if image_url:
+                    await self.app.bot.send_photo(
+                        chat_id=self.chat_id,
+                        photo=image_url,
+                        caption=self._clean_text(text),
+                        parse_mode='HTML',
+                        reply_markup=reply_markup
+                    )
                 else:
-                    await self.app.bot.send_message(chat_id=self.chat_id, text=full_text, parse_mode='HTML')
-                    
+                    await self.app.bot.send_message(
+                        chat_id=self.chat_id,
+                        text=self._clean_text(text),
+                        parse_mode='HTML',
+                        reply_markup=reply_markup
+                    )
+
+                # Full text preview for copy/paste
+                full_text = (
+                    f"📄 <b>Full Content: {content_id}</b>\n\n"
+                    f"<b>LinkedIn Company:</b>\n{content.get('linkedin_company', '')}\n\n"
+                    f"<b>Twitter/X:</b>\n{content.get('twitter', '')}\n\n"
+                    f"<b>Instagram:</b>\n{content.get('instagram', '')}"
+                )
+                chunks = [full_text[i:i+4000] for i in range(0, len(full_text), 4000)]
+                for chunk in chunks:
+                    await self.app.bot.send_message(
+                        chat_id=self.chat_id,
+                        text=self._clean_text(chunk),
+                        parse_mode='HTML'
+                    )
+
             except Exception as e:
-                print(f"Telegram error in send_for_approval: {e}")
+                print(f"❌ Telegram approval error: {e}")
 
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("🤖 <b>Zero-Touch Bot is ONLINE!</b>\n\nI am listening for approvals and running the daily scheduler. Every morning at your scheduled time, I will ping you here.", parse_mode='HTML')
