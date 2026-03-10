@@ -1,165 +1,120 @@
 'use client';
 import { motion } from 'framer-motion';
 
-const packages = [
+const plans = [
     {
-        id: 'geo',
-        tag: 'itappens GEO',
-        label: 'Full-Stack',
-        headline: 'GEO + Content',
-        description: 'Complete AI brand dominance. We engineer your brand into AI answers AND automate your content — zero manual effort.',
-        features: [
-            'AI Presence Audit (50+ queries)',
-            'GEO strategy & implementation',
-            'AI citation tracking',
-            'Full content automation (below)',
-            'Founder-direct onboarding',
-        ],
-        cta: 'Request GEO Package →',
-        accent: true,
+        id: 'growth',
+        name: 'Growth',
+        price: '₹4,999',
+        period: '/mo',
+        description: 'LinkedIn + Twitter/X content, daily. First post live in 5 minutes.',
+        highlight: false,
     },
     {
-        id: 'content',
-        tag: 'itappens Content',
-        label: 'Automation Only',
-        headline: 'Content Generator',
-        description: 'Your social media on autopilot. Trending AI content, cinematic visuals, and Reels — posted daily across all channels.',
-        features: [
-            'Daily trend intelligence',
-            'LinkedIn + Twitter/X posts',
-            'Instagram Reels (AI video)',
-            'YouTube Shorts',
-            'Telegram approval — you control it',
-        ],
-        cta: 'Request Content Package →',
-        accent: false,
+        id: 'pro',
+        name: 'Pro',
+        price: '₹9,999',
+        period: '/mo',
+        description: 'Add Instagram Reels + YouTube Shorts. Full multi-channel automation.',
+        highlight: true,
+    },
+    {
+        id: 'geo',
+        name: 'Pro + GEO',
+        price: '₹19,999',
+        period: '/mo',
+        description: 'Everything in Pro + we make your brand appear in ChatGPT & Perplexity answers.',
+        highlight: false,
     },
 ];
 
 export default function PackagesSection() {
     return (
-        <section id="packages" className="section-base section-padding">
-            <div className="container-wide">
-                <div className="eyebrow">
+        <section id="packages" style={{ padding: '80px 48px' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                <div className="eyebrow" style={{ marginBottom: '16px' }}>
                     <div className="eyebrow-dot" />
-                    <span>Packages</span>
+                    <span>Pricing</span>
                 </div>
 
-                <motion.h2
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7 }}
-                    className="headline-lg"
-                    style={{ marginBottom: '16px', maxWidth: 560 }}
+                <motion.div
+                    initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }} transition={{ duration: 0.7 }}
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px', flexWrap: 'wrap', gap: '24px' }}
                 >
-                    One platform.<br />
-                    <span style={{ color: 'var(--accent)' }}>Two ways in.</span>
-                </motion.h2>
+                    <h2 className="headline-lg" style={{ margin: 0, maxWidth: 480 }}>
+                        One platform.<br />
+                        <span style={{ color: 'var(--accent)' }}>Three ways to grow.</span>
+                    </h2>
+                    <a href="/pricing" style={{
+                        border: '1px solid var(--border)', padding: '12px 24px',
+                        fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase',
+                        color: 'var(--muted)', textDecoration: 'none', whiteSpace: 'nowrap',
+                        transition: 'all 0.2s',
+                    }}>
+                        See Full Pricing →
+                    </a>
+                </motion.div>
 
-                <motion.p
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7, delay: 0.1 }}
-                    className="text-sub"
-                    style={{ marginBottom: '64px', maxWidth: 480 }}
-                >
-                    Start with content automation. Add GEO when you're ready to own the AI conversation in your market.
-                </motion.p>
-
-                <div className="packages-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-                    {packages.map((pkg, idx) => (
-                        <motion.div
-                            key={pkg.id}
-                            initial={{ opacity: 0, y: 24 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: idx * 0.15 }}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: 'var(--border)' }}
+                    className="plans-grid">
+                    {plans.map((plan, idx) => (
+                        <motion.div key={plan.id}
+                            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }} transition={{ duration: 0.5, delay: idx * 0.1 }}
                             style={{
-                                border: `1px solid ${pkg.accent ? 'var(--accent-border)' : 'var(--border)'}`,
-                                background: pkg.accent ? 'var(--accent-dim)' : 'var(--surface)',
-                                padding: '40px',
+                                background: plan.highlight ? 'var(--accent-dim)' : 'var(--bg)',
+                                padding: '40px 36px',
                                 position: 'relative',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '24px',
-                            }}
-                        >
-                            {pkg.accent && (
+                                borderTop: plan.highlight ? '2px solid var(--accent)' : '2px solid transparent',
+                            }}>
+                            {plan.highlight && (
                                 <div style={{
-                                    position: 'absolute', top: '20px', right: '20px',
-                                    background: 'var(--accent)', color: 'var(--bg)',
-                                    fontSize: '8px', letterSpacing: '2px',
-                                    textTransform: 'uppercase', padding: '4px 10px',
-                                    fontWeight: 700,
-                                }}>
-                                    RECOMMENDED
-                                </div>
+                                    position: 'absolute', top: '0', left: '0', right: '0',
+                                    background: 'var(--accent)', textAlign: 'center',
+                                    fontSize: '8px', letterSpacing: '2px', padding: '3px',
+                                    color: 'var(--bg)', fontWeight: 700, textTransform: 'uppercase',
+                                }}>MOST POPULAR</div>
                             )}
 
-                            <div>
-                                <div style={{ fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px' }}>
-                                    {pkg.tag}
-                                </div>
-                                <div style={{ fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '16px' }}>
-                                    {pkg.label}
-                                </div>
-                                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 800, lineHeight: 1.1, marginBottom: '16px' }}>
-                                    {pkg.headline}
-                                </h3>
-                                <p className="text-sub" style={{ fontSize: '13px' }}>
-                                    {pkg.description}
-                                </p>
+                            <div style={{ fontSize: '8px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px', marginTop: plan.highlight ? '16px' : 0 }}>
+                                itappens {plan.id === 'geo' ? 'GEO' : 'Content'}
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                {pkg.features.map((f) => (
-                                    <div key={f} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', color: 'var(--text2)' }}>
-                                        <div style={{ width: '4px', height: '4px', background: 'var(--accent)', borderRadius: '50%', flexShrink: 0 }} />
-                                        {f}
-                                    </div>
-                                ))}
+                            <div style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800, marginBottom: '8px' }}>{plan.name}</div>
+
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px', marginBottom: '16px' }}>
+                                <span style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: 800 }}>{plan.price}</span>
+                                <span style={{ fontSize: '11px', color: 'var(--muted)' }}>{plan.period}</span>
                             </div>
 
-                            <a
-                                href="/#cta"
-                                style={{
-                                    marginTop: 'auto',
-                                    display: 'inline-block',
-                                    background: pkg.accent ? 'var(--accent)' : 'transparent',
-                                    color: pkg.accent ? 'var(--bg)' : 'var(--accent)',
-                                    border: `1px solid ${pkg.accent ? 'var(--accent)' : 'var(--accent-border)'}`,
-                                    padding: '14px 24px',
-                                    fontSize: '10px',
-                                    letterSpacing: '2px',
-                                    textTransform: 'uppercase',
-                                    textDecoration: 'none',
-                                    fontWeight: 700,
-                                    transition: 'all 0.2s',
-                                    textAlign: 'center',
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.opacity = '0.85';
-                                    e.currentTarget.style.transform = 'translateY(-2px)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.opacity = '1';
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                }}
-                            >
-                                {pkg.cta}
+                            <p style={{ fontSize: '12px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '28px' }}>{plan.description}</p>
+
+                            <a href={`/signup?plan=${plan.id}`} style={{
+                                display: 'block', textAlign: 'center',
+                                background: plan.highlight ? 'var(--accent)' : 'transparent',
+                                color: plan.highlight ? 'var(--bg)' : 'var(--accent)',
+                                border: `1px solid ${plan.highlight ? 'var(--accent)' : 'var(--accent-border)'}`,
+                                padding: '12px', fontSize: '10px', letterSpacing: '2px',
+                                textTransform: 'uppercase', textDecoration: 'none', fontWeight: 700,
+                            }}>
+                                Get Started →
                             </a>
                         </motion.div>
                     ))}
                 </div>
+
+                <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '11px', color: 'var(--muted)' }}>
+                    Annual plans save up to ₹40K · Discount codes accepted at checkout · <a href="mailto:founder@tinko.in" style={{ color: 'var(--accent)' }}>founder@tinko.in</a>
+                </div>
             </div>
 
             <style jsx>{`
-                @media (max-width: 900px) {
-                    .packages-grid { grid-template-columns: 1fr !important; }
+                @media (max-width: 860px) {
+                    .plans-grid { grid-template-columns: 1fr !important; }
                 }
             `}</style>
         </section>
     );
 }
+

@@ -13,10 +13,10 @@ export default function NavBar() {
     }, []);
 
     const navLinks = [
+        { name: 'Pricing', href: '/pricing' },
         { name: 'Packages', href: '/#packages' },
         { name: 'System', href: '/#system' },
         { name: 'Proof', href: '/#proof' },
-        { name: 'Roadmap', href: '/#roadmap' },
         { name: 'Founder', href: '/#founder' },
     ];
 
