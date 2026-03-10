@@ -2,6 +2,7 @@
 import NavBar from "@/components/NavBar";
 import HeroSection from "@/components/sections/HeroSection";
 import SolutionSection from "@/components/sections/SolutionSection";
+import PackagesSection from "@/components/sections/PackagesSection";
 import ProofSection from "@/components/sections/ProofSection";
 import RoadmapSection from "@/components/sections/RoadmapSection";
 import FounderSection from "@/components/sections/FounderSection";
@@ -16,6 +17,7 @@ export default function Home() {
       <div className="layer-top">
         <HeroSection />
         <SolutionSection />
+        <PackagesSection />
         <ProofSection />
         <RoadmapSection />
         <FounderSection />

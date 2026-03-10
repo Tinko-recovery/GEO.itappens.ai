@@ -28,7 +28,7 @@ export default function HeroSection() {
                 userSelect: 'none',
                 zIndex: 0
             }}>
-                GEO
+                itappens
             </div>
 
             <motion.div
@@ -38,7 +38,7 @@ export default function HeroSection() {
                 className="hero-eyebrow"
             >
                 <div className="eyebrow-dot" />
-                <span className="hero-eyebrow-text">India's GEO Practice — 2026</span>
+                <span className="hero-eyebrow-text">AI Brand Visibility + Content — 2026</span>
                 <div className="eyebrow-div" />
                 <span style={{ fontSize: '10px', letterSpacing: '2px', color: 'var(--muted)' }}>
                     Blocks & Loops Technologies
