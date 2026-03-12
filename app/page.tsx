@@ -100,7 +100,6 @@ export default function Page() {
 
           <div className="hero-actions">
             <a href="#cta" className="btn btn-primary btn-lg">Start Free AI Audit →</a>
-            <a href="#proof" className="btn btn-outline btn-lg">See the Evidence</a>
           </div>
 
           <p className="hero-social-proof">
@@ -187,60 +186,6 @@ export default function Page() {
               <p>We run 200+ targeted prompts across ChatGPT, Perplexity, Gemini and Claude every two weeks to measure your brand's citation frequency. When AI model updates affect your visibility, we know within days.</p>
               <span className="pillar-outcome">→ Bi-weekly AI presence delta reports</span>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="comparison" id="proof">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">The Evidence</span>
-            <h2>GEO is not a trend.<br />It's the new default.</h2>
-            <p>Traditional SEO metrics are collapsing for informational queries as AI search takes over. The brands that move now define the next decade of discovery.</p>
-          </div>
-
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Metric</th>
-                  <th>Traditional Marketing</th>
-                  <th>itappens.ai GEO</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>How customers find you</td>
-                  <td>Google SERP — declining CTR for info queries</td>
-                  <td>Named directly in AI responses</td>
-                </tr>
-                <tr>
-                  <td>Brand trust signal</td>
-                  <td>Ranked listing — one of many results</td>
-                  <td>AI-endorsed recommendation — feels authoritative</td>
-                </tr>
-                <tr>
-                  <td>Optimisation approach</td>
-                  <td>Keyword density and backlinks</td>
-                  <td>Semantic entity + information density</td>
-                </tr>
-                <tr>
-                  <td>Indian market saturation</td>
-                  <td>5M+ competing domains on Google</td>
-                  <td>Under 200 GEO-optimised brands in India today</td>
-                </tr>
-                <tr>
-                  <td>Long-term asset value</td>
-                  <td>Rankings fluctuate with every algorithm update</td>
-                  <td>Entity citations compound over time</td>
-                </tr>
-                <tr>
-                  <td>Time to first result</td>
-                  <td>6–12 months for competitive keywords</td>
-                  <td>First citations typically within 8–12 weeks</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </section>
