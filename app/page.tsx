@@ -1,42 +1,428 @@
-'use client';
-import NavBar from "@/components/NavBar";
-import HeroSection from "@/components/sections/HeroSection";
-import SolutionSection from "@/components/sections/SolutionSection";
-import PackagesSection from "@/components/sections/PackagesSection";
-import ProofSection from "@/components/sections/ProofSection";
-import FAQSection from "@/components/sections/FAQSection";
-import CTASection from "@/components/sections/CTASection";
-import BlogTeaser from "@/components/sections/BlogTeaser";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+
+export default function Page() {
+  const [heroText, setHeroText] = useState("who to trust in your category");
+
+  useEffect(() => {
+    const lines = [
+      "who to trust in your category",
+      "which brand to recommend",
+      "what product to buy",
+      "which consultant to hire",
+      "where to go in your city"
+    ];
+    let idx = 0;
+
+    const interval = setInterval(() => {
+      const el = document.getElementById('heroRotate');
+      if (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(8px)';
+        setTimeout(() => {
+          idx = (idx + 1) % lines.length;
+          setHeroText(lines[idx]);
+          el.style.transition = 'opacity 0.4s, transform 0.4s';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 300);
+      }
+    }, 2800);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const toggleFaq = (e: any) => {
+    const item = e.currentTarget.parentElement;
+    item.classList.toggle('open');
+  };
+
+  const handleAuditRequest = async (e: any) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const website = formData.get('website');
+    const competitor = formData.get('competitor');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, website, competitor }),
+      });
+      if (res.ok) {
+        alert("Request sent successfully! We will be in touch.");
+        e.target.reset();
+      } else {
+        alert("Failed to send request. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error submitting request.");
+    }
+  };
+
   return (
-    <main className="min-h-screen">
-      <NavBar />
-
-      <div className="layer-top">
-        <HeroSection />
-        <SolutionSection />
-        <PackagesSection />
-        <ProofSection />
-        <BlogTeaser />
-        <FAQSection />
-        <CTASection />
-      </div>
-
-      <footer style={{ padding: '40px 48px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }} className="site-footer">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <div style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px' }}>
-            © 2026 itappens.ai — Blocks and Loops Technologies Pvt Ltd. All rights reserved.
-          </div>
-          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-            <a href="/blog" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>Blog</a>
-            <a href="/pricing" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>Pricing</a>
-            <a href="/privacy" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>Privacy Policy</a>
-            <a href="mailto:founder@tinko.in" style={{ fontSize: '10px', color: 'var(--muted)', textDecoration: 'none' }}>founder@tinko.in</a>
+    <>
+      <nav>
+        <div className="container nav-inner">
+          <a href="#" className="nav-logo">it<span>appens</span>.ai</a>
+          <ul className="nav-links">
+            <li><a href="#system">How It Works</a></li>
+            <li><a href="#proof">Proof</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#founder">Founder</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+          <div className="nav-cta">
+            <a href="#cta" className="btn btn-primary">Free AI Audit →</a>
           </div>
         </div>
-      </footer>
+      </nav>
 
-    </main>
+      <section className="hero">
+        <div className="container">
+          <div className="hero-badge">
+            <span className="dot"></span>
+            India's AI Brand Visibility Practice — 2026
+          </div>
+
+          <h1>
+            When your customer asks AI<br />
+            <span className="hero-rotate" id="heroRotate" style={{ transition: 'opacity 0.4s, transform 0.4s' }}>{heroText}</span>
+          </h1>
+
+          <p className="hero-sub">
+            Your competitors appear in ChatGPT, Perplexity & Gemini answers — not because they're better,
+            but because their brand data is structured for AI. We fix that.
+          </p>
+
+          <div className="hero-actions">
+            <a href="#cta" className="btn btn-primary btn-lg">Start Free AI Audit →</a>
+            <a href="#proof" className="btn btn-outline btn-lg">See the Evidence</a>
+          </div>
+
+          <p className="hero-social-proof">
+            <span className="stars">★★★★★</span>
+            &nbsp;Founder-direct · No sales call · India-focused
+          </p>
+        </div>
+      </section>
+
+      <div className="ai-logos">
+        <div className="container">
+          <p className="ai-logos-label">We engineer your visibility across</p>
+          <div className="ai-logos-track">
+            <div className="ai-logo-item"><span className="icon">🤖</span> ChatGPT</div>
+            <div className="ai-logo-item"><span className="icon">🔍</span> Perplexity</div>
+            <div className="ai-logo-item"><span className="icon">✦</span> Gemini</div>
+            <div className="ai-logo-item"><span className="icon">◆</span> Claude</div>
+            <div className="ai-logo-item"><span className="icon">𝕏</span> Grok</div>
+            <div className="ai-logo-item"><span className="icon">🪟</span> Copilot</div>
+          </div>
+        </div>
+      </div>
+
+      <section className="stats-bar">
+        <div className="container">
+          <div className="stats-grid">
+            <div className="stat-item">
+              <div className="stat-number">&lt;200</div>
+              <div className="stat-label">Indian brands<br />GEO-ready today</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">90d</div>
+              <div className="stat-label">To first verified<br />AI citations</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">5×</div>
+              <div className="stat-label">Growth in AI search<br />vs traditional search</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">8–12w</div>
+              <div className="stat-label">Typical time to<br />first AI citations</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pillars" id="system">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">The 4-Pillar System</span>
+            <h2>How your brand becomes<br />the default AI answer</h2>
+            <p>Traditional SEO ranks you on Google. GEO gets you named by AI. These are two completely different games — and we play the new one.</p>
+          </div>
+
+          <div className="pillars-grid">
+            <div className="pillar-card">
+              <div className="pillar-num">Pillar 01</div>
+              <div className="pillar-icon">🧬</div>
+              <h3>Semantic Identity Seeding</h3>
+              <p>AI models don't find you by keyword — they recognise you as a known entity. We build the structured knowledge definition that makes AI models say your brand's name with confidence when answering questions in your category.</p>
+              <span className="pillar-outcome">→ Your brand becomes a named entity, not just text</span>
+            </div>
+
+            <div className="pillar-card">
+              <div className="pillar-num">Pillar 02</div>
+              <div className="pillar-icon">⚡</div>
+              <h3>Information Gain Content</h3>
+              <p>AI models cite sources that provide unique, data-dense information — not generic blog posts. We engineer 12–18 high-value content pieces specifically designed to be extracted and quoted by AI reasoning engines.</p>
+              <span className="pillar-outcome">→ Most clients achieve citations within 8–12 weeks</span>
+            </div>
+
+            <div className="pillar-card">
+              <div className="pillar-num">Pillar 03</div>
+              <div className="pillar-icon">🏗️</div>
+              <h3>Machine-Readable Infrastructure</h3>
+              <p>Deep JSON-LD Schema (Organisation, Service, FAQ, LocalBusiness) that gives AI crawlers like PerplexityBot the mathematical proof they need to trust and cite your brand. Without this, you're invisible to AI.</p>
+              <span className="pillar-outcome">→ Full schema coverage on deployment</span>
+            </div>
+
+            <div className="pillar-card">
+              <div className="pillar-num">Pillar 04</div>
+              <div className="pillar-icon">📈</div>
+              <h3>AI Citation Auditing</h3>
+              <p>We run 200+ targeted prompts across ChatGPT, Perplexity, Gemini and Claude every two weeks to measure your brand's citation frequency. When AI model updates affect your visibility, we know within days.</p>
+              <span className="pillar-outcome">→ Bi-weekly AI presence delta reports</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="comparison" id="proof">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">The Evidence</span>
+            <h2>GEO is not a trend.<br />It's the new default.</h2>
+            <p>Traditional SEO metrics are collapsing for informational queries as AI search takes over. The brands that move now define the next decade of discovery.</p>
+          </div>
+
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Traditional Marketing</th>
+                  <th>itappens.ai GEO</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>How customers find you</td>
+                  <td>Google SERP — declining CTR for info queries</td>
+                  <td>Named directly in AI responses</td>
+                </tr>
+                <tr>
+                  <td>Brand trust signal</td>
+                  <td>Ranked listing — one of many results</td>
+                  <td>AI-endorsed recommendation — feels authoritative</td>
+                </tr>
+                <tr>
+                  <td>Optimisation approach</td>
+                  <td>Keyword density and backlinks</td>
+                  <td>Semantic entity + information density</td>
+                </tr>
+                <tr>
+                  <td>Indian market saturation</td>
+                  <td>5M+ competing domains on Google</td>
+                  <td>Under 200 GEO-optimised brands in India today</td>
+                </tr>
+                <tr>
+                  <td>Long-term asset value</td>
+                  <td>Rankings fluctuate with every algorithm update</td>
+                  <td>Entity citations compound over time</td>
+                </tr>
+                <tr>
+                  <td>Time to first result</td>
+                  <td>6–12 months for competitive keywords</td>
+                  <td>First citations typically within 8–12 weeks</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="roadmap" id="roadmap">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">The 6-Phase Journey</span>
+            <h2>From invisible to default answer.</h2>
+            <p>A 90-day compounding roadmap. Each phase builds on the last — turning your brand from an unknown entity into the name AI models consistently recommend.</p>
+          </div>
+
+          <div className="phases-grid">
+            <div className="phase-card">
+              <div className="phase-number">1</div>
+              <div className="phase-timing">Week 1–2</div>
+              <h3>AI Presence Audit</h3>
+              <p>200+ targeted prompts across ChatGPT, Perplexity, Gemini and Claude establish your baseline citation rate and competitor gap map.</p>
+              <div className="phase-tags">
+                <span className="phase-tag">Citation Report</span>
+                <span className="phase-tag">Competitor Gap Map</span>
+              </div>
+            </div>
+
+            <div className="phase-card">
+              <div className="phase-number">2</div>
+              <div className="phase-timing">Week 2–4</div>
+              <h3>Entity Architecture</h3>
+              <p>We design your semantic entity — the structured definition AI models use when reasoning about your brand in your category.</p>
+              <div className="phase-tags">
+                <span className="phase-tag">Brand Entity Doc</span>
+                <span className="phase-tag">Knowledge Blueprint</span>
+              </div>
+            </div>
+
+            <div className="phase-card">
+              <div className="phase-number">3</div>
+              <div className="phase-timing">Week 4–8</div>
+              <h3>Content Sprint</h3>
+              <p>12–18 high-information-gain content pieces engineered with data-dense, AI-extractable paragraphs. Precision GEO assets — not generic blog posts.</p>
+              <div className="phase-tags">
+                <span className="phase-tag">18 GEO Assets</span>
+                <span className="phase-tag">Liftability Score</span>
+              </div>
+            </div>
+
+            <div className="phase-card">
+              <div className="phase-number">4</div>
+              <div className="phase-timing">Week 6–10</div>
+              <h3>Schema & Technical Layer</h3>
+              <p>Full JSON-LD deployment. AI crawlers like PerplexityBot and OAI-SearchBot consume these directly to corroborate your content claims.</p>
+              <div className="phase-tags">
+                <span className="phase-tag">Full Schema Coverage</span>
+                <span className="phase-tag">Data Validation</span>
+              </div>
+            </div>
+
+            <div className="phase-card">
+              <div className="phase-number">5</div>
+              <div className="phase-timing">Week 8+</div>
+              <h3>Citation Amplification</h3>
+              <p>15+ authoritative third-party references — directories, press, industry databases — corroborating your entity claims across multiple sources.</p>
+              <div className="phase-tags">
+                <span className="phase-tag">15+ Entity References</span>
+                <span className="phase-tag">Authority Map</span>
+              </div>
+            </div>
+
+            <div className="phase-card">
+              <div className="phase-number">6</div>
+              <div className="phase-timing">Monthly · Ongoing</div>
+              <h3>GEO Intelligence Layer</h3>
+              <p>Monthly citation dashboards, quarterly entity refreshes, and real-time alerts when AI model updates affect your citation posture.</p>
+              <div className="phase-tags">
+                <span className="phase-tag">Monthly GEO Report</span>
+                <span className="phase-tag">Entity Refresh</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founder" id="founder">
+        <div className="container">
+          <div className="founder-inner">
+            <div className="founder-content">
+              <h2>Built on myself first.<br />Then built for you.</h2>
+              <ul className="founder-bullets">
+                <li>Founder-direct engagement — no junior teams, no templates</li>
+                <li>Live proof: itappens.ai ranks in GEO for our own target queries</li>
+                <li>India-first strategy — built for Indian brands, Indian cities, Indian buyers</li>
+                <li>Small client roster per quarter — deep work, not volume</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="faq" id="faq">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">Common Questions</span>
+            <h2>Everything you need to decide.</h2>
+          </div>
+
+          <div className="faq-list">
+            <div className="faq-item open">
+              <button className="faq-q" onClick={toggleFaq}>
+                What exactly is Generative Engine Optimisation (GEO)?
+                <span className="faq-icon">+</span>
+              </button>
+              <div className="faq-a">GEO is the practice of structuring your brand's data, content, and technical infrastructure so that AI models (ChatGPT, Perplexity, Gemini, Claude) cite your brand when answering questions in your category. It's to AI what SEO was to Google — except the rules are completely different.</div>
+            </div>
+
+            <div className="faq-item">
+              <button className="faq-q" onClick={toggleFaq}>
+                How does itappens.ai get my brand cited in AI responses?
+                <span className="faq-icon">+</span>
+              </button>
+              <div className="faq-a">We work across four layers: your brand's semantic entity definition, high-information-gain content that AI models extract from, JSON-LD schema that AI crawlers consume, and a third-party citation network that corroborates your entity claims. All four layers compound together over 90 days.</div>
+            </div>
+
+            <div className="faq-item">
+              <button className="faq-q" onClick={toggleFaq}>
+                How long before I start appearing in AI responses?
+                <span className="faq-icon">+</span>
+              </button>
+              <div className="faq-a">Most clients see their first verifiable AI citations within 8–12 weeks of starting the engagement. We measure this with 200+ targeted prompts run bi-weekly so you can see the progress in concrete numbers, not vague claims.</div>
+            </div>
+
+            <div className="faq-item">
+              <button className="faq-q" onClick={toggleFaq}>
+                What is the ROI compared to traditional SEO or paid ads?
+                <span className="faq-icon">+</span>
+              </button>
+              <div className="faq-a">Traditional SEO takes 6–12 months for competitive keywords and resets with every algorithm update. Paid ads stop when you stop paying. GEO citations are entity-based — they compound over time and grow more authoritative as AI models learn from more data. The window is also unusually open right now: fewer than 200 Indian brands are GEO-optimised today.</div>
+            </div>
+
+            <div className="faq-item">
+              <button className="faq-q" onClick={toggleFaq}>
+                Do you work with all types of businesses?
+                <span className="faq-icon">+</span>
+              </button>
+              <div className="faq-a">We're India-focused and work best with service businesses, consultants, agencies, and product brands that have a specific category they want to own. We keep a small client roster per quarter — max 2 clients per niche per geography — so we can go deep, not wide.</div>
+            </div>
+
+            <div className="faq-item">
+              <button className="faq-q" onClick={toggleFaq}>
+                How do I get started?
+                <span className="faq-icon">+</span>
+              </button>
+              <div className="faq-a">Start with a Free AI Audit. We run your brand through 50+ targeted queries across ChatGPT, Perplexity, Gemini and Claude. You'll see exactly where you're cited, where you're invisible, and which competitor is taking your traffic. No sales call, no credit card. Just the data.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-section" id="cta">
+        <div className="container">
+          <h2>See where your brand stands.<br />Free AI Audit.</h2>
+          <p>We'll run your brand through 50+ queries across ChatGPT, Perplexity, Gemini and Claude. You'll see exactly where you're invisible — and which competitor is taking your spot.</p>
+
+          <form className="cta-form" onSubmit={handleAuditRequest}>
+            <input type="email" name="email" className="cta-input" placeholder="Corporate email address" required />
+            <input type="url" name="website" className="cta-input" placeholder="Your website URL" required />
+            <input type="url" name="competitor" className="cta-input" placeholder="Primary competitor URL" required />
+            <button type="submit" className="btn btn-primary btn-lg" style={{ justifyContent: 'center' }}>Request AI Audit →</button>
+            <p className="cta-guarantee">founder@tinko.in reviews every request personally. No spam.</p>
+          </form>
+        </div>
+      </section>
+
+      <footer>
+        <div className="container footer-inner">
+          <div className="footer-logo">it<span>appens</span>.ai</div>
+          <div className="footer-links">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="mailto:founder@tinko.in">founder@tinko.in</a>
+          </div>
+          <div className="footer-copy">© 2026 Blocks & Loops Technologies Pvt Ltd</div>
+        </div>
+      </footer>
+    </>
   );
 }

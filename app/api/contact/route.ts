@@ -1,56 +1,52 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import sgMail from '@sendgrid/mail';
 
-export async function POST(req: NextRequest) {
+// Ensure the API key exists
+const sendgridKey = process.env.SENDGRID_API_KEY;
+
+if (sendgridKey) {
+    sgMail.setApiKey(sendgridKey);
+}
+
+export async function POST(request: Request) {
     try {
-        const { name, email, website, competitor } = await req.json();
-        if (!email || !website) {
-            return NextResponse.json({ error: 'Email and website are required.' }, { status: 400 });
+        const { email, website, competitor } = await request.json();
+
+        if (!email || !website || !competitor) {
+            return NextResponse.json(
+                { error: 'Missing required fields' },
+                { status: 400 }
+            );
         }
 
-        const RESEND_API_KEY = process.env.RESEND_API_KEY;
-        const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'founder@tinko.in';
-
-        if (!RESEND_API_KEY) {
-            // Fallback: log and return success (so form doesn't break during setup)
-            console.log(`[CONTACT FORM] No RESEND_API_KEY set. Email: ${email}, Website: ${website}, Competitor: ${competitor}`);
-            return NextResponse.json({ success: true });
+        if (!sendgridKey) {
+            console.warn('SENDGRID_API_KEY is missing. Mocking success for the form submission.');
+            // Fallback/mock if the key is not set so the UI doesn't break
+            return NextResponse.json({ success: true, mocked: true });
         }
 
-        const emailBody = `
-New AI Audit Request from itappens.ai
+        const msg = {
+            to: 'founder@tinko.in', // The recipient
+            from: 'founder@tinko.in', // Your verified sender address on SendGrid
+            replyTo: email,
+            subject: `New AI Audit Request -> ${website}`,
+            text: `New Request for Free AI Audit:\n\nContact Email: ${email}\nWebsite URL: ${website}\nCompetitor URL: ${competitor}`,
+            html: `
+        <h2>New Request for Free AI Audit</h2>
+        <p><strong>Contact Email:</strong> ${email}</p>
+        <p><strong>Website URL:</strong> <a href="${website}">${website}</a></p>
+        <p><strong>Competitor URL:</strong> <a href="${competitor}">${competitor}</a></p>
+      `,
+        };
 
-Name: ${name || 'Not provided'}
-Email: ${email}
-Website: ${website}
-Competitor: ${competitor || 'Not provided'}
-
-Submitted at: ${new Date().toISOString()}
-        `.trim();
-
-        const res = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${RESEND_API_KEY}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                from: 'itappens.ai <onboarding@resend.dev>',
-                to: [CONTACT_EMAIL],
-                reply_to: email,
-                subject: `New AI Audit Request — ${website}`,
-                text: emailBody,
-            }),
-        });
-
-        if (!res.ok) {
-            const err = await res.json();
-            console.error('Resend error:', err);
-            return NextResponse.json({ error: 'Email send failed.' }, { status: 500 });
-        }
+        await sgMail.send(msg);
 
         return NextResponse.json({ success: true });
-    } catch (err: any) {
-        console.error('Contact API error:', err);
-        return NextResponse.json({ error: 'Server error.' }, { status: 500 });
+    } catch (error: any) {
+        console.error('SendGrid Error:', error?.response?.body || error.message);
+        return NextResponse.json(
+            { error: 'Failed to send email via SendGrid' },
+            { status: 500 }
+        );
     }
 }
