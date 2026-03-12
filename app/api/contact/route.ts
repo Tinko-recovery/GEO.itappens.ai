@@ -1,12 +1,9 @@
 import { NextResponse } from 'next/server';
-import sgMail from '@sendgrid/mail';
+import { Resend } from 'resend';
 
 // Ensure the API key exists
-const sendgridKey = process.env.SENDGRID_API_KEY;
-
-if (sendgridKey) {
-    sgMail.setApiKey(sendgridKey);
-}
+const resendKey = process.env.RESEND_API_KEY;
+const resend = resendKey ? new Resend(resendKey) : null;
 
 export async function POST(request: Request) {
     try {
@@ -19,15 +16,15 @@ export async function POST(request: Request) {
             );
         }
 
-        if (!sendgridKey) {
-            console.warn('SENDGRID_API_KEY is missing. Mocking success for the form submission.');
+        if (!resend) {
+            console.warn('RESEND_API_KEY is missing. Mocking success for the form submission.');
             // Fallback/mock if the key is not set so the UI doesn't break
             return NextResponse.json({ success: true, mocked: true });
         }
 
-        const msg = {
-            to: 'founder@tinko.in', // The recipient
-            from: 'founder@tinko.in', // Your verified sender address on SendGrid
+        const { data, error } = await resend.emails.send({
+            from: 'itappens.ai <onboarding@resend.dev>', // Resend's default testing domain or use a verified one
+            to: 'founder@tinko.in',
             replyTo: email,
             subject: `New AI Audit Request -> ${website}`,
             text: `New Request for Free AI Audit:\n\nContact Email: ${email}\nWebsite URL: ${website}\nCompetitor URL: ${competitor}`,
@@ -37,15 +34,21 @@ export async function POST(request: Request) {
         <p><strong>Website URL:</strong> <a href="${website}">${website}</a></p>
         <p><strong>Competitor URL:</strong> <a href="${competitor}">${competitor}</a></p>
       `,
-        };
+        });
 
-        await sgMail.send(msg);
+        if (error) {
+            console.error('Resend Error:', error);
+            return NextResponse.json(
+                { error: 'Failed to send email via Resend' },
+                { status: 500 }
+            );
+        }
 
         return NextResponse.json({ success: true });
     } catch (error: any) {
-        console.error('SendGrid Error:', error?.response?.body || error.message);
+        console.error('API Error:', error.message);
         return NextResponse.json(
-            { error: 'Failed to send email via SendGrid' },
+            { error: 'Internal Server Error' },
             { status: 500 }
         );
     }
