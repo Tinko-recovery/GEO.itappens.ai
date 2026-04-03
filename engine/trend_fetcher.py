@@ -97,7 +97,6 @@ class TrendFetcher:
             "- NOT overly niche or developer-focused\n\n"
             f"Stories:\n{stories_text}\n\n"
             "Reply in this format ONLY:\n"
-            "ID: [the number from the list above]\n"
             "TITLE: [the exact title of the chosen story]\n"
             "HOOK: [a punchy 1-sentence hook for a business audience]\n"
             "CATEGORY: [one of: AI Tools, Business Strategy, Future of Work, AI News, Industry Disruption]"
@@ -114,35 +113,20 @@ class TrendFetcher:
     def _parse_topic_pick(self, text: str, stories: list) -> dict:
         """Parse Claude's picked topic into content engine format."""
         import re
-        id_m = re.search(r"ID:\s*(\d+)", text)
         title_m = re.search(r"TITLE:\s*(.+)", text)
         hook_m = re.search(r"HOOK:\s*(.+)", text)
         cat_m = re.search(r"CATEGORY:\s*(.+)", text)
 
-        # Retrieve matched story for URL
-        matched_story = None
-        if id_m:
-            idx = int(id_m.group(1)) - 1
-            if 0 <= idx < len(stories):
-                matched_story = stories[idx]
-
-        title = title_m.group(1).strip() if title_m else (matched_story["title"] if matched_story else "AI Innovation Today")
+        title = title_m.group(1).strip() if title_m else (stories[0]["title"] if stories else "AI Innovation Today")
         hook = hook_m.group(1).strip() if hook_m else ""
         category = cat_m.group(1).strip() if cat_m else "AI News"
-        
-        source_url = matched_story.get("url") if matched_story else None
-        source_name = matched_story.get("source") if matched_story else None
 
         print(f"--- TREND PICKED: {title}")
-        if source_url:
-            print(f"--- SOURCE: {source_url}")
-
+        print(f"--- HOOK: {hook}")
         return {
             "title": title,
             "hook": hook,
             "category": category,
-            "source_url": source_url,
-            "source_name": source_name,
             "footer": "made by itappens.ai (automations by Sadish)"
         }
 

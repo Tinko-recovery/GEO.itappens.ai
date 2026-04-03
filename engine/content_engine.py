@@ -37,7 +37,7 @@ class ContentEngine:
             f"{citation}\n"
             f"Disclaimer: This content is AI-generated and posted by our own engine.\n\n"
             f"— itappens.ai | AI brand visibility + content automation\n"
-            f"📧 founder@tinko.in"
+            f"📧 sadish@itappens.ai"
         )
 
         prompt = (
@@ -54,7 +54,7 @@ class ContentEngine:
             "   - Open with a strong data point or contrarian take\n"
             "   - Connect the trend to AI brand visibility or content automation\n"
             "   - Position itappens.ai as the solution\n"
-            "   - End with CTA: 'DM or email founder@tinko.in to audit your brand's AI presence'\n"
+            "   - End with CTA: 'DM or email sadish@itappens.ai to audit your brand's AI presence'\n"
             "   - UNDER 1200 characters. No fluff.\n\n"
             "2. TWITTER post:\n"
             "   - Punchy 1-2 lines max. Under 240 characters.\n"

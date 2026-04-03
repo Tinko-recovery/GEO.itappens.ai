@@ -70,10 +70,10 @@ export default function Page() {
           <a href="#" className="nav-logo">it<span>appens</span>.ai</a>
           <ul className="nav-links">
             <li><a href="#system">How It Works</a></li>
-            <li><a href="#proof">Proof</a></li>
             <li><a href="#roadmap">Roadmap</a></li>
             <li><a href="#founder">Founder</a></li>
             <li><a href="#faq">FAQ</a></li>
+            <li><a href="/insights">Insights</a></li>
           </ul>
           <div className="nav-cta">
             <a href="#cta" className="btn btn-primary">Free AI Audit →</a>
@@ -272,13 +272,36 @@ export default function Page() {
         <div className="container">
           <div className="founder-inner">
             <div className="founder-content">
+              <span className="section-tag" style={{ display: "inline-block", marginBottom: "1rem" }}>The Founder</span>
               <h2>Built on myself first.<br />Then built for you.</h2>
+              <p style={{ color: "var(--muted)", lineHeight: 1.7, marginBottom: "1.5rem", maxWidth: 520 }}>
+                I am Sadish Sugumaran — a digital strategist who got tired of watching Indian brands
+                disappear from AI answers while their competitors got named. So I built the system that fixes it,
+                starting with itappens.ai itself as the proof of concept.
+              </p>
               <ul className="founder-bullets">
                 <li>Founder-direct engagement — no junior teams, no templates</li>
                 <li>Live proof: itappens.ai ranks in GEO for our own target queries</li>
                 <li>India-first strategy — built for Indian brands, Indian cities, Indian buyers</li>
                 <li>Small client roster per quarter — deep work, not volume</li>
               </ul>
+              <div style={{ marginTop: "1.5rem", display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                <a
+                  href="https://www.linkedin.com/company/itappens-ai/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#0077b5", color: "#fff", padding: "10px 18px", borderRadius: 8, fontWeight: 600, fontSize: "0.875rem", textDecoration: "none" }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  Connect on LinkedIn
+                </a>
+                <a
+                  href="mailto:sadish@itappens.ai"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", color: "var(--text)", padding: "10px 18px", borderRadius: 8, fontWeight: 600, fontSize: "0.875rem", textDecoration: "none", border: "1.5px solid var(--border)" }}
+                >
+                  sadish@itappens.ai
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -353,7 +376,7 @@ export default function Page() {
             <input type="url" name="website" className="cta-input" placeholder="Your website URL" required />
             <input type="url" name="competitor" className="cta-input" placeholder="Primary competitor URL" required />
             <button type="submit" className="btn btn-primary btn-lg" style={{ justifyContent: 'center' }}>Request AI Audit →</button>
-            <p className="cta-guarantee">founder@tinko.in reviews every request personally. No spam.</p>
+            <p className="cta-guarantee">sadish@itappens.ai reviews every request personally. No spam.</p>
           </form>
         </div>
       </section>
@@ -362,12 +385,41 @@ export default function Page() {
         <div className="container footer-inner">
           <div className="footer-logo">it<span>appens</span>.ai</div>
           <div className="footer-links">
+            <a href="/insights">Insights</a>
             <a href="/privacy">Privacy Policy</a>
-            <a href="mailto:founder@tinko.in">founder@tinko.in</a>
+            <a href="https://www.linkedin.com/company/itappens-ai/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="mailto:sadish@itappens.ai">sadish@itappens.ai</a>
           </div>
-          <div className="footer-copy">© 2026 Blocks & Loops Technologies Pvt Ltd</div>
+          <div className="footer-copy">© 2026 Blocks & Loops Technologies Pvt Ltd · Bengaluru, India</div>
         </div>
       </footer>
+
+      {/* WhatsApp Float — replace XXXXXXXXXX with your actual number */}
+      <a
+        href="https://wa.me/919353015844?text=Hi%20Sadish%2C%20I%20want%20a%20free%20AI%20audit%20for%20my%20brand."
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat on WhatsApp"
+        style={{
+          position: "fixed",
+          bottom: 28,
+          right: 28,
+          width: 56,
+          height: 56,
+          background: "#25d366",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 4px 20px rgba(37,211,102,0.45)",
+          zIndex: 999,
+          textDecoration: "none",
+        }}
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </a>
     </>
   );
 }

@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
         const { data, error } = await resend.emails.send({
             from: 'itappens.ai <onboarding@resend.dev>', // Resend's default testing domain or use a verified one
-            to: 'founder@tinko.in',
+            to: 'sadish@itappens.ai',
             replyTo: email,
             subject: `New AI Audit Request -> ${website}`,
             text: `New Request for Free AI Audit:\n\nContact Email: ${email}\nWebsite URL: ${website}\nCompetitor URL: ${competitor}`,

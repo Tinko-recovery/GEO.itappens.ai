@@ -25,25 +25,44 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: "itappens.ai — AI Content Automation", description: "Your brand, on every platform, every day. Automatically." },
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: "https://itappens.ai",
+  },
 };
 
-/* ── JSON-LD: SoftwareApplication Schema ── */
+/* ── JSON-LD: ProfessionalService Schema ── */
 const identitySchema = {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
+  "@type": "ProfessionalService",
   "name": "itappens.ai",
-  "applicationCategory": "BusinessApplication",
-  "description": "AI-powered content automation platform. itappens.ai generates and publishes daily social media content across LinkedIn, Instagram, Twitter/X and YouTube, and engineers brand presence into AI search engines like ChatGPT and Perplexity.",
+  "description": "Specialized Digital Marketing Agency focusing on Generative Engine Optimization (GEO) and AI-first search visibility. We engineer Indian brands into the answers given by ChatGPT, Perplexity, Gemini, Claude, and Grok.",
   "url": "https://itappens.ai",
   "logo": "https://itappens.ai/logo.png",
+  "image": "https://itappens.ai/logo.png",
+  "email": "sadish@itappens.ai",
+  "foundingDate": "2024",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Bengaluru",
+    "addressRegion": "Karnataka",
+    "addressCountry": "IN"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "India"
+  },
+  "serviceType": ["Generative Engine Optimization", "AI Brand Visibility", "Content Automation", "Digital Marketing"],
+  "sameAs": [
+    "https://www.linkedin.com/company/itappens-ai/",
+    "https://wa.me/919353015844"
+  ],
   "offers": [
     { "@type": "Offer", "name": "Growth", "price": "4999", "priceCurrency": "INR", "billingDuration": "P1M" },
     { "@type": "Offer", "name": "Pro", "price": "9999", "priceCurrency": "INR", "billingDuration": "P1M" },
     { "@type": "Offer", "name": "Pro + GEO", "price": "19999", "priceCurrency": "INR", "billingDuration": "P1M" }
   ],
-  "operatingSystem": "Web",
-  "areaServed": ["India"],
-  "keywords": ["content automation", "GEO", "AI social media", "LinkedIn automation", "AI search presence"]
+  "knowsAbout": ["Generative Engine Optimization", "AI Search", "Large Language Models", "Brand Entity Architecture", "JSON-LD Schema", "SEO", "Content Marketing"],
+  "keywords": ["GEO agency India", "AI search visibility", "ChatGPT brand citation", "Perplexity SEO", "generative engine optimization India", "AI content automation"]
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
