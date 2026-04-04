@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-// Ensure the API key exists
-const resendKey = process.env.RESEND_API_KEY;
-const resend = resendKey ? new Resend(resendKey) : null;
+const transporter =
+    process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD
+        ? nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                  user: process.env.GMAIL_USER,
+                  pass: process.env.GMAIL_APP_PASSWORD,
+              },
+          })
+        : null;
 
 export async function POST(request: Request) {
     try {
@@ -16,13 +23,13 @@ export async function POST(request: Request) {
             );
         }
 
-        if (!resend) {
-            console.warn('RESEND_API_KEY is missing. Mocking success for the form submission.');
+        if (!transporter) {
+            console.warn('Gmail credentials missing. Mocking success.');
             return NextResponse.json({ success: true, mocked: true });
         }
 
-        const { error } = await resend.emails.send({
-            from: 'itappens.ai <onboarding@resend.dev>',
+        await transporter.sendMail({
+            from: `"itappens.ai" <${process.env.GMAIL_USER}>`,
             to: 'hello@itappens.ai',
             replyTo: email,
             subject: `New GEO Audit Request → ${website}`,
@@ -34,14 +41,6 @@ export async function POST(request: Request) {
         <p><strong>Current AI Visibility:</strong> ${visibility || 'Not specified'}</p>
       `,
         });
-
-        if (error) {
-            console.error('Resend Error:', error);
-            return NextResponse.json(
-                { error: 'Failed to send email via Resend' },
-                { status: 500 }
-            );
-        }
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import NavBar from "@/components/NavBar";
 
 export const metadata: Metadata = {
   title: "FAQ — Generative Engine Optimization | itappens.ai",
@@ -123,21 +124,7 @@ export default function FAQPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div style={{ minHeight: "100vh", background: "var(--bg)", fontFamily: "var(--font-body)" }}>
 
-        {/* Nav */}
-        <nav style={{ borderBottom: "1px solid var(--border)", position: "sticky", top: 0, background: "rgba(249,250,251,0.95)", backdropFilter: "blur(12px)", zIndex: 100 }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", height: 64, display: "flex", alignItems: "center", gap: 24 }}>
-            <a href="/" style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.1rem", color: "var(--text)", textDecoration: "none" }}>
-              it<span style={{ color: "var(--accent)" }}>appens</span>.ai
-            </a>
-            <a href="/" style={{ fontSize: 13, color: "var(--text-dim)", textDecoration: "none" }}>← Back to home</a>
-            <a href="/insights" style={{ fontSize: 13, color: "var(--text-dim)", textDecoration: "none" }}>Insights</a>
-            <a href="/blog" style={{ fontSize: 13, color: "var(--text-dim)", textDecoration: "none" }}>Blog</a>
-            <div style={{ flex: 1 }} />
-            <a href="/#audit" style={{ background: "var(--accent)", color: "#fff", padding: "9px 20px", borderRadius: 6, fontWeight: 600, fontSize: 13, textDecoration: "none" }}>
-              Free AI Audit →
-            </a>
-          </div>
-        </nav>
+        <NavBar />
 
         {/* Header */}
         <div style={{ maxWidth: 760, margin: "0 auto", padding: "64px 24px 48px" }}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import NavBar from "@/components/NavBar";
 
 /* ── Data ────────────────────────────────────────────── */
 const PHRASES = [
@@ -125,7 +126,6 @@ export default function Page() {
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [faqOpen, setFaqOpen] = useState<number | null>(0);
   const [formState, setFormState] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const iv = setInterval(() => setPhraseIdx((i) => (i + 1) % PHRASES.length), 2800);
@@ -156,58 +156,9 @@ export default function Page() {
   return (
     <div style={{ background: "var(--bg)", minHeight: "100vh", overflowX: "hidden" }}>
 
-      {/* ── NAV ──────────────────────────────────────── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        background: "rgba(249,250,251,0.9)",
-        backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-        borderBottom: "1px solid var(--border)",
-      }}>
-        <div className="container" style={{ height: 64, display: "flex", alignItems: "center", gap: 24 }}>
-          <a href="/" style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 18, color: "var(--text)", textDecoration: "none", flexShrink: 0 }}>
-            it<span style={{ color: "var(--accent)" }}>appens</span>.ai
-          </a>
-          <div style={{ flex: 1 }} />
-          {/* Desktop links */}
-          <div style={{ display: "flex", gap: 28, alignItems: "center" }} className="desktop-nav">
-            {[
-              { label: "Platform", href: "#platform" },
-              { label: "Solutions", href: "#solutions" },
-              { label: "Blog", href: "/blog" },
-              { label: "Pricing", href: "#pricing" },
-            ].map((l) => (
-              <a key={l.label} href={l.href} style={{ fontSize: 14, color: "var(--text-dim)", textDecoration: "none", fontWeight: 500, transition: "color 0.15s" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-                onMouseLeave={e => (e.currentTarget.style.color = "var(--text-dim)")}>
-                {l.label}
-              </a>
-            ))}
-          </div>
-          <a href="#audit" className="btn-primary nav-cta-btn" style={{ fontSize: 13, padding: "9px 20px", marginLeft: 8 }}>
-            Free AI Audit
-          </a>
-          <button className="hamburger-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
-        <div className={`mobile-menu${menuOpen ? " open" : ""}`}>
-          {[
-            { label: "Platform", href: "#platform" },
-            { label: "Solutions", href: "#solutions" },
-            { label: "Blog", href: "/blog" },
-            { label: "Pricing", href: "#pricing" },
-          ].map((l) => (
-            <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
-          ))}
-          <div className="mobile-menu-cta">
-            <a href="#audit" className="btn-primary" style={{ display: "block", textAlign: "center" }} onClick={() => setMenuOpen(false)}>Free AI Audit →</a>
-          </div>
-        </div>
-      </nav>
+      <NavBar />
 
-      <main style={{ paddingTop: 64 }}>
+      <main>
 
         {/* ── HERO ───────────────────────────────────── */}
         <section id="hero" style={{ padding: "100px 0 80px", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
