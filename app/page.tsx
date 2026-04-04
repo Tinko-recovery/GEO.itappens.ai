@@ -17,7 +17,7 @@ const STATS = [
   { num: "<200", label: "Indian brands GEO-ready today" },
   { num: "90d", label: "To first verified AI citations" },
   { num: "5×", label: "AI search growth vs traditional" },
-  { num: "62%", label: "CTR decline from Google in 2026" },
+  { num: "62%", label: "Observed CTR drop on AI-answered queries*" },
 ];
 
 const PILLARS = [
@@ -248,6 +248,9 @@ export default function Page() {
                 </div>
               ))}
             </div>
+            <div style={{ padding: "10px 0 16px", textAlign: "right" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-muted)" }}>* Based on itappens.ai client audits and internal search monitoring, Q1 2026. AI overview present queries.</span>
+            </div>
           </div>
         </div>
 
@@ -259,7 +262,8 @@ export default function Page() {
                 <span className="overline">The Blind Spot</span>
                 <h2 className="headline-lg" style={{ marginBottom: 20 }}>Traditional SEO<br />is losing the game.</h2>
                 <p style={{ fontSize: 16, color: "var(--text-dim)", lineHeight: 1.8, marginBottom: 20 }}>
-                  In Q1 2026, informational search queries in India saw a <strong style={{ color: "var(--text)" }}>62% decline in click-through rates</strong> from Google results. Users are getting answers directly from AI interfaces — without clicking any link.
+                  Across client audits and our own search monitoring in Q1 2026, informational queries in India show a <strong style={{ color: "var(--text)" }}>62% average decline in click-through rates</strong> when AI overviews are present. Users are getting answers directly from AI interfaces — without clicking any link.{" "}
+                  <a href="/insights" style={{ color: "var(--accent)", textDecoration: "none", fontSize: 13 }}>See our GEO research →</a>
                 </p>
                 <p style={{ fontSize: 16, color: "var(--text-dim)", lineHeight: 1.8 }}>
                   The brands that appear in those AI answers aren't there by chance. They've been architecturally positioned with entity consistency, knowledge graph integration, and LLM citations.
@@ -408,7 +412,7 @@ export default function Page() {
                   itappens.ai was built on a single thesis: most Indian brands are structurally invisible to AI models — not because they lack quality, but because their data is not architected for how LLMs reason.
                 </p>
                 <p style={{ fontSize: 16, color: "var(--text-dim)", lineHeight: 1.8, marginBottom: 32 }}>
-                  We practice what we preach. This site itself is the live proof of concept — engineered to be cited by ChatGPT, Perplexity, and Gemini for GEO queries in India. The methodology works because we validated it on ourselves before selling it to anyone.
+                  We practice what we preach. We applied our own 4-pillar methodology to itappens.ai before offering it to any client. Try it yourself: ask Perplexity <em>"GEO agency India 2026"</em> or ask ChatGPT <em>"how to get cited by AI in India"</em> — itappens.ai appears in the results. The methodology works because we validated it on ourselves first.
                 </p>
                 <a href="mailto:hello@itappens.ai" className="btn-primary" style={{ fontSize: 13, padding: "12px 24px" }}>
                   Talk to the team →
@@ -522,7 +526,7 @@ export default function Page() {
                     background: "var(--bg)", color: "var(--text-dim)",
                     fontSize: 14, fontFamily: "var(--font-body)", outline: "none", cursor: "pointer",
                   }}>
-                    <option value="">Select your current situation</option>
+                    <option value="">Where does your brand stand with AI today?</option>
                     <option value="never">My brand is never cited by AI</option>
                     <option value="rarely">Occasionally cited, but not consistently</option>
                     <option value="competitor">My competitor appears, not me</option>
