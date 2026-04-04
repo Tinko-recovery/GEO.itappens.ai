@@ -1,34 +1,29 @@
 @import "tailwindcss";
 
-/* ─── DESIGN TOKENS ─────────────────────────────────
-   Palette: Obsidian + Indigo + Gold + Silver
-   Inspired by: Linear, Vercel, Framer — premium dark luxury
+/* ─── DESIGN TOKENS: RENDER-LIGHT ───────────────────
+   Palette: Slate 50 + Slate 900 + Indigo 500
+   Structural Clarity & Technical Authority
    ─────────────────────────────────────────────────── */
 :root {
-  /* Backgrounds — deep earthy & midnight black */
-  --bg: #030303;
-  --bg-dots: rgba(232, 213, 163, 0.035);
-  --surface: #0a0a0a;
-  --surface-alt: #121212;
-  --surface-dim: #070707;
+  /* Backgrounds — clean, airy platform feel */
+  --bg: #F9FAFB;         /* Slate 50 */
+  --surface: #ffffff;
+  --surface-alt: #F1F5F9; /* Slate 100 */
+
+  /* Text — high contrast for readability */
+  --text: #0F172A;       /* Slate 900 */
+  --text-dim: #475569;   /* Slate 600 */
+  --text-muted: #94A3B8; /* Slate 400 */
 
   /* Borders & Dividers */
-  --border: rgba(232, 213, 163, 0.08);
-  --border-strong: rgba(232, 213, 163, 0.15);
-  --border-accent: rgba(129, 140, 248, 0.25);
-
-  /* Primary Text */
-  --text: #e8d5a3;       /* Champagne/Cream */
-  --text-dim: #a89870;   /* Muted gold-brown */
-  --text-muted: #5a5040; /* Earthy grey */
-  --text-h: #ffffff;     /* Pure white for headlines */
+  --border: #E2E8F0;     /* Slate 200 */
+  --border-strong: #CBD5E1; /* Slate 300 */
+  --border-accent: #6366F1; /* Indigo 500 */
 
   /* Identity Colors */
-  --accent: #ff6b1a;     /* Bright Orange */
-  --gold: #c8a84a;       /* Branded Gold */
-  --indigo: #818cf8;     /* Tech Indigo */
-  --emerald: #10b981;    /* Data Emerald */
-  --rose: #f43f5e;       /* Alert Rose */
+  --accent: #6366F1;     /* Electric Indigo */
+  --accent-dim: rgba(99, 102, 241, 0.03);
+  --accent-muted: rgba(99, 102, 241, 0.1);
 
   /* Fonts */
   --font-display: 'Syne', system-ui, sans-serif;
@@ -36,7 +31,7 @@
   --font-mono: 'DM Mono', monospace;
 }
 
-/* ─── RESET ───────────────────────────────────────── */
+/* ─── RESET & BASE ────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -52,153 +47,141 @@ html {
 body {
   font-family: var(--font-body);
   background-color: var(--bg);
-  color: var(--text-dim);
+  color: var(--text);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
 }
 
-/* ─── UTILITIES ────────────────────────────────────── */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 32px;
-}
-
-.container-narrow {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 32px;
-}
-
-.text-center { text-align: center; }
-
 /* ─── TYPOGRAPHY ────────────────────────────────────── */
 h1, h2, h3, h4, .font-display {
   font-family: var(--font-display);
-  color: var(--text-h);
+  color: var(--text);
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.05em; /* Syne factor - Render/Apple density */
 }
 
+h1 { font-weight: 800; }
+h2 { font-weight: 700; }
+
 .headline-xl {
-  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 800;
-  letter-spacing: -0.04em;
-  margin-bottom: 0.5rem;
+  line-height: 1.05;
 }
 
 .headline-lg {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
-  margin-bottom: 1rem;
 }
 
 .text-sub {
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
   color: var(--text-dim);
-  line-height: 1.7;
+  max-width: 640px;
 }
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 10px;
-  letter-spacing: 0.25em;
+/* Monospace Overlines */
+.overline {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+  display: block;
 }
 
-.eyebrow-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--accent);
-  border-radius: 50%;
+/* ─── COMPONENTS ────────────────────────────────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
-.eyebrow-div {
-  width: 40px;
-  height: 1px;
-  background: var(--border-strong);
+.card-bento {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 32px;
+  transition: all 0.2s ease;
+}
+
+.card-bento:hover {
+  border-color: var(--border-accent);
+  background: var(--accent-dim);
 }
 
 /* ─── BUTTONS ──────────────────────────────────────── */
 .btn-primary {
   display: inline-flex;
   align-items: center;
-  padding: 14px 32px;
-  background: var(--text);
-  color: var(--bg);
+  justify-content: center;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: #ffffff;
   border-radius: 6px;
   font-weight: 600;
   font-size: 14px;
   text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid var(--text);
+  transition: all 0.2s ease;
+  border: 1px solid var(--accent);
 }
 
 .btn-primary:hover {
-  background: transparent;
-  color: var(--text);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px rgba(232, 213, 163, 0.2);
+  background: #4f46e5;
+  border-color: #4f46e5;
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
-  padding: 14px 32px;
+  justify-content: center;
+  padding: 12px 24px;
   background: transparent;
   color: var(--text);
   border-radius: 6px;
   font-weight: 500;
   font-size: 14px;
   text-decoration: none;
-  border: 1px solid var(--border-strong);
-  transition: all 0.3s ease;
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-  border-color: var(--text);
-  background: rgba(232, 213, 163, 0.04);
-  transform: translateY(-2px);
-}
-
-/* ─── MODERN SECTIONS ──────────────────────────────── */
-.section-padding { padding: 120px 0; }
-
-.card-base {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 40px;
-  transition: all 0.3s ease;
-}
-
-.card-base:hover {
-  border-color: var(--border-accent);
   background: var(--surface-alt);
-  transform: translateY(-4px);
+  border-color: var(--border-strong);
 }
 
-/* ─── GRADIENTS & FX ───────────────────────────────── */
-.glass {
-  background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
+/* ─── ANIMATIONS (Fade In + Slide Up) ───────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.mesh-bg {
-  mask-image: radial-gradient(circle at center, black, transparent 80%);
+.animate-in {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-}
+/* ─── UTILITIES ────────────────────────────────────── */
+.bg-white { background-color: var(--surface); }
+.border-slate-200 { border-color: var(--border); }
+.tracking-tighter { letter-spacing: -0.05em; }
 
-.animate-pulse-slow {
-  animation: pulse-slow 8s infinite ease-in-out;
+/* Timeline vertical line */
+.timeline-line {
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
 }

@@ -2,19 +2,19 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "itappens.ai — Premium GEO Practice India | AI-Brand Optimization",
+  title: "itappens.ai — The Citation Layer for the AI Web",
   description:
-    "Specialized Generative Engine Optimization (GEO) agency. We engineer Indian brands into AI answers — ChatGPT, Perplexity, Gemini, Claude, and Grok.",
+    "We engineer your brand into AI answers. Specialised Generative Engine Optimization (GEO) for Indian B2B and Industrial sectors. Get cited by ChatGPT, Perplexity, and Gemini.",
   keywords: [
-    "GEO agency India", "generative engine optimization", "AI brand visibility",
-    "ChatGPT brand citation", "Perplexity optimization", "entity architecture"
+    "GEO agency India", "AI search visibility", "LLM citation engineering",
+    "Perplexity optimization", "KIADB digital marketing", "SearchGPT visibility"
   ],
   icons: {
     icon: '/favicon.svg',
   },
   openGraph: {
     title: "itappens.ai — Get Your Brand Cited by AI",
-    description: "India's first GEO practice. We engineer digital entities that AI models trust and recommend.",
+    description: "India's first GEO practice. We ensure your brand is the primary source when LLMs answer questions.",
     url: "https://itappens.ai",
     siteName: "itappens.ai",
     type: "website",
@@ -26,11 +26,21 @@ const identitySchema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "name": "itappens.ai",
-  "description": "Specialized Digital Marketing Agency focusing on Generative Engine Optimization (GEO) and AI-first search visibility.",
+  "description": "Specialised Digital Marketing Agency focusing on Generative Engine Optimization (GEO) and AI-first search visibility.",
   "url": "https://itappens.ai",
   "logo": "https://itappens.ai/favicon.svg",
   "email": "sadish@itappens.ai",
   "areaServed": { "@type": "Country", "name": "India" },
+  "knowsAbout": [
+    "Generative Engine Optimization (GEO)",
+    "AI Search Visibility",
+    "LLM Citation Engineering",
+    "Digital Entity Consistency",
+    "Information Gain Content Strategy",
+    "Knowledge Graph Optimization",
+    "KIADB Industrial Digital Marketing",
+    "B2B Manufacturing Lead Generation"
+  ]
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
