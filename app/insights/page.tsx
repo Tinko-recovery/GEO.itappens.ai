@@ -51,10 +51,17 @@ export default function InsightsPage() {
         {/* Nav */}
         <nav style={{ borderBottom: "1px solid #e5e7eb", padding: "16px 0", position: "sticky", top: 0, background: "#fff", zIndex: 100 }}>
           <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <a href="/" style={{ fontWeight: 800, fontSize: "1.1rem", color: "#0f172a", textDecoration: "none", fontFamily: "var(--font-display)", letterSpacing: "-0.05em" }}>
-              it<span style={{ color: "#6366f1" }}>appens</span>.ai
-            </a>
-            <a href="/#cta" style={{ background: "#6366f1", color: "#fff", padding: "10px 20px", borderRadius: 8, fontWeight: 600, fontSize: "0.875rem", textDecoration: "none" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+              <a href="/" style={{ fontWeight: 800, fontSize: "1.1rem", color: "#0f172a", textDecoration: "none", fontFamily: "var(--font-display)", letterSpacing: "-0.05em" }}>
+                it<span style={{ color: "#6366f1" }}>appens</span>.ai
+              </a>
+              <a href="/" style={{ fontSize: "0.825rem", color: "#6b7280", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+                ← Back to home
+              </a>
+              <a href="/blog" style={{ fontSize: "0.825rem", color: "#6b7280", textDecoration: "none" }}>Blog</a>
+              <a href="/faq" style={{ fontSize: "0.825rem", color: "#6b7280", textDecoration: "none" }}>FAQ</a>
+            </div>
+            <a href="/#audit" style={{ background: "#6366f1", color: "#fff", padding: "10px 20px", borderRadius: 8, fontWeight: 600, fontSize: "0.875rem", textDecoration: "none" }}>
               Free AI Audit →
             </a>
           </div>

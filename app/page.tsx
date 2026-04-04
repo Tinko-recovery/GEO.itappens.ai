@@ -173,7 +173,7 @@ export default function Page() {
             {[
               { label: "Platform", href: "#platform" },
               { label: "Solutions", href: "#solutions" },
-              { label: "Insights", href: "/insights" },
+              { label: "Blog", href: "/blog" },
               { label: "Pricing", href: "#pricing" },
             ].map((l) => (
               <a key={l.label} href={l.href} style={{ fontSize: 14, color: "var(--text-dim)", textDecoration: "none", fontWeight: 500, transition: "color 0.15s" }}
@@ -361,7 +361,7 @@ export default function Page() {
             <div style={{ textAlign: "center", marginBottom: 64 }}>
               <span className="overline" style={{ display: "block", textAlign: "center" }}>Pricing</span>
               <h2 className="headline-lg" style={{ marginBottom: 16 }}>Simple, transparent plans.</h2>
-              <p className="text-sub" style={{ margin: "0 auto", textAlign: "center" }}>All plans include founder-direct engagement. No junior teams.</p>
+              <p className="text-sub" style={{ margin: "0 auto", textAlign: "center" }}>All plans include principal-led delivery. No junior teams.</p>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20, alignItems: "start" }}>
@@ -397,41 +397,37 @@ export default function Page() {
           </div>
         </section>
 
-        {/* ── FOUNDER ────────────────────────────────── */}
-        <section id="founder" style={{ padding: "100px 0", background: "var(--bg)", borderTop: "1px solid var(--border)" }}>
+        {/* ── WHY ITAPPENS ────────────────────────────── */}
+        <section id="why" style={{ padding: "100px 0", background: "var(--bg)", borderTop: "1px solid var(--border)" }}>
           <div className="container">
-            <div style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 64, alignItems: "start", maxWidth: 900 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", maxWidth: 1000 }}>
               <div>
-                <div style={{
-                  width: 140, height: 140, borderRadius: "50%",
-                  background: "var(--accent-muted)",
-                  border: "2px solid var(--border-accent)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  marginBottom: 20,
-                }}>
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: 32, fontWeight: 800, color: "var(--accent)" }}>SS</span>
-                </div>
-                <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--text)", marginBottom: 4 }}>Sadish Sugumaran</div>
-                <div style={{ fontSize: 12, color: "var(--text-dim)" }}>Founder, itappens.ai</div>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>Bengaluru, India</div>
-              </div>
-              <div>
-                <span className="overline">Founder's Logic</span>
-                <h2 className="headline-lg" style={{ marginBottom: 20 }}>Intellectual honesty.<br />Data-backed growth.</h2>
+                <span className="overline">Why itappens.ai</span>
+                <h2 className="headline-lg" style={{ marginBottom: 20 }}>We don't sell GEO.<br />We run it.</h2>
                 <p style={{ fontSize: 16, color: "var(--text-dim)", lineHeight: 1.8, marginBottom: 16 }}>
-                  I built itappens.ai on myself first. This site is the live proof of concept — engineered to be cited by ChatGPT, Perplexity, and Gemini for GEO queries in India. If it works for me, it'll work for you.
+                  itappens.ai was built on a single thesis: most Indian brands are structurally invisible to AI models — not because they lack quality, but because their data is not architected for how LLMs reason.
                 </p>
                 <p style={{ fontSize: 16, color: "var(--text-dim)", lineHeight: 1.8, marginBottom: 32 }}>
-                  Founder-direct engagement. No junior teams. No templates. India-first strategy — built for Indian brands, Indian cities, Indian buyers.
+                  We practice what we preach. This site itself is the live proof of concept — engineered to be cited by ChatGPT, Perplexity, and Gemini for GEO queries in India. The methodology works because we validated it on ourselves before selling it to anyone.
                 </p>
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                  <a href="https://www.linkedin.com/company/itappens-ai/" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: 13, padding: "10px 20px", background: "#0077b5", border: "1px solid #0077b5" }}>
-                    LinkedIn →
-                  </a>
-                  <a href="mailto:sadish@itappens.ai" className="btn-secondary" style={{ fontSize: 13, padding: "10px 20px" }}>
-                    sadish@itappens.ai
-                  </a>
-                </div>
+                <a href="mailto:hello@itappens.ai" className="btn-primary" style={{ fontSize: 13, padding: "12px 24px" }}>
+                  Talk to the team →
+                </a>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {[
+                  { icon: "◈", title: "Principal-led delivery", body: "Every engagement is run by a senior practitioner. No handoffs to junior teams or generic templates." },
+                  { icon: "⬡", title: "India-first methodology", body: "Built for Indian brands, Indian cities, Indian buyers. The entity signals, directories, and content formats are calibrated for the Indian context." },
+                  { icon: "◉", title: "Proof before promises", body: "We run the same 200+ prompt audit on your brand before quoting. You see the gap before you pay anything." },
+                ].map((item, i) => (
+                  <div key={i} style={{ display: "flex", gap: 16, padding: "20px 24px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8 }}>
+                    <span style={{ color: "var(--accent)", fontSize: 18, flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
+                    <div>
+                      <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--text)", marginBottom: 6 }}>{item.title}</div>
+                      <div style={{ fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>{item.body}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -484,7 +480,7 @@ export default function Page() {
                 <div style={{ fontSize: 32, marginBottom: 16 }}>✓</div>
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700, color: "var(--text)", marginBottom: 12 }}>Request received.</h3>
                 <p style={{ fontSize: 15, color: "var(--text-dim)", lineHeight: 1.8 }}>
-                  sadish@itappens.ai will review your brand personally and be in touch within 24 hours.
+                  hello@itappens.ai will be in touch within 24 hours. No spam, no sales call.
                 </p>
               </div>
             ) : (
@@ -537,10 +533,10 @@ export default function Page() {
                   {formState === "loading" ? "Sending..." : "Request Free AI Audit →"}
                 </button>
                 {formState === "error" && (
-                  <p style={{ fontSize: 13, color: "#ef4444", textAlign: "center" }}>Something went wrong. Email sadish@itappens.ai directly.</p>
+                  <p style={{ fontSize: 13, color: "#ef4444", textAlign: "center" }}>Something went wrong. Email hello@itappens.ai directly.</p>
                 )}
                 <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)", textAlign: "center", letterSpacing: "0.03em" }}>
-                  Sadish reviews every request personally · No spam · No sales call
+                  Principal reviews every request · No spam · No sales call
                 </p>
               </form>
             )}
@@ -571,7 +567,7 @@ export default function Page() {
             <div>
               <h4 className="overline">Resources</h4>
               <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
-                {[["Insights", "/insights"], ["Privacy Policy", "/privacy"]].map(([l, h]) => (
+                {[["Insights", "/insights"], ["Blog", "/blog"], ["FAQ", "/faq"], ["Privacy Policy", "/privacy"]].map(([l, h]) => (
                   <li key={l}><a href={h} style={{ fontSize: 13, color: "var(--text-dim)", textDecoration: "none" }}>{l}</a></li>
                 ))}
               </ul>
@@ -579,7 +575,7 @@ export default function Page() {
             <div>
               <h4 className="overline">Contact</h4>
               <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
-                <li><a href="mailto:sadish@itappens.ai" style={{ fontSize: 13, color: "var(--text-dim)", textDecoration: "none" }}>sadish@itappens.ai</a></li>
+                <li><a href="mailto:hello@itappens.ai" style={{ fontSize: 13, color: "var(--text-dim)", textDecoration: "none" }}>hello@itappens.ai</a></li>
                 <li><a href="https://wa.me/919353015844" style={{ fontSize: 13, color: "var(--text-dim)", textDecoration: "none" }}>+91 93530 15844</a></li>
                 <li><a href="https://www.linkedin.com/company/itappens-ai/" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "var(--text-dim)", textDecoration: "none" }}>LinkedIn</a></li>
               </ul>
@@ -593,7 +589,7 @@ export default function Page() {
       </footer>
 
       {/* ── WHATSAPP FLOAT ─────────────────────────── */}
-      <a href="https://wa.me/919353015844?text=Hi%20Sadish%2C%20I%20want%20a%20free%20AI%20audit%20for%20my%20brand."
+      <a href="https://wa.me/919353015844?text=Hi%2C%20I%20want%20a%20free%20AI%20audit%20for%20my%20brand."
         target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
         style={{
           position: "fixed", bottom: 28, right: 28, width: 52, height: 52,

@@ -21,9 +21,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: true, mocked: true });
         }
 
-        const { data, error } = await resend.emails.send({
+        const { error } = await resend.emails.send({
             from: 'itappens.ai <onboarding@resend.dev>',
-            to: 'hello@itappens.ai',
+            to: 'sadish@itappens.ai',
             replyTo: email,
             subject: `New GEO Audit Request → ${website}`,
             html: `
