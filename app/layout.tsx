@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "itappens.ai — AI Content Automation & GEO Platform",
+  title: "itappens.ai — GEO Agency India | Get Your Brand Cited by AI",
   description:
-    "Your brand, on every platform, every day. Automatically. itappens.ai automates your social media content across LinkedIn, Instagram, Twitter/X and YouTube — and engineers your brand into AI search answers.",
+    "Specialized Generative Engine Optimization (GEO) agency. We engineer Indian brands into the answers given by ChatGPT, Perplexity, Gemini, Claude, and Grok — not just ranked, cited.",
   keywords: [
-    "GEO agency India", "AI content automation", "social media automation India",
-    "ChatGPT brand visibility", "itappens ai", "LinkedIn automation India",
-    "generative engine optimization", "AI social media marketing", "content automation SaaS"
+    "GEO agency India", "generative engine optimization", "AI brand visibility India",
+    "ChatGPT brand citation", "Perplexity SEO India", "AI search optimization",
+    "LLM citation strategy", "entity optimization", "itappens ai", "Sadish Sugumaran GEO"
   ],
   icons: {
     icon: [
@@ -18,12 +18,12 @@ export const metadata: Metadata = {
     apple: '/logo.png',
   },
   openGraph: {
-    title: "itappens.ai — Your Brand on Every Platform, Every Day",
-    description: "AI-powered content automation + GEO. We generate, schedule, and publish daily content across all your channels while you focus on your business.",
+    title: "itappens.ai — Get Your Brand Cited, Not Just Searched",
+    description: "We engineer digital entities that AI models like Perplexity, Gemini, and SearchGPT trust and recommend. India's first GEO practice.",
     url: "https://itappens.ai", siteName: "itappens.ai", type: "website", locale: "en_IN",
-    images: [{ url: '/logo.png', width: 512, height: 512, alt: 'itappens.ai logo' }],
+    images: [{ url: '/logo.png', width: 512, height: 512, alt: 'itappens.ai — GEO Agency India' }],
   },
-  twitter: { card: "summary_large_image", title: "itappens.ai — AI Content Automation", description: "Your brand, on every platform, every day. Automatically." },
+  twitter: { card: "summary_large_image", title: "itappens.ai — Get Your Brand Cited by AI", description: "India's GEO practice. We engineer brands into AI answers — ChatGPT, Perplexity, Gemini." },
   robots: { index: true, follow: true },
   alternates: {
     canonical: "https://itappens.ai",
@@ -71,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(identitySchema) }} />
       </head>
       <body>

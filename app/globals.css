@@ -24,13 +24,25 @@
   --muted2: #3a3020;
 
   --accent: #ff6b1a;
-  /* Orange */
   --accent2: #ff8c42;
   --accent-dim: rgba(255, 107, 26, 0.08);
   --accent-border: rgba(255, 107, 26, 0.25);
 
   --gold: #c8a84a;
   --gold-dim: rgba(200, 168, 74, 0.08);
+
+  /* Indigo — primary CTA accent */
+  --indigo: #818cf8;
+  --indigo-border: rgba(129, 140, 248, 0.22);
+  --indigo-dim: rgba(129, 140, 248, 0.06);
+
+  /* Semantic aliases */
+  --text-h: #e8d5a3;
+  --text-body: #a89870;
+  --text-dim: #5a5040;
+  --bg-card: rgba(22, 20, 16, 0.8);
+  --bg-card-hover: rgba(129, 140, 248, 0.04);
+  --border-lo: rgba(232, 213, 163, 0.04);
 
   /* Fonts */
   --font-display: 'Syne', system-ui, sans-serif;

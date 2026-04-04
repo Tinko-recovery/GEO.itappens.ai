@@ -7,9 +7,9 @@ const resend = resendKey ? new Resend(resendKey) : null;
 
 export async function POST(request: Request) {
     try {
-        const { email, website, competitor } = await request.json();
+        const { name, email, website, visibility } = await request.json();
 
-        if (!email || !website || !competitor) {
+        if (!email || !website) {
             return NextResponse.json(
                 { error: 'Missing required fields' },
                 { status: 400 }
@@ -18,21 +18,20 @@ export async function POST(request: Request) {
 
         if (!resend) {
             console.warn('RESEND_API_KEY is missing. Mocking success for the form submission.');
-            // Fallback/mock if the key is not set so the UI doesn't break
             return NextResponse.json({ success: true, mocked: true });
         }
 
         const { data, error } = await resend.emails.send({
-            from: 'itappens.ai <onboarding@resend.dev>', // Resend's default testing domain or use a verified one
+            from: 'itappens.ai <onboarding@resend.dev>',
             to: 'sadish@itappens.ai',
             replyTo: email,
-            subject: `New AI Audit Request -> ${website}`,
-            text: `New Request for Free AI Audit:\n\nContact Email: ${email}\nWebsite URL: ${website}\nCompetitor URL: ${competitor}`,
+            subject: `New GEO Audit Request → ${website}`,
             html: `
-        <h2>New Request for Free AI Audit</h2>
-        <p><strong>Contact Email:</strong> ${email}</p>
-        <p><strong>Website URL:</strong> <a href="${website}">${website}</a></p>
-        <p><strong>Competitor URL:</strong> <a href="${competitor}">${competitor}</a></p>
+        <h2>New GEO Audit Request</h2>
+        <p><strong>Name:</strong> ${name || 'Not provided'}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Website:</strong> <a href="${website}">${website}</a></p>
+        <p><strong>Current AI Visibility:</strong> ${visibility || 'Not specified'}</p>
       `,
         });
 
