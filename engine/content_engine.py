@@ -22,7 +22,7 @@ class ContentEngine:
             "Mentor talking to a friend over coffee, focusing on real-world impact and ethical implementation."
         ))
         self.company_name = os.getenv("COMPANY_NAME", "itappens.ai")
-        self.footer_branding = os.getenv("FOOTER_BRANDING", "— Sadish Sugumaran")
+        self.footer_branding = os.getenv("FOOTER_BRANDING", "— itappens.ai Principal")
         self.reel_cta = os.getenv("REEL_CTA", "Limited slots for March automation coaching. Link in bio.")
 
     async def generate_content(self, data):
@@ -37,14 +37,14 @@ class ContentEngine:
             f"{citation}\n"
             f"Disclaimer: This content is AI-generated and posted by our own engine.\n\n"
             f"— itappens.ai | AI brand visibility + content automation\n"
-            f"📧 sadish@itappens.ai"
+            f"📧 hello@itappens.ai"
         )
 
         prompt = (
             f"You are the content voice of itappens.ai — India's first AI brand visibility agency.\n"
             f"itappens.ai has two services: GEO (making brands appear in AI answers like ChatGPT/Perplexity) "
             f"and itcontents (AI-powered social media automation).\n"
-            f"Voice: Confident, data-led, founder-direct. Provocative but not arrogant. "
+            f"Voice: Confident, data-led, principal-led. Provocative but not arrogant. "
             f"Your audience is Indian B2B founders and marketing heads.\n\n"
             f"Today's trending topic: {title}\n"
             f"Hook angle: {hook}\n"
@@ -54,7 +54,7 @@ class ContentEngine:
             "   - Open with a strong data point or contrarian take\n"
             "   - Connect the trend to AI brand visibility or content automation\n"
             "   - Position itappens.ai as the solution\n"
-            "   - End with CTA: 'DM or email sadish@itappens.ai to audit your brand's AI presence'\n"
+            "   - End with CTA: 'DM or email hello@itappens.ai to audit your brand's AI presence'\n"
             "   - UNDER 1200 characters. No fluff.\n\n"
             "2. TWITTER post:\n"
             "   - Punchy 1-2 lines max. Under 240 characters.\n"
@@ -252,6 +252,6 @@ if __name__ == "__main__":
         "title": "The 8 Pages That Changed AI",
         "hook": "8 pages. That's all it took to flip the industry.",
         "category": "Untold Origin Story",
-        "footer": "made by itappens.ai ( automations by Sadish)"
+        "footer": "made by itappens.ai (automations by Principal)"
     }
     print(engine.generate_content(test_data))

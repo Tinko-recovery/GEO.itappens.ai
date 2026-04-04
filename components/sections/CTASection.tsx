@@ -95,7 +95,7 @@ export default function CTASection() {
                                 Start Free AI Audit →
                             </button>
                             <p style={{ textAlign: 'center', fontSize: '11px', color: 'var(--text-muted)' }}>
-                                Founder @ itappens.ai reviews every audit personally.
+                                Our Principal reviews every request personally.
                             </p>
                         </form>
                     </motion.div>

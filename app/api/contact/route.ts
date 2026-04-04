@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
         const { data, error } = await resend.emails.send({
             from: 'itappens.ai <onboarding@resend.dev>',
-            to: 'sadish@itappens.ai',
+            to: 'hello@itappens.ai',
             replyTo: email,
             subject: `New GEO Audit Request → ${website}`,
             html: `

@@ -33,16 +33,16 @@ export default function FounderSection() {
                             width: '80px', height: '80px', borderRadius: '12px', 
                             background: 'var(--accent-muted)', border: '1px solid var(--border-accent)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 800,
+                            fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 800,
                             color: 'var(--accent)', marginBottom: '32px'
                         }}>
-                            SS
+                            IA
                         </div>
                         <h2 style={{ fontSize: '32px', fontWeight: 800, marginBottom: '16px' }}>
-                            Sadish Sugumaran
+                            itappens.ai Architecture
                         </h2>
                         <span className="overline" style={{ fontSize: '11px', marginBottom: '24px' }}>
-                            Founder, itappens.ai
+                            Principal-Led Practice
                         </span>
                         <div style={{ 
                             padding: '16px 20px', background: 'var(--bg)', 
@@ -50,7 +50,7 @@ export default function FounderSection() {
                             fontSize: '14px', fontStyle: 'italic', color: 'var(--text-dim)',
                             lineHeight: 1.6
                         }}>
-                            "My commitment is to **Intellectual Honesty**. We don't sell SEO templates; we engineer citations via semantic architecture. If your brand doesn't have the data-density to rank, I'll tell you before we take your money."
+                            "Our commitment is to **Intellectual Honesty**. We don't sell SEO templates; we engineer citations via semantic architecture. This system was built on proprietary GEO logic, ensuring mathematical proof of authority for LLM reasoning engines."
                         </div>
                     </motion.div>
 
@@ -65,7 +65,7 @@ export default function FounderSection() {
                         </h3>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             {[
-                                { t: 'Founder-Direct', d: 'No junior account managers. You work directly with the architect of the system.' },
+                                { t: 'Principal-Led', d: 'No junior account managers. You work directly with the architect of the system.' },
                                 { t: 'KIADB & Malur Focus', d: 'Deep understanding of Indian industrial clusters and manufacturing authority.' },
                                 { t: 'Entity-First Strategy', d: 'Proven method to align your brand with LLM training datasets and real-time scrapers.' }
                             ].map((item, i) => (
@@ -80,13 +80,13 @@ export default function FounderSection() {
                         </div>
                         <div style={{ marginTop: '32px' }}>
                             <a 
-                                href="https://www.linkedin.com/in/sadishsugumaran/" 
+                                href="https://www.linkedin.com/company/itappens-ai/" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="btn-secondary"
                                 style={{ fontSize: '12px', fontWeight: 600, padding: '10px 20px' }}
                             >
-                                Connect on LinkedIn
+                                Company LinkedIn
                             </a>
                         </div>
                     </motion.div>

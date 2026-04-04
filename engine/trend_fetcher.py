@@ -127,7 +127,7 @@ class TrendFetcher:
             "title": title,
             "hook": hook,
             "category": category,
-            "footer": "made by itappens.ai (automations by Sadish)"
+            "footer": "made by itappens.ai (automations by itappens.ai)"
         }
 
     def _fallback_topic(self) -> dict:
@@ -136,7 +136,7 @@ class TrendFetcher:
             "title": "How AI is reshaping business in 2025",
             "hook": "The companies that ignore AI today will be replaced by those that embrace it tomorrow.",
             "category": "Business Strategy",
-            "footer": "made by itappens.ai (automations by Sadish)"
+            "footer": "made by itappens.ai (automations by itappens.ai)"
         }
 
     async def get_trending_topic(self) -> dict:

@@ -26,14 +26,14 @@ const articleSchema = {
   "dateModified": "2026-04-01",
   "author": {
     "@type": "Person",
-    "name": "Sadish Sugumaran",
-    "email": "sadish@itappens.ai",
-    "url": "https://itappens.ai"
+    "name": "itappens.ai Principal",
+    "email": "hello@itappens.ai",
+    "url": "https://www.itappens.ai/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "itappens.ai",
-    "logo": { "@type": "ImageObject", "url": "https://itappens.ai/logo.png" }
+    "logo": { "@type": "ImageObject", "url": "https://www.itappens.ai/favicon.svg" }
   },
   "mainEntityOfPage": "https://itappens.ai/insights",
   "keywords": ["GEO", "SEO", "generative engine optimization", "AI search India", "ChatGPT brand visibility", "Perplexity SEO 2026"]
@@ -51,10 +51,10 @@ export default function InsightsPage() {
         {/* Nav */}
         <nav style={{ borderBottom: "1px solid #e5e7eb", padding: "16px 0", position: "sticky", top: 0, background: "#fff", zIndex: 100 }}>
           <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <a href="/" style={{ fontWeight: 800, fontSize: "1.1rem", color: "#0f0d0a", textDecoration: "none" }}>
-              it<span style={{ color: "#ff6b1a" }}>appens</span>.ai
+            <a href="/" style={{ fontWeight: 800, fontSize: "1.1rem", color: "#0f172a", textDecoration: "none", fontFamily: "var(--font-display)", letterSpacing: "-0.05em" }}>
+              it<span style={{ color: "#6366f1" }}>appens</span>.ai
             </a>
-            <a href="/#cta" style={{ background: "#ff6b1a", color: "#fff", padding: "10px 20px", borderRadius: 8, fontWeight: 600, fontSize: "0.875rem", textDecoration: "none" }}>
+            <a href="/#cta" style={{ background: "#6366f1", color: "#fff", padding: "10px 20px", borderRadius: 8, fontWeight: 600, fontSize: "0.875rem", textDecoration: "none" }}>
               Free AI Audit →
             </a>
           </div>
@@ -62,7 +62,7 @@ export default function InsightsPage() {
 
         {/* Article Header */}
         <header style={{ maxWidth: 760, margin: "0 auto", padding: "64px 24px 40px" }}>
-          <div style={{ display: "inline-block", background: "#fff3ed", color: "#ff6b1a", padding: "4px 14px", borderRadius: 20, fontSize: "0.8rem", fontWeight: 600, marginBottom: 24, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+          <div style={{ display: "inline-block", background: "rgba(99, 102, 241, 0.05)", color: "#6366f1", padding: "4px 14px", borderRadius: 20, fontSize: "0.8rem", fontWeight: 600, marginBottom: 24, letterSpacing: "0.05em", textTransform: "uppercase" }}>
             GEO Insights · 2026
           </div>
           <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, lineHeight: 1.15, color: "#0f0d0a", margin: "0 0 24px" }}>
@@ -74,7 +74,7 @@ export default function InsightsPage() {
             Indian brands building long-term authority.
           </p>
           <div style={{ marginTop: 24, display: "flex", gap: 16, alignItems: "center", fontSize: "0.875rem", color: "#9ca3af" }}>
-            <span>By Sadish Sugumaran, itappens.ai</span>
+            <span>By itappens.ai Principal</span>
             <span>·</span>
             <span>April 2026</span>
             <span>·</span>
@@ -114,7 +114,7 @@ export default function InsightsPage() {
                   <tr style={{ background: "#f9fafb" }}>
                     <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e5e7eb", color: "#0f0d0a", fontWeight: 700 }}>Dimension</th>
                     <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e5e7eb", color: "#6b7280", fontWeight: 700 }}>Traditional SEO</th>
-                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #ff6b1a", color: "#ff6b1a", fontWeight: 700 }}>GEO (2026)</th>
+                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #6366f1", color: "#6366f1", fontWeight: 700 }}>GEO (2026)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -153,7 +153,7 @@ export default function InsightsPage() {
               { num: "04", title: "AI Citation Auditing", body: "GEO is not set-and-forget. Every model update changes citation patterns. We run 200+ targeted prompts bi-weekly across ChatGPT, Perplexity, Gemini, and Claude to measure your delta and react within days." },
             ].map((p) => (
               <div key={p.num} style={{ display: "flex", gap: 20, marginBottom: 28 }}>
-                <div style={{ flexShrink: 0, width: 40, height: 40, background: "#fff3ed", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "#ff6b1a", fontSize: "0.8rem" }}>{p.num}</div>
+                <div style={{ flexShrink: 0, width: 40, height: 40, background: "rgba(99, 102, 241, 0.05)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "#6366f1", fontSize: "0.8rem" }}>{p.num}</div>
                 <div>
                   <h3 style={{ fontWeight: 700, color: "#0f0d0a", margin: "0 0 8px", fontSize: "1rem" }}>{p.title}</h3>
                   <p style={{ color: "#374151", lineHeight: 1.7, margin: 0, fontSize: "0.975rem" }}>{p.body}</p>
@@ -186,7 +186,7 @@ export default function InsightsPage() {
               Free AI Audit — we run 50+ queries across ChatGPT, Perplexity, Gemini and Claude.
               No sales call. No credit card.
             </p>
-            <a href="/#cta" style={{ display: "inline-block", background: "#ff6b1a", color: "#fff", padding: "14px 28px", borderRadius: 8, fontWeight: 700, fontSize: "1rem", textDecoration: "none" }}>
+            <a href="/#cta" style={{ display: "inline-block", background: "#6366f1", color: "#fff", padding: "14px 28px", borderRadius: 8, fontWeight: 700, fontSize: "1rem", textDecoration: "none" }}>
               Request Free AI Audit →
             </a>
           </div>
@@ -195,13 +195,13 @@ export default function InsightsPage() {
         {/* Footer */}
         <footer style={{ borderTop: "1px solid #e5e7eb", padding: "32px 24px" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-            <div style={{ fontWeight: 800, color: "#0f0d0a" }}>it<span style={{ color: "#ff6b1a" }}>appens</span>.ai</div>
+            <div style={{ fontWeight: 800, color: "#0f172a", fontFamily: "var(--font-display)", letterSpacing: "-0.05em" }}>it<span style={{ color: "#6366f1" }}>appens</span>.ai</div>
             <div style={{ display: "flex", gap: 24, fontSize: "0.875rem" }}>
               <a href="/privacy" style={{ color: "#6b7280", textDecoration: "none" }}>Privacy Policy</a>
               <a href="/insights" style={{ color: "#6b7280", textDecoration: "none" }}>Insights</a>
-              <a href="mailto:sadish@itappens.ai" style={{ color: "#6b7280", textDecoration: "none" }}>sadish@itappens.ai</a>
+              <a href="mailto:hello@itappens.ai" style={{ color: "#6b7280", textDecoration: "none" }}>hello@itappens.ai</a>
             </div>
-            <div style={{ fontSize: "0.8rem", color: "#9ca3af" }}>© 2026 Blocks & Loops Technologies Pvt Ltd</div>
+            <div style={{ fontSize: "0.8rem", color: "#9ca3af" }}>© 2026 itappens.ai</div>
           </div>
         </footer>
       </div>

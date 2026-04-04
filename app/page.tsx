@@ -75,7 +75,7 @@ export default function Page() {
               <div>
                 <h4 className="overline" style={{ fontSize: '10px', color: 'var(--text)' }}>Contact</h4>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '13px' }}>
-                  <li><a href="mailto:sadish@itappens.ai" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>sadish@itappens.ai</a></li>
+                  <li><a href="mailto:hello@itappens.ai" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>hello@itappens.ai</a></li>
                   <li><a href="https://wa.me/919353015844" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>+91 93530 15844</a></li>
                 </ul>
               </div>
@@ -86,7 +86,7 @@ export default function Page() {
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               fontSize: '11px', color: 'var(--text-muted)'
             }}>
-              <div>© 2026 Blocks & Loops Technologies Pvt Ltd · Bengaluru, India</div>
+              <div>© 2026 itappens.ai · Bengaluru, India</div>
               <div style={{ display: 'flex', gap: '20px' }}>
                 <a href="https://www.linkedin.com/company/itappens-ai/" style={{ color: 'inherit', textDecoration: 'none' }}>LinkedIn</a>
                 <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Twitter / X</a>
@@ -98,7 +98,7 @@ export default function Page() {
 
       {/* Minimalist WhatsApp Float (Outline Style) */}
       <a
-        href="https://wa.me/919353015844?text=Hi%20Sadish%2C%20I%20want%20a%20free%20AI%20audit%20for%20my%20brand."
+        href="https://wa.me/919353015844?text=Hi%2C%20I%20want%20a%20free%20AI%20audit%20for%20my%20brand."
         target="_blank"
         rel="noopener noreferrer"
         style={{

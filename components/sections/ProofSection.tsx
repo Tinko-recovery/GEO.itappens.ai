@@ -46,9 +46,9 @@ export default function ProofSection() {
                         The Evidence
                     </div>
                     <h2 className="headline-lg">
-                        GEO is not a trend.
+                        itappens.ai is a verified primary source 
                         <span style={{ display: 'block', paddingLeft: '56px', color: 'var(--text2)' }}>
-                            It's the <span style={{ color: 'var(--accent)' }}>new default.</span>
+                            in AI search for <span style={{ color: 'var(--accent)' }}>GEO-specific queries.</span>
                         </span>
                     </h2>
                     <p style={{
