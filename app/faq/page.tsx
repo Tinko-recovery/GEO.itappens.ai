@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import NavBar from "@/components/NavBar";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "FAQ — Generative Engine Optimization | itappens.ai",
+  title: "FAQ â€” Generative Engine Optimization | itappens.ai",
   description: "Answers to the most common questions about GEO, AI search visibility, and how itappens.ai engineers Indian brands into ChatGPT, Perplexity, and Gemini answers.",
-  alternates: { canonical: "https://itappens.ai/faq" },
+  alternates: { canonical: "https://www.itappens.ai/faq" },
   openGraph: {
-    title: "FAQ — itappens.ai GEO Agency",
+    title: "FAQ â€” itappens.ai GEO Agency",
     description: "Everything you need to know about Generative Engine Optimization for Indian brands.",
-    url: "https://itappens.ai/faq",
+    url: "https://www.itappens.ai/faq",
     siteName: "itappens.ai",
     type: "website",
     locale: "en_IN",
@@ -22,22 +23,22 @@ const faqSchema = {
     {
       "@type": "Question",
       "name": "What is Generative Engine Optimization (GEO)?",
-      "acceptedAnswer": { "@type": "Answer", "text": "GEO is the practice of structuring your brand's data, content, and technical infrastructure so that AI models — ChatGPT, Perplexity, Gemini, Claude — cite your brand when answering questions in your category. It's to AI what SEO was to Google, except the signals are completely different: entity consistency, information gain, and cross-source corroboration rather than backlinks and keyword density." }
+      "acceptedAnswer": { "@type": "Answer", "text": "GEO is the practice of structuring your brand's data, content, and technical infrastructure so that AI models â€” ChatGPT, Perplexity, Gemini, Claude â€” cite your brand when answering questions in your category. It's to AI what SEO was to Google, except the signals are completely different: entity consistency, information gain, and cross-source corroboration rather than backlinks and keyword density." }
     },
     {
       "@type": "Question",
       "name": "How long before my brand starts appearing in AI responses?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Most clients see their first verifiable AI citations within 8–12 weeks of starting. We measure this with 200+ targeted prompts run bi-weekly across ChatGPT, Perplexity, Gemini and Claude so you see progress in concrete numbers." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Most clients see their first verifiable AI citations within 8â€“12 weeks of starting. We measure this with 200+ targeted prompts run bi-weekly across ChatGPT, Perplexity, Gemini and Claude so you see progress in concrete numbers." }
     },
     {
       "@type": "Question",
       "name": "How does GEO differ from traditional SEO?",
-      "acceptedAnswer": { "@type": "Answer", "text": "SEO targets keywords and ranks web pages. GEO builds entity authority — making your brand a recognised, trusted entity that AI reasoning engines cite. The signals are completely different: entity consistency, knowledge graph integration, and LLM citations rather than backlinks and keyword density." }
+      "acceptedAnswer": { "@type": "Answer", "text": "SEO targets keywords and ranks web pages. GEO builds entity authority â€” making your brand a recognised, trusted entity that AI reasoning engines cite. The signals are completely different: entity consistency, knowledge graph integration, and LLM citations rather than backlinks and keyword density." }
     },
     {
       "@type": "Question",
       "name": "What types of businesses does itappens.ai work with?",
-      "acceptedAnswer": { "@type": "Answer", "text": "We work best with service businesses, consultants, agencies, and B2B product brands that have a specific category they want to own in AI responses. We keep a small client roster per quarter — max 2 clients per niche per geography — so we go deep, not wide." }
+      "acceptedAnswer": { "@type": "Answer", "text": "We work best with service businesses, consultants, agencies, and B2B product brands that have a specific category they want to own in AI responses. We keep a small client roster per quarter â€” max 2 clients per niche per geography â€” so we go deep, not wide." }
     },
     {
       "@type": "Question",
@@ -47,7 +48,7 @@ const faqSchema = {
     {
       "@type": "Question",
       "name": "How does GEO pricing work?",
-      "acceptedAnswer": { "@type": "Answer", "text": "itappens.ai offers three plans: GEO Starter (₹4,999/mo), GEO Pro (₹9,999/mo), and GEO Authority (₹19,999/mo). All plans are monthly with no lock-in. The difference is the depth of the 4-pillar system applied — content volume, citation network size, and reporting frequency." }
+      "acceptedAnswer": { "@type": "Answer", "text": "itappens.ai offers three plans: GEO Starter (â‚¹4,999/mo), GEO Pro (â‚¹9,999/mo), and GEO Authority (â‚¹19,999/mo). All plans are monthly with no lock-in. The difference is the depth of the 4-pillar system applied â€” content volume, citation network size, and reporting frequency." }
     },
   ]
 };
@@ -58,11 +59,11 @@ const FAQS = [
     items: [
       {
         q: "What is Generative Engine Optimization (GEO)?",
-        a: "GEO is the practice of structuring your brand's data, content, and technical infrastructure so that AI models — ChatGPT, Perplexity, Gemini, Claude — cite your brand when answering questions in your category. It's to AI what SEO was to Google, except the signals are completely different: entity consistency, information gain, and cross-source corroboration rather than backlinks and keyword density.",
+        a: "GEO is the practice of structuring your brand's data, content, and technical infrastructure so that AI models â€” ChatGPT, Perplexity, Gemini, Claude â€” cite your brand when answering questions in your category. It's to AI what SEO was to Google, except the signals are completely different: entity consistency, information gain, and cross-source corroboration rather than backlinks and keyword density.",
       },
       {
         q: "Why is GEO different from traditional SEO?",
-        a: "SEO targets keywords and ranks web pages. GEO builds entity authority — making your brand a recognised, trusted entity that AI reasoning engines cite. Traditional SEO takes 6–12 months and resets with every algorithm update. GEO citations compound over time and grow more authoritative as AI models train on more data.",
+        a: "SEO targets keywords and ranks web pages. GEO builds entity authority â€” making your brand a recognised, trusted entity that AI reasoning engines cite. Traditional SEO takes 6â€“12 months and resets with every algorithm update. GEO citations compound over time and grow more authoritative as AI models train on more data.",
       },
       {
         q: "Which AI models does GEO affect?",
@@ -70,7 +71,7 @@ const FAQS = [
       },
       {
         q: "Is GEO relevant for Indian businesses specifically?",
-        a: "Yes — and urgently so. Fewer than 200 Indian brands are GEO-optimised today. The window to establish AI citation authority in your category before competitors do is open right now in 2026, but it's closing fast as awareness spreads. India-specific entity signals, directories, and content formats require a different approach than Western GEO methodologies.",
+        a: "Yes â€” and urgently so. Fewer than 200 Indian brands are GEO-optimised today. The window to establish AI citation authority in your category before competitors do is open right now in 2026, but it's closing fast as awareness spreads. India-specific entity signals, directories, and content formats require a different approach than Western GEO methodologies.",
       },
     ],
   },
@@ -83,11 +84,11 @@ const FAQS = [
       },
       {
         q: "How long before I start appearing in AI responses?",
-        a: "Most clients see their first verifiable AI citations within 8–12 weeks of starting engagement. We measure this with 200+ targeted prompts run bi-weekly so you see progress in concrete numbers — not vague claims about 'improving visibility'.",
+        a: "Most clients see their first verifiable AI citations within 8â€“12 weeks of starting engagement. We measure this with 200+ targeted prompts run bi-weekly so you see progress in concrete numbers â€” not vague claims about 'improving visibility'.",
       },
       {
         q: "What is the 4-Pillar Framework?",
-        a: "The 4-Pillar Framework is our core methodology: (1) Entity Correction — building the structured knowledge definition AI models use to identify your brand; (2) Information-Gain Content — engineering 40–60 word 'golden snippets' that AI systems verbatim-lift; (3) Neural-Link Building — 15+ authoritative third-party corroborating sources; (4) Citation Tracking — bi-weekly 200+ prompt audits across all AI platforms.",
+        a: "The 4-Pillar Framework is our core methodology: (1) Entity Correction â€” building the structured knowledge definition AI models use to identify your brand; (2) Information-Gain Content â€” engineering 40â€“60 word 'golden snippets' that AI systems verbatim-lift; (3) Neural-Link Building â€” 15+ authoritative third-party corroborating sources; (4) Citation Tracking â€” bi-weekly 200+ prompt audits across all AI platforms.",
       },
       {
         q: "Do I need to change my existing website?",
@@ -100,15 +101,15 @@ const FAQS = [
     items: [
       {
         q: "How does pricing work?",
-        a: "We offer three monthly plans: GEO Starter (₹4,999/mo) for establishing your AI entity and first citations; GEO Pro (₹9,999/mo) for the full 4-pillar system; GEO Authority (₹19,999/mo) for category dominance. All plans are monthly with no lock-in contracts.",
+        a: "We offer three monthly plans: GEO Starter (â‚¹4,999/mo) for establishing your AI entity and first citations; GEO Pro (â‚¹9,999/mo) for the full 4-pillar system; GEO Authority (â‚¹19,999/mo) for category dominance. All plans are monthly with no lock-in contracts.",
       },
       {
         q: "How many clients do you take on per quarter?",
-        a: "We maintain a small client roster — a maximum of 2 clients per niche per geography per quarter. This is deliberate: deep, effective GEO work is incompatible with high-volume agency models. We go deep, not wide.",
+        a: "We maintain a small client roster â€” a maximum of 2 clients per niche per geography per quarter. This is deliberate: deep, effective GEO work is incompatible with high-volume agency models. We go deep, not wide.",
       },
       {
         q: "What is the ROI compared to paid ads?",
-        a: "Paid ads stop the moment you stop paying. GEO citations are entity-based — they compound over time and grow more authoritative as AI models train on more data. The investment in entity authority pays dividends across every AI model update, whereas paid traffic requires continuous spend to maintain.",
+        a: "Paid ads stop the moment you stop paying. GEO citations are entity-based â€” they compound over time and grow more authoritative as AI models train on more data. The investment in entity authority pays dividends across every AI model update, whereas paid traffic requires continuous spend to maintain.",
       },
       {
         q: "How do I get started?",
@@ -161,11 +162,11 @@ export default function FAQPage() {
               Still have questions?
             </h3>
             <p style={{ fontSize: 15, color: "var(--text-dim)", marginBottom: 24, lineHeight: 1.7 }}>
-              Start with a Free AI Audit — we'll run your brand through 50+ queries and show you exactly where you stand.
+              Start with a Free AI Audit â€” we'll run your brand through 50+ queries and show you exactly where you stand.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <a href="/#audit" style={{ background: "var(--accent)", color: "#fff", padding: "12px 24px", borderRadius: 6, fontWeight: 600, fontSize: 14, textDecoration: "none" }}>
-                Request Free AI Audit →
+                Request Free AI Audit â†’
               </a>
               <a href="mailto:hello@itappens.ai" style={{ background: "transparent", color: "var(--text)", padding: "12px 24px", borderRadius: 6, fontWeight: 500, fontSize: 14, textDecoration: "none", border: "1px solid var(--border)" }}>
                 hello@itappens.ai
@@ -174,19 +175,7 @@ export default function FAQPage() {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer style={{ borderTop: "1px solid var(--border)", padding: "32px 24px" }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <span style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 16, color: "var(--text)" }}>it<span style={{ color: "var(--accent)" }}>appens</span>.ai</span>
-            <div style={{ display: "flex", gap: 24, fontSize: 13 }}>
-              <a href="/insights" style={{ color: "var(--text-dim)", textDecoration: "none" }}>Insights</a>
-              <a href="/blog" style={{ color: "var(--text-dim)", textDecoration: "none" }}>Blog</a>
-              <a href="/privacy" style={{ color: "var(--text-dim)", textDecoration: "none" }}>Privacy</a>
-              <a href="mailto:hello@itappens.ai" style={{ color: "var(--text-dim)", textDecoration: "none" }}>hello@itappens.ai</a>
-            </div>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)" }}>© 2026 Blocks & Loops Technologies Pvt Ltd</span>
-          </div>
-        </footer>
+        <SiteFooter />
       </div>
     </>
   );

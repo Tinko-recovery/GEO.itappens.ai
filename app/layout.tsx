@@ -1,86 +1,59 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
+
 import "./globals.css";
+import "./pillar1.css";
+
+import { siteConfig } from "@/lib/content/site";
 
 export const metadata: Metadata = {
-  title: "itappens.ai — The Citation Layer for the AI Web",
-  description:
-    "We engineer your brand into AI answers. Specialised Generative Engine Optimization (GEO) for Indian B2B and Industrial sectors. Get cited by ChatGPT, Perplexity, and Gemini.",
-  keywords: [
-    "GEO agency India", "AI search visibility", "LLM citation engineering",
-    "Perplexity optimization", "KIADB digital marketing", "SearchGPT visibility"
-  ],
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: "itappens.ai | India's First AEO/GEO Solution Provider",
+    template: "%s | itappens.ai",
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
   alternates: {
-    canonical: 'https://www.itappens.ai/',
+    canonical: siteConfig.url,
+  },
+  keywords: [
+    "GEO agency India",
+    "AEO consultant India",
+    "how to get cited by AI in India",
+    "llms.txt generation",
+    "schema for AI search visibility",
+    "AI content automation India",
+  ],
+  openGraph: {
+    title: "itappens.ai | India's First AEO/GEO Solution Provider",
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "itappens.ai | India's First AEO/GEO Solution Provider",
+    description: siteConfig.description,
   },
   icons: {
-    icon: '/favicon.svg',
-  },
-  openGraph: {
-    title: "itappens.ai — Get Your Brand Cited by AI",
-    description: "India's first GEO practice. We ensure your brand is the primary source when LLMs answer questions.",
-    url: "https://www.itappens.ai/",
-    siteName: "itappens.ai",
-    type: "website",
-    locale: "en_IN",
+    icon: "/favicon.svg",
   },
 };
 
-const identitySchema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://www.itappens.ai/#organization",
-      "name": "itappens.ai",
-      "url": "https://www.itappens.ai/",
-      "logo": "https://www.itappens.ai/favicon.svg",
-      "email": "hello@itappens.ai",
-      "sameAs": [
-        "https://www.linkedin.com/company/itappens-ai/"
-      ],
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Bengaluru",
-        "addressCountry": "IN"
-      }
-    },
-    {
-      "@type": "ProfessionalService",
-      "name": "itappens.ai",
-      "description": "Specialised Digital Marketing Agency focusing on Generative Engine Optimization (GEO) and AI-first search visibility.",
-      "url": "https://www.itappens.ai/",
-      "logo": "https://www.itappens.ai/favicon.svg",
-      "email": "hello@itappens.ai",
-      "sameAs": [
-        "https://www.linkedin.com/company/itappens-ai/"
-      ],
-      "areaServed": { "@type": "Country", "name": "India" },
-      "knowsAbout": [
-        "Generative Engine Optimization (GEO)",
-        "AI Search Visibility",
-        "LLM Citation Engineering",
-        "Digital Entity Consistency",
-        "Information Gain Content Strategy",
-        "Knowledge Graph Optimization",
-        "KIADB Industrial Digital Marketing",
-        "B2B Manufacturing Lead Generation"
-      ]
-    }
-  ]
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-IN">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(identitySchema) }} />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

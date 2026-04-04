@@ -41,7 +41,7 @@ export default function itcontents() {
                     className="hero-eyebrow"
                 >
                     <div className="eyebrow-dot" />
-                    <span className="hero-eyebrow-text">itcontents — Premium AI Automation</span>
+                    <span className="hero-eyebrow-text">itcontents â€” Premium AI Automation</span>
                 </motion.div>
 
                 <motion.h1
@@ -75,10 +75,10 @@ export default function itcontents() {
                 >
                     <div className="text-sub" style={{ maxWidth: 480 }}>
                         Stop spending 20 hours a week on content that barely gets seen.<br /><br />
-                        itcontents uses an agentic engine to research trends, write human-first copy, and generate premium Ken Burns video content—all approved by you in Telegram.
+                        itcontents uses an agentic engine to research trends, write human-first copy, and generate premium Ken Burns video contentâ€”all approved by you in Telegram.
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                        <a href="https://t.me/itcontents_ai" target="_blank" className="btn-primary">View the Showroom →</a>
+                        <a href="https://t.me/itcontents_ai" target="_blank" className="btn-primary">View the Showroom â†’</a>
                         <div style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px', textAlign: 'center' }}>
                             A Product of itappens.ai
                         </div>
@@ -109,11 +109,11 @@ export default function itcontents() {
             </section>
 
             <footer style={{ padding: '40px 48px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
                     <div style={{ fontSize: '10px', color: 'var(--muted)', letterSpacing: '1px' }}>
-                        © 2026 itappens.ai — Blocks and Loops Technologies Pvt Ltd.
+                        © 2026 itappens.ai
                     </div>
-                    <a href="/" style={{ fontSize: '10px', color: 'var(--accent)', textDecoration: 'none', letterSpacing: '1px' }}>Back to Hub</a>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}><a href="mailto:hello@itappens.ai" style={{ fontSize: '10px', color: 'var(--accent)', textDecoration: 'none', letterSpacing: '1px' }}>hello@itappens.ai</a><a href="/" style={{ fontSize: '10px', color: 'var(--accent)', textDecoration: 'none', letterSpacing: '1px' }}>Back to Hub</a></div>
                 </div>
             </footer>
         </main>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import '../globals.css';
 
 export const metadata: Metadata = {
-    title: 'Privacy Policy — itappens.ai',
+    title: 'Privacy Policy â€” itappens.ai',
     description: 'Privacy Policy for itappens.ai, operated by Blocks and Loops Technologies Pvt Ltd.',
 };
 
@@ -18,9 +18,9 @@ Contact: hello@itappens.ai`,
             title: '2. Information We Collect',
             content: `We collect only the minimum information required to operate our service:
 
-• **Contact information** — your email address when you submit the contact form on our website.
-• **Usage data** — anonymised interaction data collected by standard analytics tools (page views, session duration). No personally identifiable information is stored in analytics.
-• **Communications** — any information you voluntarily share when corresponding with us via email.
+â€¢ **Contact information** â€” your email address when you submit the contact form on our website.
+â€¢ **Usage data** â€” anonymised interaction data collected by standard analytics tools (page views, session duration). No personally identifiable information is stored in analytics.
+â€¢ **Communications** â€” any information you voluntarily share when corresponding with us via email.
 
 We do not use cookies beyond those strictly necessary for site function. We do not deploy advertising trackers or third-party data brokers.`,
         },
@@ -28,15 +28,15 @@ We do not use cookies beyond those strictly necessary for site function. We do n
             title: '3. How We Use Your Information',
             content: `We use the information exclusively for:
 
-• Responding to your enquiry or request for our services.
-• Sending service-related communications you have explicitly requested.
-• Improving our website and services based on anonymised aggregate data.
+â€¢ Responding to your enquiry or request for our services.
+â€¢ Sending service-related communications you have explicitly requested.
+â€¢ Improving our website and services based on anonymised aggregate data.
 
 We do not sell, rent, or share your personal information with third parties for marketing purposes.`,
         },
         {
             title: '4. AI Crawlers & the /llms.txt File',
-            content: `itappens.ai maintains a structured data file (/llms.txt) designed to help AI language models understand our services. This file is served exclusively to AI crawlers and automated AI agents; access by human browsers is redirected.
+            content: `itappens.ai maintains a structured data file (/llms.txt) designed to help AI language models understand our services. This file is publicly accessible as plain text so AI systems, humans, and validators can all inspect the same canonical source.
 
 This file contains only business information about itappens.ai and does not include any personal data about visitors or clients.`,
         },
@@ -50,11 +50,11 @@ You may request deletion of your personal data at any time by writing to hello@i
             title: '6. Your Rights',
             content: `Under the Information Technology Act, 2000 (India) and applicable data protection regulations, you have the right to:
 
-• Access the personal data we hold about you.
-• Correct inaccurate personal data.
-• Request deletion of your personal data.
-• Withdraw consent for any processing based on consent.
-• Lodge a complaint with the relevant data protection authority.
+â€¢ Access the personal data we hold about you.
+â€¢ Correct inaccurate personal data.
+â€¢ Request deletion of your personal data.
+â€¢ Withdraw consent for any processing based on consent.
+â€¢ Lodge a complaint with the relevant data protection authority.
 
 To exercise any of these rights, contact us at hello@itappens.ai.`,
         },
@@ -66,8 +66,8 @@ To exercise any of these rights, contact us at hello@itappens.ai.`,
             title: '8. Third-Party Services',
             content: `Our website may use:
 
-• **Google Fonts** — fonts are loaded from Google's CDN. Google's privacy policy applies.
-• **Vercel** — our hosting provider. Vercel's privacy policy applies to infrastructure-level data.
+â€¢ **Google Fonts** â€” fonts are loaded from Google's CDN. Google's privacy policy applies.
+â€¢ **Vercel** â€” our hosting provider. Vercel's privacy policy applies to infrastructure-level data.
 
 We do not embed third-party social media widgets, advertising networks, or tracking pixels.`,
         },
@@ -95,7 +95,7 @@ Website: itappens.ai`,
                 {/* Header */}
                 <div style={{ marginBottom: 64 }}>
                     <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginBottom: 48, fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: 'var(--text-dim)', letterSpacing: '0.06em' }}>
-                        ← Back to itappens.ai
+                        â† Back to itappens.ai
                     </a>
                     <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--indigo)', marginBottom: 16 }}>
                         Legal
@@ -104,7 +104,7 @@ Website: itappens.ai`,
                         Privacy Policy
                     </h1>
                     <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--text-dim)', letterSpacing: '0.04em' }}>
-                        Last updated: March 4, 2026 &nbsp;·&nbsp; Blocks and Loops Technologies Pvt Ltd
+                        Last updated: March 4, 2026 &nbsp;Â·&nbsp; Blocks and Loops Technologies Pvt Ltd
                     </p>
                 </div>
 
