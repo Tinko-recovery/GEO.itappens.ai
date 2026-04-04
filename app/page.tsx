@@ -183,9 +183,27 @@ export default function Page() {
               </a>
             ))}
           </div>
-          <a href="#audit" className="btn-primary" style={{ fontSize: 13, padding: "9px 20px", marginLeft: 8 }}>
+          <a href="#audit" className="btn-primary nav-cta-btn" style={{ fontSize: 13, padding: "9px 20px", marginLeft: 8 }}>
             Free AI Audit
           </a>
+          <button className="hamburger-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+        <div className={`mobile-menu${menuOpen ? " open" : ""}`}>
+          {[
+            { label: "Platform", href: "#platform" },
+            { label: "Solutions", href: "#solutions" },
+            { label: "Blog", href: "/blog" },
+            { label: "Pricing", href: "#pricing" },
+          ].map((l) => (
+            <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
+          ))}
+          <div className="mobile-menu-cta">
+            <a href="#audit" className="btn-primary" style={{ display: "block", textAlign: "center" }} onClick={() => setMenuOpen(false)}>Free AI Audit →</a>
+          </div>
         </div>
       </nav>
 
@@ -219,7 +237,7 @@ export default function Page() {
                 We engineer digital entities that AI models like Perplexity, Gemini, and SearchGPT trust and recommend — structuring your brand to be the default answer in your category.
               </p>
 
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 56 }}>
+              <div className="hero-actions">
                 <a href="#audit" className="btn-primary" style={{ padding: "13px 28px", fontSize: 15 }}>Start Free AI Audit →</a>
                 <a href="#platform" className="btn-secondary" style={{ padding: "13px 28px", fontSize: 15 }}>See How It Works</a>
               </div>
@@ -237,12 +255,9 @@ export default function Page() {
         {/* ── STATS ──────────────────────────────────── */}
         <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "var(--surface)" }}>
           <div className="container">
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)" }}>
+            <div className="grid-stats">
               {STATS.map((s, i) => (
-                <div key={i} style={{
-                  padding: "40px 24px", textAlign: "center",
-                  borderRight: i < 3 ? "1px solid var(--border)" : "none",
-                }}>
+                <div key={i} style={{ padding: "40px 24px", textAlign: "center" }}>
                   <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 800, color: "var(--accent)", lineHeight: 1, marginBottom: 8 }}>{s.num}</div>
                   <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-dim)", lineHeight: 1.5 }}>{s.label}</div>
                 </div>
@@ -257,7 +272,7 @@ export default function Page() {
         {/* ── SOLUTIONS — The Problem ─────────────────── */}
         <section id="solutions" style={{ padding: "100px 0", background: "var(--bg)" }}>
           <div className="container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+            <div className="grid-2col">
               <div>
                 <span className="overline">The Blind Spot</span>
                 <h2 className="headline-lg" style={{ marginBottom: 20 }}>Traditional SEO<br />is losing the game.</h2>
@@ -306,7 +321,7 @@ export default function Page() {
               </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 20 }}>
+            <div className="grid-pillars">
               {PILLARS.map((p, i) => (
                 <div key={i} className="card-bento">
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
@@ -332,7 +347,7 @@ export default function Page() {
               </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+            <div className="grid-3col">
               {[
                 { num: "01", timing: "Week 1–2", title: "AI Presence Audit", body: "200+ prompts across ChatGPT, Perplexity, Gemini and Claude establish your baseline citation rate and competitor gap map.", tags: ["Citation Report", "Gap Map"] },
                 { num: "02", timing: "Week 2–4", title: "Entity Architecture", body: "We design your semantic entity — the structured definition AI models use when reasoning about your brand in your category.", tags: ["Brand Entity Doc", "Knowledge Blueprint"] },
@@ -368,7 +383,7 @@ export default function Page() {
               <p className="text-sub" style={{ margin: "0 auto", textAlign: "center" }}>All plans include principal-led delivery. No junior teams.</p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20, alignItems: "start" }}>
+            <div className="grid-pricing">
               {PLANS.map((plan, i) => (
                 <div key={i} style={{
                   padding: 32, borderRadius: 8, border: plan.accent ? "2px solid var(--accent)" : "1px solid var(--border)",
@@ -404,7 +419,7 @@ export default function Page() {
         {/* ── WHY ITAPPENS ────────────────────────────── */}
         <section id="why" style={{ padding: "100px 0", background: "var(--bg)", borderTop: "1px solid var(--border)" }}>
           <div className="container">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", maxWidth: 1000 }}>
+            <div className="grid-why">
               <div>
                 <span className="overline">Why itappens.ai</span>
                 <h2 className="headline-lg" style={{ marginBottom: 20 }}>We don't sell GEO.<br />We run it.</h2>
@@ -493,7 +508,7 @@ export default function Page() {
                 borderRadius: 8, padding: "40px 36px",
                 display: "flex", flexDirection: "column", gap: 16,
               }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div className="grid-form-row">
                   {[
                     { name: "name", label: "Your Name", type: "text", placeholder: "Priya Sharma", required: false },
                     { name: "email", label: "Business Email *", type: "email", placeholder: "you@company.com", required: true },
@@ -551,7 +566,7 @@ export default function Page() {
       {/* ── FOOTER ─────────────────────────────────── */}
       <footer style={{ padding: "64px 0 40px", borderTop: "1px solid var(--border)", background: "var(--surface)" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 40, marginBottom: 48 }}>
+          <div className="grid-footer">
             <div>
               <div style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 18, marginBottom: 16, color: "var(--text)" }}>
                 it<span style={{ color: "var(--accent)" }}>appens</span>.ai
@@ -585,7 +600,7 @@ export default function Page() {
               </ul>
             </div>
           </div>
-          <div style={{ paddingTop: 24, borderTop: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className="footer-bottom">
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)" }}>© 2026 Blocks & Loops Technologies Pvt Ltd · Bengaluru, India</span>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)" }}>A product of itappens.ai</span>
           </div>
@@ -595,6 +610,7 @@ export default function Page() {
       {/* ── WHATSAPP FLOAT ─────────────────────────── */}
       <a href="https://wa.me/919353015844?text=Hi%2C%20I%20want%20a%20free%20AI%20audit%20for%20my%20brand."
         target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
+        className="whatsapp-float"
         style={{
           position: "fixed", bottom: 28, right: 28, width: 52, height: 52,
           background: "#25d366", borderRadius: "50%",

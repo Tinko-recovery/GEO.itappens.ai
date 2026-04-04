@@ -185,3 +185,240 @@ h2 { font-weight: 700; }
   width: 2px;
   background: var(--accent);
 }
+
+/* ─── RESPONSIVE LAYOUT CLASSES ─────────────────────── */
+
+/* Hamburger */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--text);
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+/* Mobile menu (hidden by default) */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: rgba(249, 250, 251, 0.98);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0 20px;
+}
+
+.mobile-menu.open {
+  display: flex;
+}
+
+.mobile-menu a {
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.mobile-menu a:last-child {
+  border-bottom: none;
+}
+
+.mobile-menu-cta {
+  margin: 12px 24px 0;
+}
+
+/* Grid layouts */
+.grid-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Desktop stat borders handled by nth-child */
+.grid-stats > div:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.grid-pillars {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid-pricing {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.grid-why {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1000px;
+}
+
+.grid-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid-footer {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+
+.footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 56px;
+}
+
+.comparison-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── MOBILE BREAKPOINT (≤768px) ─────────────────────── */
+@media (max-width: 768px) {
+
+  /* Nav */
+  .desktop-nav { display: none !important; }
+  .nav-cta-btn { display: none !important; }
+  .hamburger-btn { display: flex !important; }
+
+  /* Stats: 4-col → 2×2 */
+  .grid-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* Reset all right borders, re-apply for 2-col layout */
+  .grid-stats > div:not(:last-child) {
+    border-right: none;
+  }
+  .grid-stats > div:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+  .grid-stats > div:nth-child(3),
+  .grid-stats > div:nth-child(4) {
+    border-top: 1px solid var(--border);
+  }
+
+  /* Solutions 2-col → 1-col */
+  .grid-2col {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  /* Pillars 2-col → 1-col */
+  .grid-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  /* Roadmap 3-col → 1-col */
+  .grid-3col {
+    grid-template-columns: 1fr;
+  }
+
+  /* Pricing 3-col → 1-col */
+  .grid-pricing {
+    grid-template-columns: 1fr;
+  }
+
+  /* Why 2-col → 1-col */
+  .grid-why {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  /* Form name/email row → 1-col */
+  .grid-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hero CTA buttons: full-width stacked */
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .hero-actions a {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Footer: all columns stack */
+  .grid-footer {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Sections: reduce vertical padding on mobile */
+  section {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+
+  /* Form padding reduce */
+  .mobile-form-pad {
+    padding: 28px 20px !important;
+  }
+
+  /* WhatsApp float: smaller + lower on mobile */
+  .whatsapp-float {
+    bottom: 16px !important;
+    right: 16px !important;
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  .whatsapp-float svg {
+    width: 22px;
+    height: 22px;
+  }
+}
