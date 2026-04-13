@@ -328,7 +328,7 @@ telegram = TelegramReporter(sprint_board=sprint_board)
 
 # ── Founder Notification Helpers ───────────────────────────────────────────────
 
-FOUNDER_EMAIL = os.getenv("FOUNDER_EMAIL", "founder@tinko.in")
+FOUNDER_EMAIL = os.getenv("FOUNDER_EMAIL", "sadish@itappens.ai")
 FOUNDER_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 
 def _notify_founder_email(subject: str, body: str) -> None:
@@ -538,7 +538,75 @@ async def landing_page():
     <html lang="en">
     <head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>itappens.ai | The Autonomous Workforce</title>
+        <title>itappens.ai | AI-First Digital Marketing &amp; GEO Agency</title>
+        <meta name="description" content="itappens.ai is a specialized digital marketing agency focused on Generative Engine Optimization (GEO) and AI-first search visibility. We help brands get cited by ChatGPT, Gemini &amp; Perplexity.">
+        <meta name="robots" content="index, follow">
+        <link rel="canonical" href="https://itappens.ai/">
+
+        <!-- Open Graph / Social -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://itappens.ai/">
+        <meta property="og:title" content="itappens.ai | AI-First Digital Marketing &amp; GEO Agency">
+        <meta property="og:description" content="Specialized Digital Marketing Agency focusing on Generative Engine Optimization (GEO) and AI-first search visibility. Get cited by ChatGPT, Gemini &amp; Perplexity.">
+        <meta property="og:image" content="https://itappens.ai/static/og-image.png">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:url" content="https://itappens.ai/">
+        <meta name="twitter:title" content="itappens.ai | GEO &amp; AI-First Search Agency">
+        <meta name="twitter:description" content="We help brands appear in AI-generated answers. GEO-first strategy, 24/7 autonomous execution.">
+        <meta name="twitter:image" content="https://itappens.ai/static/og-image.png">
+
+        <!-- JSON-LD Structured Data -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "ProfessionalService",
+          "name": "itappens.ai",
+          "alternateName": "Blocks and Loops Technologies",
+          "url": "https://itappens.ai",
+          "logo": "https://itappens.ai/static/logo.png",
+          "description": "Specialized Digital Marketing Agency focusing on Generative Engine Optimization (GEO) and AI-first search visibility.",
+          "email": "sadish@itappens.ai",
+          "telephone": "+91-XXXXXXXXXX",
+          "foundingDate": "2025",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bengaluru",
+            "addressRegion": "Karnataka",
+            "addressCountry": "IN"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "12.9716",
+            "longitude": "77.5946"
+          },
+          "areaServed": [
+            {"@type": "Country", "name": "India"},
+            {"@type": "Country", "name": "United States"},
+            {"@type": "AdministrativeArea", "name": "Global"}
+          ],
+          "serviceType": [
+            "Generative Engine Optimization",
+            "AI-First Search Visibility",
+            "Digital Marketing",
+            "Autonomous AI Workforce",
+            "Content Strategy"
+          ],
+          "sameAs": [
+            "https://www.linkedin.com/company/itappens-ai",
+            "https://twitter.com/itappensai"
+          ],
+          "knowsAbout": [
+            "GEO",
+            "Generative Engine Optimization",
+            "AI Search Visibility",
+            "ChatGPT Citations",
+            "Perplexity SEO",
+            "Gemini Search"
+          ],
+          "priceRange": "$$"
+        }
+        </script>
+
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
         <style>
@@ -711,7 +779,7 @@ async def landing_page():
                 <a href="#how">How it works</a>
                 <a href="#pricing">Pricing</a>
                 <a href="/security">Security</a>
-                <a href="mailto:founder@tinko.in" style="color: #00ffff;">Contact</a>
+                <a href="mailto:sadish@itappens.ai" style="color: #00ffff;">Contact</a>
                 <a href="#" onclick="gotoProtected('/dashboard'); return false;" class="cta" style="padding: 12px 30px; font-size: 0.9rem; margin: 0;">Launch Your Team →</a>
             </div>
         </nav>
@@ -1203,7 +1271,7 @@ async def landing_page():
                 <a href="/security" style="color: inherit;">Security</a>
                 <a href="#" style="color: inherit;">Twitter</a>
                 <a href="#" style="color: inherit;">Terms</a>
-                <a href="mailto:founder@tinko.in" style="color: #00ffff; font-weight: 600;">founder@tinko.in</a>
+                <a href="mailto:sadish@itappens.ai" style="color: #00ffff; font-weight: 600;">sadish@itappens.ai</a>
             </div>
         </footer>
 
@@ -1674,11 +1742,314 @@ async def security_page():
 
         <footer>
             © 2026 itappens.ai — by blocks and loops technologies &nbsp;|&nbsp;
-            <a href="mailto:founder@tinko.in" style="color: #00ffff;">founder@tinko.in</a>
+            <a href="mailto:sadish@itappens.ai" style="color: #00ffff;">sadish@itappens.ai</a>
         </footer>
     </body>
     </html>
     """
+
+@app.get("/robots.txt", response_class=HTMLResponse)
+async def robots_txt():
+    """Serve robots.txt to allow all crawlers."""
+    from fastapi.responses import PlainTextResponse
+    content = (
+        "User-agent: *\n"
+        "Allow: /\n\n"
+        "Sitemap: https://itappens.ai/sitemap.xml\n"
+    )
+    return PlainTextResponse(content=content, media_type="text/plain")
+
+
+@app.get("/blog", response_class=HTMLResponse)
+async def blog_index():
+    """GEO-optimised blog / insights hub."""
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GEO vs SEO: The 2026 Guide | itappens.ai Blog</title>
+        <meta name="description" content="The definitive 2026 guide to Generative Engine Optimization (GEO) vs traditional SEO. Learn how to get your brand cited by ChatGPT, Gemini, and Perplexity.">
+        <meta name="robots" content="index, follow">
+        <link rel="canonical" href="https://itappens.ai/blog">
+        <meta property="og:type" content="article">
+        <meta property="og:url" content="https://itappens.ai/blog">
+        <meta property="og:title" content="GEO vs SEO: The 2026 Guide | itappens.ai">
+        <meta property="og:description" content="How to get your brand cited by AI search engines in 2026. GEO strategies that actually work.">
+
+        <!-- Article JSON-LD -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "GEO vs SEO: The 2026 Guide — How to Win in the Age of AI Search",
+          "description": "The definitive guide to Generative Engine Optimization. Learn why GEO is replacing traditional SEO as AI engines like ChatGPT, Gemini, and Perplexity become the primary discovery interface.",
+          "author": {
+            "@type": "Person",
+            "name": "Sadish",
+            "worksFor": {"@type": "Organization", "name": "itappens.ai"}
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "itappens.ai",
+            "url": "https://itappens.ai",
+            "logo": {"@type": "ImageObject", "url": "https://itappens.ai/static/logo.png"}
+          },
+          "datePublished": "2026-04-03",
+          "dateModified": "2026-04-03",
+          "mainEntityOfPage": {"@type": "WebPage", "@id": "https://itappens.ai/blog"},
+          "keywords": ["GEO", "Generative Engine Optimization", "SEO 2026", "AI Search", "ChatGPT SEO", "Perplexity SEO", "Gemini Search Visibility"],
+          "articleSection": "Digital Marketing"
+        }
+        </script>
+
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+        <style>
+            :root { --p: #ff00ff; --s: #00ffff; --bg: #030014; --glass: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.1); }
+            * { box-sizing: border-box; transition: all 0.3s ease; }
+            body { background: var(--bg); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; line-height: 1.7; }
+            h1, h2, h3, h4, .logo { font-family: 'Unbounded'; }
+            .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% 50%, #1a0033 0%, #030014 100%); }
+
+            nav { padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; max-width: 1300px; margin: 0 auto; background: rgba(3,0,20,0.85); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 100; }
+            .logo { font-size: 1.4rem; background: linear-gradient(to right, var(--p), var(--s)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; text-decoration: none; }
+            .nav-links { display: flex; gap: 30px; align-items: center; }
+            .nav-links a { color: #aaa; text-decoration: none; font-size: 0.9rem; }
+            .nav-links a:hover { color: var(--s); }
+
+            .container { max-width: 900px; margin: 0 auto; padding: 60px 20px 120px; }
+            .breadcrumb { font-size: 0.85rem; color: #555; margin-bottom: 40px; }
+            .breadcrumb a { color: var(--s); text-decoration: none; }
+
+            /* Hero */
+            .article-hero { margin-bottom: 60px; }
+            .tag { display: inline-block; background: rgba(0,255,255,0.1); border: 1px solid rgba(0,255,255,0.3); color: var(--s); padding: 4px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; margin-bottom: 20px; }
+            h1.article-title { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; letter-spacing: -1px; margin: 0 0 20px 0; }
+            h1.article-title mark { background: none; color: var(--s); }
+            .article-meta { color: #666; font-size: 0.85rem; margin-bottom: 40px; display: flex; gap: 20px; flex-wrap: wrap; }
+            .article-meta span { display: flex; align-items: center; gap: 6px; }
+
+            /* Divider */
+            .divider { height: 1px; background: var(--border); margin: 50px 0; }
+
+            /* Article Body */
+            .article-body h2 { font-size: 1.8rem; color: #fff; margin-top: 60px; margin-bottom: 20px; border-left: 4px solid var(--p); padding-left: 20px; line-height: 1.3; }
+            .article-body h3 { font-size: 1.3rem; color: var(--s); margin-top: 40px; margin-bottom: 15px; }
+            .article-body p { color: #ccc; font-size: 1.05rem; margin-bottom: 20px; }
+            .article-body ul { color: #ccc; padding-left: 20px; margin-bottom: 20px; }
+            .article-body ul li { padding: 6px 0; font-size: 1.05rem; }
+            .article-body strong { color: #fff; }
+
+            /* Callout box */
+            .callout { background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 20px; padding: 30px 35px; margin: 40px 0; }
+            .callout p { margin: 0; color: #aaa; }
+            .callout-title { font-weight: bold; color: var(--s); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+
+            /* Comparison table */
+            .compare-table { width: 100%; border-collapse: collapse; margin: 40px 0; font-size: 0.95rem; }
+            .compare-table th { background: rgba(255,255,255,0.05); padding: 15px 20px; text-align: left; border-bottom: 2px solid var(--border); font-family: 'Unbounded'; font-size: 0.8rem; letter-spacing: 1px; }
+            .compare-table th:first-child { color: #ff4444; }
+            .compare-table th:last-child { color: #00ff88; }
+            .compare-table td { padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #bbb; }
+            .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+            .badge-old { color: #ff6666; font-weight: bold; }
+            .badge-new { color: #00ff88; font-weight: bold; }
+
+            /* CTA block */
+            .cta-block { background: linear-gradient(135deg, rgba(255,0,255,0.08), rgba(0,255,255,0.08)); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 60px; text-align: center; margin-top: 80px; }
+            .cta-block h3 { font-size: 2rem; margin-bottom: 15px; }
+            .cta-block p { color: #aaa; max-width: 500px; margin: 0 auto 30px; }
+            .btn-cta { display: inline-block; background: linear-gradient(45deg, var(--p), #6600ff); color: #fff; padding: 18px 50px; border-radius: 100px; text-decoration: none; font-weight: bold; font-size: 1rem; }
+            .btn-cta:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(255,0,255,0.4); }
+
+            /* Related posts */
+            .related { margin-top: 80px; }
+            .related h2 { font-size: 1.5rem; margin-bottom: 30px; }
+            .posts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+            .post-card { background: var(--glass); border: 1px solid var(--border); border-radius: 25px; padding: 35px; text-decoration: none; color: inherit; display: block; }
+            .post-card:hover { border-color: var(--s); transform: translateY(-5px); background: rgba(255,255,255,0.07); }
+            .post-card .tag { margin-bottom: 15px; }
+            .post-card h3 { font-size: 1.1rem; margin: 0 0 10px 0; color: #fff; }
+            .post-card p { font-size: 0.9rem; color: #888; margin: 0; }
+
+            footer { padding: 60px 40px; border-top: 1px solid var(--border); text-align: center; color: #555; font-size: 0.85rem; }
+            footer a { color: var(--s); text-decoration: none; }
+
+            @media (max-width: 768px) {
+                nav { padding: 20px; }
+                .container { padding: 40px 20px 80px; }
+                .posts-grid { grid-template-columns: 1fr; }
+                .compare-table { font-size: 0.85rem; }
+                .compare-table td, .compare-table th { padding: 10px 12px; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bg-glow"></div>
+
+        <nav>
+            <a href="/" class="logo">itappens.ai</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/blog" style="color: var(--s);">Blog</a>
+                <a href="mailto:sadish@itappens.ai" style="color: var(--s);">Contact</a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/">Home</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; GEO vs SEO: The 2026 Guide
+            </div>
+
+            <article class="article-hero" itemscope itemtype="https://schema.org/Article">
+                <meta itemprop="datePublished" content="2026-04-03">
+                <meta itemprop="author" content="Sadish">
+
+                <span class="tag">GEO · AI Search · 2026</span>
+                <h1 class="article-title" itemprop="headline">GEO vs SEO:<br><mark>The 2026 Guide</mark></h1>
+                <div class="article-meta">
+                    <span>📅 April 3, 2026</span>
+                    <span>✍️ Sadish — itappens.ai</span>
+                    <span>⏱ 8 min read</span>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="article-body" itemprop="articleBody">
+
+                    <p>In 2024, Google accounted for <strong>90%+ of all search traffic</strong>. By 2026, that statistic is being quietly disrupted. Millions of users now start their research with a simple question to ChatGPT, Gemini, or Perplexity — and the AI gives them a <strong>curated answer with citations</strong>.</p>
+
+                    <p>The brand that gets <em>cited</em> wins. The brand that only ranks on page 1 of Google? It might as well be invisible.</p>
+
+                    <p>Welcome to the era of <strong>Generative Engine Optimization (GEO)</strong>.</p>
+
+                    <div class="callout">
+                        <div class="callout-title">💡 Key Insight</div>
+                        <p>When a user asks ChatGPT "What's the best AI marketing agency?", traditional SEO rankings don't determine the answer. The AI picks from sources it has learned to <strong>trust, cite, and summarise</strong>. GEO is the discipline of becoming that trusted source.</p>
+                    </div>
+
+                    <h2>What Is GEO (Generative Engine Optimization)?</h2>
+
+                    <p>GEO is the practice of structuring your website, content, and entity data so that AI language models — ChatGPT, Gemini, Perplexity, Claude, Copilot — cite your brand when answering questions relevant to your industry.</p>
+
+                    <p>Unlike SEO which optimises for a crawler's spider, GEO optimises for a <strong>language model's training data, retrieval pipeline, and citation logic</strong>.</p>
+
+                    <h3>The 5 Core Pillars of GEO</h3>
+                    <ul>
+                        <li><strong>Entity Authority</strong> — Making your brand a recognized named entity in the knowledge graph (Schema.org, Wikipedia, Wikidata)</li>
+                        <li><strong>Citability</strong> — Writing content in a format AI engines like to quote (statistics, clear definitions, structured answers)</li>
+                        <li><strong>Structured Data</strong> — JSON-LD schema that tells AI what your business IS, what it DOES, and WHO vouches for it</li>
+                        <li><strong>sameAs Signals</strong> — Consistent NAP data across LinkedIn, Crunchbase, G2, Product Hunt</li>
+                        <li><strong>Answer-First Content</strong> — Content that directly answers the question in the first paragraph (no 1000-word preambles)</li>
+                    </ul>
+
+                    <h2>GEO vs SEO: The Head-to-Head</h2>
+
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>SEO (Old World)</th>
+                                <th>Signal</th>
+                                <th>GEO (2026)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="badge-old">Blue links, Position 1–10</td>
+                                <td>Discovery Interface</td>
+                                <td class="badge-new">AI-generated summary with citation</td>
+                            </tr>
+                            <tr>
+                                <td class="badge-old">Keyword density &amp; backlinks</td>
+                                <td>Ranking Signal</td>
+                                <td class="badge-new">Entity trust, schema authority &amp; citability</td>
+                            </tr>
+                            <tr>
+                                <td class="badge-old">Crawler: Googlebot</td>
+                                <td>Optimise For</td>
+                                <td class="badge-new">LLM: GPT-4o, Gemini 2.5, Llama 4</td>
+                            </tr>
+                            <tr>
+                                <td class="badge-old">Title, H1, meta description</td>
+                                <td>Key On-Page Elements</td>
+                                <td class="badge-new">JSON-LD, FAQ schema, Answer boxes</td>
+                            </tr>
+                            <tr>
+                                <td class="badge-old">Domain Rating (DR)</td>
+                                <td>Authority Metric</td>
+                                <td class="badge-new">Knowledge panel presence, sameAs depth</td>
+                            </tr>
+                            <tr>
+                                <td class="badge-old">Monthly blog posts</td>
+                                <td>Content Strategy</td>
+                                <td class="badge-new">Answer-first, stat-rich, citable snippets</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>How to Get Cited by ChatGPT and Gemini in 2026</h2>
+
+                    <h3>Step 1: Fix Your Entity Schema</h3>
+                    <p>The <code>@type: ProfessionalService</code> or <code>Organization</code> JSON-LD block in your <code>&lt;head&gt;</code> is your digital passport. Include: <strong>name, description, url, email, address, areaServed, sameAs</strong>, and <strong>knowsAbout</strong>. This is what AI search engines read when they try to understand who you are.</p>
+
+                    <h3>Step 2: Build sameAs Depth</h3>
+                    <p>Your brand must appear consistently across: LinkedIn Company Page, Crunchbase, Product Hunt, G2, AngelList, and ideally a Wikipedia/Wikidata stub. Each consistent mention <strong>strengthens the entity signal</strong>.</p>
+
+                    <h3>Step 3: Write Answer-First Content</h3>
+                    <p>Google trained its users to scroll. AI engines don't scroll — they extract. Start every article with a <strong>1–2 sentence direct answer</strong> to the title question. Use numbered lists, statistics, and defined terms. AI models love to quote precise, verifiable facts.</p>
+
+                    <h3>Step 4: Get PR Citations in AI-Indexed Sources</h3>
+                    <p>Publications like TechCrunch, Product Hunt, Hacker News, Forbes, and IndieHackers are heavily weighted in AI training data. A single mention of your brand on any of these, with your URL, dramatically boosts your citation probability.</p>
+
+                    <h3>Step 5: Become the Definition</h3>
+                    <p>The most powerful GEO move: publish the <em>definitive resource</em> on your category keyword. If you're the brand that wrote "What is Generative Engine Optimization?", AI engines will cite you when someone asks that question.</p>
+
+                    <div class="callout">
+                        <div class="callout-title">🔥 itappens.ai GEO Approach</div>
+                        <p>At itappens.ai, we run a 24/7 autonomous team of AI specialists who execute GEO strategy continuously — schema injection, content optimization, entity building, and citation tracking. No waiting. No slow agencies. Just results.</p>
+                    </div>
+
+                    <h2>The Bottom Line: SEO is Table Stakes, GEO is the Game</h2>
+
+                    <p>Traditional SEO is not dead — your website still needs to rank on Google. But in 2026, the high-intent buyer increasingly <strong>asks an AI first</strong>. If you're not in the AI's answer, you're not in the consideration set.</p>
+
+                    <p>The brands winning in 2026 are the ones that built <strong>entity authority</strong>, published <strong>citable, structured content</strong>, and made their schema speak the language of large language models.</p>
+
+                    <p>The window to establish yourself as an authoritative GEO entity before your competitors is <strong>right now</strong> — 2026 is the inflection point.</p>
+
+                </div>
+            </article>
+
+            <div class="cta-block">
+                <h3>Ready to <mark style="background:none; color: var(--s);">Get Cited</mark>?</h3>
+                <p>Let itappens.ai's autonomous GEO team build your AI search visibility — starting this week.</p>
+                <a href="/#pricing" class="btn-cta">Start Your GEO Sprint →</a>
+            </div>
+
+            <div class="related">
+                <h2>More Insights</h2>
+                <div class="posts-grid">
+                    <a href="/blog" class="post-card">
+                        <span class="tag">COMING SOON</span>
+                        <h3>The AI Citation Audit: Is Your Brand Invisible to ChatGPT?</h3>
+                        <p>A step-by-step framework to test your brand's AI visibility and fix the gaps.</p>
+                    </a>
+                    <a href="/blog" class="post-card">
+                        <span class="tag">COMING SOON</span>
+                        <h3>Schema.org for Founders: The 30-Minute GEO Setup</h3>
+                        <p>Everything you need to add to your site's &lt;head&gt; to become entity-recognizable by AI.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            © 2026 itappens.ai &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/blog">Blog</a> &nbsp;|&nbsp; <a href="mailto:sadish@itappens.ai">sadish@itappens.ai</a>
+        </footer>
+    </body>
+    </html>
+    """
+
 
 @app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard_ui():

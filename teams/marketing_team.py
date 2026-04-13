@@ -20,14 +20,16 @@ def build_marketing_crew(
     Build a 4-agent marketing crew for the given marketing brief.
     All agents receive customer context via their backstory.
     """
-    # Heavy imports moved inside for lazy loading
-    from crewai import Agent, Crew, Process, Task
-    from crewai_tools import SerperDevTool
-    from tools.file_tool import read_file_tool, write_file_tool
-    from tools.human_link import HumanLinkTool
+    from customer.customer_brain import CustomerBrain
     
-    context = CustomerBrain.get_context_prompt(customer_id)
     brain = CustomerBrain.load(customer_id)
+    if brain.get("tier") != "Scale":
+        logger.warning("Marketing Team creation halted for %s. Scale Plan required.", customer_id)
+        # We return a dummy object or raise an error? For now, we'll let TeamFactory handle it if we raise, 
+        # but to be safe we'll return a minimal 'Locked' notice via an Exception or similar.
+        raise ValueError(f"Scale Plan Required for {customer_id} to run marketing campaigns.")
+
+    context = CustomerBrain.get_context_prompt(customer_id)
     brand_voice = brain.get("brand_voice", "Professional, direct, no jargon")
     target_customer = brain.get("target_customer", "founders and developers")
 
@@ -39,6 +41,8 @@ def build_marketing_crew(
 
     human_tool = HumanLinkTool(telegram_reporter=None) # Injected by TeamFactory
     serper_tool = SerperDevTool()
+    ingestion_tool = KnowledgeIngestionTool(customer_id=customer_id)
+    buffer_tool = BufferPostTool()
 
     # ── Agents ────────────────────────────────────────────────────────────────
 
@@ -74,37 +78,49 @@ def build_marketing_crew(
         allow_delegation=False,
     )
 
-    seo_specialist = Agent(
-        role="SEO Specialist",
+    geo_strategist = Agent(
+        role="GEO Content Strategist",
         goal=(
-            f"Research keywords and optimize all content for search. Primary keywords: {keywords or 'to be researched'}."
+            f"Incorporate deep knowledge into the campaign and optimize for Citation Gravity. "
+            "Run the KnowledgeIngestionTool first to ensure we have the latest truth."
         ),
         backstory=(
             context +
-            "You are an SEO specialist for SaaS companies. You find low-competition, high-intent keywords. "
-            "You optimize titles, meta descriptions, and headers for both search engines and humans."
+            "You are a specialist in Generative Engine Optimization (GEO). You ensure our content "
+            "is factual, authoritative, and structured for AI search engines (ChatGPT/Perplexity). "
+            "You use the 'itcontents/knowledge/' vault as your ground truth."
         ),
-        llm=llm_haiku,
-        tools=[serper_tool, read_file_tool, write_file_tool],
-        verbose=False,
+        llm=llm_sonnet,
+        tools=[ingestion_tool, serper_tool, read_file_tool],
+        verbose=True,
         allow_delegation=False,
     )
 
-    analyst = Agent(
-        role="Marketing Analyst",
-        goal="Analyze the content strategy and measure projected impact. Report on expected reach and conversions.",
+    social_manager = Agent(
+        role="Social Distribution Manager",
+        goal="Adapt high-level content into social variations and stage them for review.",
         backstory=(
             context +
-            "You analyze content marketing effectiveness. You estimate reach, engagement, and conversion rates. "
-            "You prioritize tactics by ROI and recommend the highest-impact actions."
+            "You are an expert in social media distribution. You take blog posts or campaigns "
+            "and create variants for LinkedIn, Twitter (X), and Instagram. "
+            "You stage everything in the 'itcontents/ready/' folder and Buffer for human review."
         ),
         llm=llm_haiku,
-        tools=[serper_tool, write_file_tool],
-        verbose=False,
+        tools=[buffer_tool, write_file_tool],
+        verbose=True,
         allow_delegation=False,
     )
 
     # ── Tasks ─────────────────────────────────────────────────────────────────
+
+    ingestion_task = Task(
+        description=(
+            "First, run the KnowledgeIngestionTool to process all files and URLs in 'itcontents/knowledge/'. "
+            "This will generate or update 'brain.json'. Review the findings to align the team."
+        ),
+        agent=geo_strategist,
+        expected_output="A summary of new entities and GEO triggers found in the knowledge vault.",
+    )
 
     plan_task = Task(
         description=(
@@ -113,55 +129,39 @@ def build_marketing_crew(
             f"Content Type: {content_type}\n"
             f"Target Audience: {target_customer}\n"
             f"CTA: {cta}\n"
-            f"Deliverables:\n{deliverables}\n\n"
-            "Create a content production plan with deadlines and owner assignments."
+            "Create a content production plan including GEO citation strategies."
         ),
         agent=pm,
-        expected_output="Content plan: tasks, owners, and content angle for each deliverable.",
-    )
-
-    seo_task = Task(
-        description=(
-            f"Research the best keywords for this campaign. Primary topic: {campaign_theme}. "
-            f"Seed keywords: {keywords or 'research needed'}. "
-            "Find 5 keywords with search intent and low competition. "
-            "Write results to workspace/seo_research.md"
-        ),
-        agent=seo_specialist,
-        expected_output="SEO research: 5 keywords with intent labels and difficulty scores.",
-        context=[plan_task],
+        expected_output="Content plan: tasks, owners, and GEO citation strategy for each deliverable.",
+        context=[ingestion_task],
     )
 
     content_task = Task(
         description=(
-            f"Write the {content_type} content for this campaign. "
-            f"Campaign theme: {campaign_theme}. "
-            f"Use the SEO keywords from the research. "
+            f"Write the {content_type} content for this campaign based on the updated brain insights. "
             f"Brand voice: {brand_voice}. CTA: {cta}. "
-            "Be specific to the product — no generic AI filler. "
             "Write to workspace/content/ with the appropriate filename."
         ),
         agent=content_lead,
         expected_output=f"Complete {content_type} content written to workspace/content/",
-        context=[plan_task, seo_task],
+        context=[plan_task, ingestion_task],
     )
 
-    analysis_task = Task(
+    social_task = Task(
         description=(
-            "Review the completed content and provide: "
-            "1) Estimated reach and engagement projections "
-            "2) Conversion rate estimate "
-            "3) Top 3 recommendations for improving performance "
-            "Write analysis to workspace/content_analysis.md"
+            "Generate social media snippets (LinkedIn post, 3 Tweets, IG caption) from the content. "
+            "Inject 2-3 'Semantic Hooks' for Perplexity citations in each variant. "
+            "1. Save variants as a JSON file in 'itcontents/ready/sprint_output.json'. "
+            "2. Stage the posts in Buffer for review using the BufferTool."
         ),
-        agent=analyst,
-        expected_output="Marketing analysis report with reach projections and recommendations.",
-        context=[content_task, seo_task],
+        agent=social_manager,
+        expected_output="Social variants saved to itcontents/ready/ and staged in Buffer.",
+        context=[content_task],
     )
 
     return Crew(
-        agents=[pm, content_lead, seo_specialist, analyst],
-        tasks=[plan_task, seo_task, content_task, analysis_task],
+        agents=[pm, content_lead, geo_strategist, social_manager],
+        tasks=[ingestion_task, plan_task, content_task, social_task],
         process=Process.sequential,
         verbose=False,
     )

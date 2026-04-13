@@ -1,0 +1,14 @@
+[Unit]
+Description=itappens AI Stock Monitor
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root/itappens.ai
+ExecStart=/usr/bin/python3 main.py
+Restart=always
+RestartSec=10
+EnvironmentFile=/root/itappens.ai/.env
+
+[Install]
+WantedBy=multi-user.target

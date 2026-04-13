@@ -13,6 +13,7 @@ const API = "http://localhost:8000/api";
 const PANEL_TABS = [
     { id: "teams", label: "🤖 Live Teams" },
     { id: "activity", label: "🧠 Live Activity" },
+    { id: "vault", label: "🧠 Knowledge Vault" },
     { id: "outputs", label: "📋 Review Queue" },
     { id: "cost", label: "💰 Cost & Tokens" },
     { id: "history", label: "🕰️ Job History" },
@@ -29,6 +30,12 @@ export default function App() {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [lastUpdate, setLastUpdate] = useState(null);
+
+    // [New State for Tiered Gating]
+    const [userTier, setUserTier] = useState(localStorage.getItem("itappens_user_tier") || "Basic");
+    const [hasPaidAudit, setHasPaidAudit] = useState(localStorage.getItem("itappens_has_paid_audit") === "true");
+    const [userStatus, setUserStatus] = useState(localStorage.getItem("itappens_user_status") || "active");
+    const [partnerCode, setPartnerCode] = useState("");
 
     const fetchAll = useCallback(async () => {
         try {
@@ -59,6 +66,24 @@ export default function App() {
         const interval = setInterval(fetchAll, 15_000); // refresh every 15s
         return () => clearInterval(interval);
     }, [fetchAll]);
+
+    // [Bypass Persistence Effect]
+    useEffect(() => {
+        localStorage.setItem("itappens_user_tier", userTier);
+        localStorage.setItem("itappens_has_paid_audit", hasPaidAudit.toString());
+        localStorage.setItem("itappens_user_status", userStatus);
+    }, [userTier, hasPaidAudit, userStatus]);
+
+    const handlePartnerCode = (val) => {
+        setPartnerCode(val);
+        if (val === "prelaunch_testing") {
+            setUserTier("Scale");
+            setHasPaidAudit(true);
+            setUserStatus("verified");
+            // Immediate UI feedback
+            alert("Partner Access Unlocked: Scale Tier Active.");
+        }
+    };
 
     const teamList = Object.values(teams).filter(t => t.team_id !== "ceo" && t.team_id !== "cto" && t.team_id !== "cpo");
     const pendingCount = outputs.length;
@@ -147,6 +172,7 @@ export default function App() {
                         <div style={{
                             marginTop: "auto", background: "rgba(255,255,255,0.04)",
                             border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px",
+                            marginBottom: 16
                         }}>
                             <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
                                 Quality Today
@@ -162,6 +188,26 @@ export default function App() {
                             </div>
                         </div>
                     )}
+
+                    {/* Partner Access Input */}
+                    <div style={{
+                        marginTop: quality ? 0 : "auto", 
+                        padding: "12px", borderTop: "1px solid rgba(255,255,255,0.05)",
+                        opacity: userTier === "Scale" ? 0.4 : 1
+                    }}>
+                        <div style={{ fontSize: 10, color: "#475569", marginBottom: 6, textTransform: "uppercase" }}>Partner Access</div>
+                        <input 
+                            type="password"
+                            placeholder="Enter code..."
+                            value={partnerCode}
+                            onChange={(e) => handlePartnerCode(e.target.value)}
+                            disabled={userTier === "Scale"}
+                            style={{
+                                width: "100%", background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.1)",
+                                borderRadius: 6, padding: "6px 8px", color: "#fff", fontSize: 11, outline: "none"
+                            }}
+                        />
+                    </div>
                 </nav>
 
                 {/* Main content */}
@@ -172,10 +218,47 @@ export default function App() {
                         </div>
                     ) : (
                         <>
-                            {/* PANEL 1 — Live Teams */}
-                            {activeTab === "teams" && (
+                            {/* Vigil Status Banner */}
+                            {userStatus === "pending" && (
+                                <div style={{
+                                    background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.3)",
+                                    borderRadius: 12, padding: "12px 20px", marginBottom: 24, 
+                                    display: "flex", alignItems: "center", gap: 12, color: "#a78bfa", fontSize: 14
+                                }}>
+                                    <span style={{ fontSize: 18 }}>🕵️</span>
+                                    <span>The Principal is verifying your data. Results arriving shortly.</span>
+                                </div>
+                            )}
+                             {activeTab === "teams" && (
                                 <div>
                                     <SectionHeader title="Live Teams" subtitle={`${teamList.length} teams running`} />
+                                    
+                                    {/* Audit Upsell Card */}
+                                    {!hasPaidAudit && (
+                                        <div style={{
+                                            background: "linear-gradient(135deg, #1e1b4b, #0c0a21)",
+                                            border: "1px solid #312e81", borderRadius: 20, padding: "24px",
+                                            marginBottom: 24, display: "flex", alignItems: "center", justifyContent: "space-between"
+                                        }}>
+                                            <div style={{ maxWidth: "60%" }}>
+                                                <h3 style={{ margin: 0, fontSize: 18, color: "#fff" }}>Claim Your GEO Blueprint</h3>
+                                                <p style={{ margin: "8px 0 0", fontSize: 13, color: "#94a3b8" }}>
+                                                    Weaponize your site for the AI Search Era. Get a 15-page "Semantic Displacement" audit today.
+                                                </p>
+                                            </div>
+                                            <button 
+                                                onClick={() => window.open(`https://rzp.io/l/itappens-geo-audit-499?email=${encodeURIComponent("user@itappens.ai")}`, "_blank")}
+                                                style={{
+                                                    background: "#6366f1", color: "#fff", border: "none", borderRadius: 10,
+                                                    padding: "12px 20px", fontWeight: 700, fontSize: 14, cursor: "pointer",
+                                                    boxShadow: "0 4px 12px rgba(99,102,241,0.4)"
+                                                }}
+                                            >
+                                                Get Detailed Audit (₹499)
+                                            </button>
+                                        </div>
+                                    )}
+
                                     {teamList.length === 0 ? (
                                         <EmptyState icon="🤖" text="No active teams yet. Run main.py to start the company." />
                                     ) : (
@@ -194,11 +277,53 @@ export default function App() {
                                 </div>
                             )}
 
-                            {/* PANEL 3 — Output Review */}
+                             {/* PANEL 3 — Output Review */}
                             {activeTab === "outputs" && (
                                 <div>
                                     <SectionHeader title="Output Review" subtitle="AI-generated content awaiting your approval" />
                                     <OutputReview outputs={outputs} onRefresh={fetchAll} />
+                                </div>
+                            )}
+
+                            {/* PANEL - Knowledge Vault (Tiered) */}
+                            {activeTab === "vault" && (
+                                <div style={{ position: "relative", minHeight: 400 }}>
+                                    <SectionHeader title="Knowledge Vault" subtitle="Autonomous ingestion & entity mapping" />
+                                    
+                                    {userTier !== "Scale" ? (
+                                        <div style={{
+                                            position: "absolute", inset: 0, 
+                                            background: "rgba(8,9,13,0.8)", backdropFilter: "blur(4px)",
+                                            zIndex: 10, display: "flex", flexDirection: "column", 
+                                            alignItems: "center", justifyContent: "center", textAlign: "center",
+                                            borderRadius: 20, border: "1px solid rgba(255,255,255,0.05)"
+                                        }}>
+                                            <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
+                                            <h3 style={{ fontSize: 24, color: "#fff", margin: 0 }}>Scale Plan Required</h3>
+                                            <p style={{ color: "#64748b", maxWidth: 400, marginTop: 12 }}>
+                                                Unlock the full power of the GEO Foundry. Upload PDFs, connect URLs, and watch the AI build your Knowledge Brain.
+                                            </p>
+                                            <button 
+                                                style={{
+                                                    marginTop: 24, background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
+                                                    color: "#fff", border: "none", borderRadius: 10, padding: "14px 28px",
+                                                    fontWeight: 700, cursor: "pointer", fontSize: 16
+                                                }}
+                                            >
+                                                Upgrade to Scale (₹2,497/mo)
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div style={{ opacity: userTier === "Scale" ? 1 : 0.3 }}>
+                                            <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 16, padding: 32, border: "1px solid rgba(255,255,255,0.06)" }}>
+                                                <h4 style={{ color: "#a78bfa", marginBottom: 16 }}>Ingestion Status: Verified</h4>
+                                                <p>Vault is active. Agents are pulling context from <code>brain.json</code>.</p>
+                                                <div style={{ marginTop: 20, padding: 20, background: "#000", borderRadius: 12, fontFamily: "monospace", fontSize: 13, color: "#10b981" }}>
+                                                    {`{ "entities": ["Principal", "GEO Foundry", "itappens.ai"], "status": "synced" }`}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 

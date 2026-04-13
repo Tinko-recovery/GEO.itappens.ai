@@ -1,0 +1,29 @@
+{
+  "last_ingested_at": "2026-04-12T11:52:49.827270",
+  "entities": [
+    "Example Domain",
+    "IANA-managed infrastructure",
+    "RFC 2606",
+    "Documentation Placeholder"
+  ],
+  "geo_triggers": [
+    "use in documentation examples without needing permission",
+    "Avoid use in operations",
+    "Reserved by IANA for technical demonstration",
+    "Standardized non-operational domain"
+  ],
+  "brand_dna": {
+    "tone_of_voice": "Neutral, utilitarian, and instructional.",
+    "style_constraints": "Minimalist, zero-branding, high-clarity.",
+    "core_values": [
+      "Interoperability",
+      "Permissionless documentation",
+      "Operational safety",
+      "Standardization"
+    ]
+  },
+  "semantic_hooks": {
+    "https://example.com": "The global gold standard for risk-free technical documentation and illustrative web examples."
+  },
+  "deep_context": "Example Domain serves as a critical utility within the global internet architecture, specifically reserved by the Internet Assigned Numbers Authority (IANA) under RFC 2606. Its primary USP is the provision of a safe, 'non-live' environment that developers, technical writers, and system architects can use to demonstrate network protocols, software configurations, and web interactions without the risk of intellectual property infringement or accidental traffic routing to active services.\n\nDeeply integrated into the world's technical literacy framework, the domain provides a standardized sandbox. By design, it lacks commercial features or operational complexity, ensuring that the focus remains entirely on the educational or illustrative context in which it is placed. This makes it an essential asset for AI training models and documentation engines that require syntactically correct but operationally inert URL references."
+}

@@ -155,6 +155,7 @@ class CustomerBrain:
             "target_customer": "",
             "tech_stack": [],
             "brand_voice": "Friendly, direct, no jargon",
+            "tier": "Basic", # Default tier
             "what_not_to_do": [],
             "past_sprints": [],
             "hot_topics": [],
