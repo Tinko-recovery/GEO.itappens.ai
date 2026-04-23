@@ -7,6 +7,7 @@ import BrandLogo from "./BrandLogo";
 
 const links = [
   { label: "Audit", href: "/audit" },
+  { label: "GEO Setup", href: "/geo" },
   { label: "Solutions", href: "/#solutions", id: "solutions" },
   { label: "How it Works", href: "/#how-it-works", id: "how-it-works" },
   { label: "Pricing", href: "/#pricing", id: "pricing" },
@@ -42,6 +43,8 @@ export default function NavBar() {
         setActiveSection(currentSection);
       } else if (pathname === "/audit") {
         setActiveSection("audit");
+      } else if (pathname === "/geo") {
+        setActiveSection("geo");
       } else {
         setActiveSection("");
       }
@@ -55,6 +58,7 @@ export default function NavBar() {
   const isLinkActive = (href: string, id?: string) => {
     if (id) return activeSection === id;
     if (href === "/audit") return activeSection === "audit";
+    if (href === "/geo") return activeSection === "geo";
     return false;
   };
 
