@@ -20,6 +20,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 308);
   }
 
+  // 1.5. Malicious Bot Blocking
+  // Return immediate 403 for common scanner paths to save server resources
+  const blockedPaths = ["/wp-", "/wordpress", "/.env", "/.git"];
+  if (blockedPaths.some(p => pathname.startsWith(p))) {
+    return new NextResponse("Forbidden - Bot scanning detected", { status: 403 });
+  }
+
   // 2. Admin Basic Auth
   if (pathname.startsWith("/admin")) {
     const username = process.env.ADMIN_USERNAME || "admin";
