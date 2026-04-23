@@ -180,7 +180,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
         </div>
         <h2 style={{ fontSize: '24px', fontWeight: 800 }}>Audit in Progress.</h2>
         <p style={{ color: 'var(--text-dim)', lineHeight: 1.6 }}>Your GEO audit is running. Check your inbox in 5 minutes.</p>
-        <Button variant="outline" onClick={() => setSuccess(false)}>Run another</Button>
+        <Button variant="secondary" onClick={() => setSuccess(false)}>Run another</Button>
       </div>
     );
   }
