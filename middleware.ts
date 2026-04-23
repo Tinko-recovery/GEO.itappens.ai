@@ -12,7 +12,13 @@ export async function middleware(request: NextRequest) {
   const host = request.headers.get("host") || "";
   const pathname = request.nextUrl.pathname;
 
-  // 1. Hostname redirection
+  // 1. Malicious Bot Blocking (Runs first to prevent serving 308 redirects to bots)
+  const blockedPaths = ["/wp-", "/wordpress", "/.env", "/.git"];
+  if (blockedPaths.some(p => pathname.startsWith(p))) {
+    return new NextResponse("Forbidden - Bot scanning detected", { status: 403 });
+  }
+
+  // 2. Hostname redirection
   if (host === "itappens.ai") {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.hostname = "www.itappens.ai";
@@ -20,14 +26,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 308);
   }
 
-  // 1.5. Malicious Bot Blocking
-  // Return immediate 403 for common scanner paths to save server resources
-  const blockedPaths = ["/wp-", "/wordpress", "/.env", "/.git"];
-  if (blockedPaths.some(p => pathname.startsWith(p))) {
-    return new NextResponse("Forbidden - Bot scanning detected", { status: 403 });
-  }
-
-  // 2. Admin Basic Auth
+  // 3. Admin Basic Auth
   if (pathname.startsWith("/admin")) {
     const username = process.env.ADMIN_USERNAME || "admin";
     const password = process.env.ADMIN_PASSWORD || "change-me";
