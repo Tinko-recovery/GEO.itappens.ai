@@ -11,8 +11,6 @@ export const auth0 = new Auth0Client({
     clientId: process.env.AUTH0_CLIENT_ID,
     clientSecret: process.env.AUTH0_CLIENT_SECRET,
     secret: process.env.AUTH0_SECRET,
-    // v4 requires issuerBaseUrl with https:// protocol
-    issuerBaseUrl: process.env.AUTH0_ISSUER_BASE_URL,
     domain: process.env.AUTH0_DOMAIN,
     routes: {
         login: '/auth/login',
