@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
 import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
@@ -83,176 +83,110 @@ const POSTS = [
 
 export default function BlogPage() {
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", fontFamily: "var(--font-body)" }}>
+    <div className="page-shell">
       <NavBar />
-
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "64px 24px 48px" }}>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 11,
-            color: "var(--accent)",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            display: "block",
-            marginBottom: 16,
-          }}
-        >
-          GEO Blog
-        </span>
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(2rem,4vw,3rem)",
-            fontWeight: 800,
-            color: "var(--text)",
-            letterSpacing: "-0.05em",
-            marginBottom: 16,
-            lineHeight: 1.1,
-          }}
-        >
-          AI Search Visibility.
-          <br />
-          Written for Indian Brands.
-        </h1>
-        <p style={{ fontSize: 16, color: "var(--text-dim)", lineHeight: 1.75, maxWidth: 560 }}>
-          In-depth articles on Generative Engine Optimization, LLM citation strategy, entity architecture, and what it takes
-          to get your brand named by AI in 2026.
-        </p>
-      </div>
-
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 80px" }}>
-        {POSTS.filter((post) => post.featured).map((post) => (
-          <a key={post.title} href={post.slug!} style={{ display: "block", textDecoration: "none", marginBottom: 32 }}>
-            <div
-              style={{
-                padding: "40px 40px",
-                background: "var(--surface)",
-                border: "2px solid var(--border-accent)",
-                borderRadius: 8,
-              }}
-            >
-              <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    color: "var(--accent)",
-                    padding: "3px 10px",
-                    border: "1px solid var(--border-accent)",
-                    borderRadius: 20,
-                    letterSpacing: "0.08em",
-                    background: "var(--accent-muted)",
-                  }}
-                >
-                  {post.tag}
-                </span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--accent)", letterSpacing: "0.05em" }}>
-                  Featured
-                </span>
-              </div>
-              <h2
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 800,
-                  fontSize: "clamp(1.4rem,2.5vw,2rem)",
-                  color: "var(--text)",
-                  letterSpacing: "-0.04em",
-                  marginBottom: 14,
-                  lineHeight: 1.15,
-                }}
-              >
-                {post.title}
-              </h2>
-              <p style={{ fontSize: 15, color: "var(--text-dim)", lineHeight: 1.75, maxWidth: 680, marginBottom: 20 }}>
-                {post.excerpt}
+      <main>
+        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--bg)' }}>
+          <div className="container">
+            <div style={{ maxWidth: '800px' }}>
+              <span className="overline">GEO Blog</span>
+              <h1 className="headline-xl" style={{ margin: '24px 0', letterSpacing: '-0.04em' }}>
+                AI Search Visibility. <br />
+                <span style={{ color: 'var(--accent)' }}>Written for Indian Brands.</span>
+              </h1>
+              <p className="text-sub" style={{ marginBottom: '40px' }}>
+                In-depth articles on Generative Engine Optimization, LLM citation strategy, and entity architecture for the AI-first internet.
               </p>
-              <div style={{ display: "flex", gap: 16, fontSize: 12, color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
-                <span>{post.date}</span>
-                {post.readTime ? (
-                  <>
-                    <span>·</span>
-                    <span>{post.readTime}</span>
-                  </>
-                ) : null}
-                <span style={{ color: "var(--accent)", marginLeft: 8 }}>Read article</span>
-              </div>
             </div>
-          </a>
-        ))}
+          </div>
+        </header>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
-          {POSTS.filter((post) => !post.featured).map((post, i) => (
-            <div
-              key={i}
-              style={{
-                padding: "28px 28px",
-                background: "var(--surface)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
-                opacity: post.slug ? 1 : 0.75,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 10,
-                  color: "var(--accent)",
-                  padding: "3px 10px",
-                  border: "1px solid var(--border)",
-                  borderRadius: 20,
-                  letterSpacing: "0.08em",
-                  display: "inline-block",
-                  marginBottom: 16,
-                }}
-              >
-                {post.tag}
-              </span>
-              <h3
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 700,
-                  fontSize: 17,
-                  color: "var(--text)",
-                  letterSpacing: "-0.03em",
-                  marginBottom: 12,
-                  lineHeight: 1.25,
-                }}
-              >
-                {post.title}
-              </h3>
-              <p style={{ fontSize: 13, color: "var(--text-dim)", lineHeight: 1.75, marginBottom: 20 }}>{post.excerpt}</p>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)" }}>
-                {post.slug ? (
-                  <a href={post.slug} style={{ color: "var(--accent)", textDecoration: "none" }}>
-                    Read article
-                  </a>
-                ) : (
-                  <span style={{ padding: "4px 10px", background: "var(--surface-alt)", borderRadius: 20, fontSize: 10, letterSpacing: "0.05em" }}>
-                    Coming soon
-                  </span>
-                )}
-              </div>
+        <section className="section" style={{ padding: '0 0 120px' }}>
+          <div className="container">
+            {/* Featured Post */}
+            {POSTS.filter((post) => post.featured).map((post) => (
+              <a key={post.title} href={post.slug!} style={{ display: "block", textDecoration: "none", marginBottom: '64px' }}>
+                <div className="card-bento" style={{ 
+                  padding: '64px', 
+                  backgroundColor: 'var(--surface)', 
+                  border: '1px solid var(--border)', 
+                  borderRadius: '32px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '24px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <span className="overline" style={{ color: 'var(--accent)', fontSize: '11px' }}>{post.tag}</span>
+                    <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--accent)', padding: '4px 12px', backgroundColor: 'var(--accent-soft)', borderRadius: '99px' }}>Featured</span>
+                  </div>
+                  <h2 className="headline-lg" style={{ margin: 0, color: 'var(--text)' }}>{post.title}</h2>
+                  <p style={{ fontSize: '18px', color: 'var(--text-dim)', lineHeight: 1.6, maxWidth: '800px' }}>{post.excerpt}</p>
+                  <div style={{ display: 'flex', gap: '16px', fontSize: '13px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                    <span>{post.date}</span>
+                    {post.readTime && <span>· {post.readTime}</span>}
+                    <span style={{ color: 'var(--accent)', marginLeft: 'auto', fontWeight: 600 }}>Read full article →</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+
+            {/* Post Grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: '32px' }}>
+              {POSTS.filter((post) => !post.featured).map((post, i) => (
+                <div key={i} className="card-bento" style={{ 
+                  padding: '40px', 
+                  backgroundColor: 'var(--surface)', 
+                  border: '1px solid var(--border)', 
+                  borderRadius: '24px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '20px',
+                  opacity: post.slug ? 1 : 0.8
+                }}>
+                  <span className="overline" style={{ fontSize: '11px', color: 'var(--accent)' }}>{post.tag}</span>
+                  <h3 style={{ fontSize: '20px', fontWeight: 700, lineHeight: 1.3, color: 'var(--text)' }}>{post.title}</h3>
+                  <p style={{ fontSize: '14px', color: 'var(--text-dim)', lineHeight: 1.6 }}>{post.excerpt}</p>
+                  
+                  <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>
+                    {post.slug ? (
+                      <a href={post.slug} style={{ color: "var(--accent)", textDecoration: "none", fontSize: '13px', fontWeight: 600 }}>
+                        Read insight →
+                      </a>
+                    ) : (
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', padding: '4px 12px', backgroundColor: 'var(--bg)', borderRadius: '99px' }}>
+                        COMING SOON
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div style={{ marginTop: 64, padding: "40px", background: "var(--accent-muted)", border: "1px solid var(--border-accent)", borderRadius: 8, textAlign: "center" }}>
-          <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, color: "var(--text)", marginBottom: 12, letterSpacing: "-0.03em" }}>
-            Get GEO insights in your inbox.
-          </h3>
-          <p style={{ fontSize: 15, color: "var(--text-dim)", marginBottom: 24 }}>
-            New articles on AI search visibility, entity architecture, and LLM citation strategy for Indian brands.
-          </p>
-          <a
-            href="mailto:hello@itappens.ai?subject=GEO Blog Updates"
-            style={{ background: "var(--accent)", color: "#fff", padding: "12px 28px", borderRadius: 6, fontWeight: 600, fontSize: 14, textDecoration: "none", display: "inline-block" }}
-          >
-            hello@itappens.ai
-          </a>
-        </div>
-      </div>
-
+            {/* Newsletter CTA */}
+            <div style={{ 
+              marginTop: '100px', 
+              padding: '80px', 
+              backgroundColor: 'var(--text)', 
+              color: 'var(--surface)', 
+              borderRadius: '32px', 
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '24px'
+            }}>
+              <span className="overline" style={{ color: 'var(--accent)' }}>Stay Ahead</span>
+              <h2 className="headline-lg" style={{ color: 'var(--surface)', margin: 0 }}>Get GEO insights in your inbox.</h2>
+              <p style={{ maxWidth: '600px', opacity: 0.8, fontSize: '17px', lineHeight: 1.6 }}>
+                New articles on AI search visibility, entity architecture, and LLM citation strategy for Indian brands.
+              </p>
+              <a href="mailto:hello@itappens.ai?subject=GEO Blog Updates" className="btn-primary" style={{ padding: '18px 40px' }}>
+                hello@itappens.ai
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
       <SiteFooter />
     </div>
   );

@@ -121,62 +121,80 @@ const FAQS = [
 
 export default function FAQPage() {
   return (
-    <>
+    <div className="page-shell">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div style={{ minHeight: "100vh", background: "var(--bg)", fontFamily: "var(--font-body)" }}>
-
-        <NavBar />
-
-        {/* Header */}
-        <div style={{ maxWidth: 760, margin: "0 auto", padding: "64px 24px 48px" }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: 16 }}>FAQ</span>
-          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 800, color: "var(--text)", letterSpacing: "-0.05em", marginBottom: 16, lineHeight: 1.1 }}>
-            Everything you need to decide.
-          </h1>
-          <p style={{ fontSize: 16, color: "var(--text-dim)", lineHeight: 1.75 }}>
-            Common questions about GEO, AI search visibility, and how itappens.ai works.
-          </p>
-        </div>
-
-        {/* FAQ Sections */}
-        <div style={{ maxWidth: 760, margin: "0 auto", padding: "0 24px 80px" }}>
-          {FAQS.map((section, si) => (
-            <div key={si} style={{ marginBottom: 56 }}>
-              <h2 style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24, paddingBottom: 12, borderBottom: "2px solid var(--accent)" }}>
-                {section.category}
-              </h2>
-              {section.items.map((item, i) => (
-                <div key={i} style={{ borderBottom: "1px solid var(--border)", padding: "24px 0" }}>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 17, color: "var(--text)", marginBottom: 12, letterSpacing: "-0.02em", lineHeight: 1.3 }}>
-                    {item.q}
-                  </h3>
-                  <p style={{ fontSize: 15, color: "var(--text-dim)", lineHeight: 1.8 }}>{item.a}</p>
-                </div>
-              ))}
-            </div>
-          ))}
-
-          {/* CTA */}
-          <div style={{ padding: "40px", background: "var(--accent-muted)", border: "1px solid var(--border-accent)", borderRadius: 8, textAlign: "center" }}>
-            <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, color: "var(--text)", marginBottom: 12, letterSpacing: "-0.03em" }}>
-              Still have questions?
-            </h3>
-            <p style={{ fontSize: 15, color: "var(--text-dim)", marginBottom: 24, lineHeight: 1.7 }}>
-              Start with a Free AI Audit â€” we'll run your brand through 50+ queries and show you exactly where you stand.
+      <NavBar />
+      <main>
+        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--bg)' }}>
+          <div className="container-narrow">
+            <span className="overline">FAQ</span>
+            <h1 className="headline-xl" style={{ margin: '24px 0', letterSpacing: '-0.04em' }}>
+              Everything you need <br />
+              <span style={{ color: 'var(--accent)' }}>to decide.</span>
+            </h1>
+            <p className="text-sub" style={{ marginBottom: '40px' }}>
+              Common questions about Generative Engine Optimization, AI search visibility, and how itappens.ai engineers citation signals.
             </p>
-            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-              <a href="/#audit" style={{ background: "var(--accent)", color: "#fff", padding: "12px 24px", borderRadius: 6, fontWeight: 600, fontSize: 14, textDecoration: "none" }}>
-                Request Free AI Audit â†’
-              </a>
-              <a href="mailto:hello@itappens.ai" style={{ background: "transparent", color: "var(--text)", padding: "12px 24px", borderRadius: 6, fontWeight: 500, fontSize: 14, textDecoration: "none", border: "1px solid var(--border)" }}>
-                hello@itappens.ai
-              </a>
+          </div>
+        </header>
+
+        <section className="section" style={{ padding: '0 0 120px' }}>
+          <div className="container-narrow">
+            {FAQS.map((section, si) => (
+              <div key={si} style={{ marginBottom: '80px' }}>
+                <h2 className="overline" style={{ 
+                  color: 'var(--accent)', 
+                  marginBottom: '32px', 
+                  paddingBottom: '16px', 
+                  borderBottom: '2px solid var(--accent-soft)',
+                  width: 'fit-content'
+                }}>
+                  {section.category}
+                </h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
+                  {section.items.map((item, i) => (
+                    <div key={i} style={{ paddingBottom: '48px', borderBottom: '1px solid var(--border)' }}>
+                      <h3 className="headline-sm" style={{ marginBottom: '16px', color: 'var(--text)' }}>
+                        {item.q}
+                      </h3>
+                      <p style={{ fontSize: '16px', color: 'var(--text-dim)', lineHeight: 1.8 }}>{item.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* CTA */}
+            <div style={{ 
+              marginTop: '100px', 
+              padding: '80px', 
+              backgroundColor: 'var(--text)', 
+              color: 'var(--surface)', 
+              borderRadius: '32px', 
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '24px'
+            }}>
+              <span className="overline" style={{ color: 'var(--accent)' }}>Still have questions?</span>
+              <h2 className="headline-lg" style={{ color: 'var(--surface)', margin: 0 }}>Start with a Free AI Audit.</h2>
+              <p style={{ maxWidth: '600px', opacity: 0.8, fontSize: '17px', lineHeight: 1.6 }}>
+                We'll run your brand through 50+ queries across ChatGPT, Perplexity, and Gemini to show you exactly where you stand.
+              </p>
+              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '16px' }}>
+                <a href="/audit" className="btn-primary" style={{ padding: '18px 40px' }}>
+                  Run Audit →
+                </a>
+                <a href="mailto:hello@itappens.ai" className="btn-secondary" style={{ padding: '18px 40px', color: 'var(--surface)', borderColor: 'rgba(255,255,255,0.2)' }}>
+                  Email us
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-
-        <SiteFooter />
-      </div>
-    </>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

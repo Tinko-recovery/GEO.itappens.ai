@@ -1,10 +1,14 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
-import AuditForm from "@/components/AuditForm";
 import JsonLd from "@/components/JsonLd";
 import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
-import { corePlatforms, homepageFaqs, homepageStats, pillars } from "@/lib/content/site";
+import HeroSection from "@/components/sections/HeroSection";
+import ProblemSection from "@/components/sections/ProblemSection";
+import ProofSection from "@/components/sections/ProofSection";
+import GEOExplanation from "@/components/sections/GEOExplanation";
+import AuditForm from "@/components/AuditForm";
+import { homepageFaqs } from "@/lib/content/site";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { faqSchema, organizationSchema, schemaGraph, serviceSchema } from "@/lib/seo/schema";
 
@@ -27,165 +31,78 @@ const homepageSchema = schemaGraph(
   faqSchema(homepageFaqs),
 );
 
+import { Suspense } from "react";
+
 export default function HomePage() {
   return (
     <div className="page-shell">
       <JsonLd data={homepageSchema} />
-      <NavBar />
+      <Suspense fallback={<div className="h-20 bg-surface animate-pulse" />}>
+        <NavBar />
+      </Suspense>
+      
       <main>
-        <header className="section page-hero">
-          <div className="container hero-grid">
+        <HeroSection />
+        <ProblemSection />
+        <ProofSection />
+        <GEOExplanation />
+
+        {/* Integrated Audit Section */}
+        <section id="pricing" style={{ padding: '140px 0', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
+          <div className="container grid-2col" style={{ gap: '100px', alignItems: 'center' }}>
             <div>
-              <p className="overline">India's first AEO/GEO solution provider</p>
-              <h1 className="headline-xl" style={{ marginBottom: 18 }}>
-                Become the default answer across AI engines.
-              </h1>
-              <p className="text-sub" style={{ marginBottom: 24 }}>
-                itappens.ai helps brands become visible, trusted, and cited across ChatGPT, Perplexity, Claude, Gemini,
-                Grok, and SearchGPT through a four-pillar system built for the AI-first internet.
+              <span className="overline" style={{ color: 'var(--brand-blue)', backgroundColor: 'rgba(58, 190, 249, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
+                Free AI Audit
+              </span>
+              <h2 className="headline-lg" style={{ marginTop: '24px', lineHeight: 1.1 }}>
+                See where your brand stands <br />
+                <span style={{ 
+                  background: 'linear-gradient(to right, var(--brand-blue), var(--brand-green))',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}>across AI engines today.</span>
+              </h2>
+              <p className="text-sub" style={{ marginTop: '32px', fontSize: '17px', opacity: 0.8 }}>
+                The snapshot captures your current answer-engine visibility, highlights missing technical signals, and identifies the first query cluster to ship.
               </p>
-              <ul className="pill-list" style={{ marginBottom: 24 }}>
-                {corePlatforms.map((platform) => (
-                  <li key={platform}>{platform}</li>
+              <ul className="check-list" style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {[
+                  "Baseline prompts across the major answer engines",
+                  "Canonical and schema gap review",
+                  "Priority recommendations for the first 90 days"
+                ].map((item, i) => (
+                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-dim)', fontSize: '15px' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--brand-blue)' }} />
+                    {item}
+                  </li>
                 ))}
               </ul>
-              <div className="pill-list">
-                <li>
-                  <a className="btn-primary" href="/geo">
-                    Explore the GEO system
-                  </a>
-                </li>
-                <li>
-                  <a className="btn-secondary" href="/answers">
-                    See target answers
-                  </a>
-                </li>
-              </div>
             </div>
-            <aside className="summary-card">
-              <p className="overline">What this site proves</p>
-              <p style={{ marginBottom: 12 }}>
-                Pillar 1 is now production-ready: canonical routing, public llms.txt assets, page-level schema, answer-first routes,
-                and a weekly citation tracking workflow.
-              </p>
-              <ul className="check-list">
-                <li>Technical Signals complete first</li>
-                <li>One deep answer cluster per week</li>
-                <li>Entity and citation work compounds on top</li>
-                <li>Weekly engine-by-engine tracking drives iteration</li>
-              </ul>
-            </aside>
-          </div>
-        </header>
-
-        <section className="section section-muted">
-          <div className="container">
-            <dl className="metric-grid">
-              {homepageStats.map((stat) => (
-                <div className="metric-card" key={stat.label}>
-                  <dt className="metric-value">{stat.value}</dt>
-                  <dd>
-                    <span className="metric-label">{stat.label}</span>
-                    <span className="metric-detail">{stat.detail}</span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <div className="card-glass" style={{ padding: '48px', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'linear-gradient(to right, var(--brand-blue), var(--brand-green), var(--brand-yellow), var(--brand-red))' }} />
+              <AuditForm />
+            </div>
           </div>
         </section>
 
-        <section className="section">
-          <div className="container">
-            <p className="overline">The 4-pillar system</p>
-            <h2 className="headline-lg" style={{ marginBottom: 18 }}>
-              Technical Signals first. Then content, entity, and tracking compound.
-            </h2>
-            <p className="text-sub" style={{ marginBottom: 28 }}>
-              The system is designed to make itappens.ai and client brands easier for answer engines to identify, extract, and
-              trust. Pillar 1 creates the machine-readable base layer that the rest of the program depends on.
-            </p>
-            <ol className="steps-list">
-              {pillars.map((pillar) => (
-                <li key={pillar.title}>
-                  <p className="overline" style={{ marginBottom: 8 }}>{pillar.tag}</p>
-                  <h3 className="headline-md" style={{ marginBottom: 10 }}>
-                    {pillar.title}
-                  </h3>
-                  <p>{pillar.body}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <section className="section section-muted">
-          <div className="container grid-2col">
-            <div>
-              <p className="overline">Canonical page set</p>
-              <h2 className="headline-lg" style={{ marginBottom: 18 }}>
-                Every key route now supports the same entity story.
+        {/* FAQ Section */}
+        <section className="section" style={{ padding: '140px 0', background: 'var(--surface-alt)', borderTop: '1px solid var(--border)' }}>
+          <div className="container" style={{ maxWidth: '800px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '80px' }}>
+              <span className="overline" style={{ color: 'var(--brand-yellow)', backgroundColor: 'rgba(249, 217, 73, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
+                FAQ
+              </span>
+              <h2 className="headline-lg" style={{ marginTop: '24px', lineHeight: 1.1 }}>
+                Questions that buyers and <br />
+                <span style={{ color: 'var(--brand-yellow)' }}>AI systems both need resolved.</span>
               </h2>
-              <ul className="check-list">
-                <li>The homepage establishes the brand and service frame.</li>
-                <li>/geo explains the offer, methodology, and commercial model.</li>
-                <li>/how-it-works turns the delivery process into explicit steps.</li>
-                <li>/case-studies proves the system on the itappens.ai self-case first.</li>
-                <li>/answers captures the exact high-intent prompts buyers ask inside AI products.</li>
-              </ul>
             </div>
-            <div className="card">
-              <p className="overline">Internal links that matter</p>
-              <ul className="stack-list">
-                <li>
-                  <a className="link-accent" href="/geo">/geo</a> anchors the commercial service and the four-pillar methodology.
-                </li>
-                <li>
-                  <a className="link-accent" href="/how-it-works">/how-it-works</a> documents the seven-step execution loop.
-                </li>
-                <li>
-                  <a className="link-accent" href="/case-studies">/case-studies</a> introduces the self-case and proof posture.
-                </li>
-                <li>
-                  <a className="link-accent" href="/answers">/answers</a> groups the query-led content cluster used for AI retrieval.
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section id="audit" className="section">
-          <div className="container grid-2col">
-            <div>
-              <p className="overline">Free AI audit</p>
-              <h2 className="headline-lg" style={{ marginBottom: 18 }}>
-                See where your brand stands across AI engines today.
-              </h2>
-              <p className="text-sub" style={{ marginBottom: 18 }}>
-                The audit captures your current answer-engine visibility, highlights missing technical signals, and identifies the
-                first query cluster to ship.
-              </p>
-              <ul className="check-list">
-                <li>Baseline prompts across the major answer engines</li>
-                <li>Canonical and schema gap review</li>
-                <li>Priority recommendations for the first 7 days and the first 90 days</li>
-              </ul>
-            </div>
-            <AuditForm />
-          </div>
-        </section>
-
-        <section className="section section-muted">
-          <div className="container-narrow">
-            <p className="overline">FAQ</p>
-            <h2 className="headline-lg" style={{ marginBottom: 20 }}>
-              Questions that buyers and AI systems both need resolved.
-            </h2>
-            <ul className="faq-list">
+            <ul className="faq-list" style={{ listStyle: 'none' }}>
               {homepageFaqs.map((item) => (
-                <li key={item.question}>
-                  <h3 className="faq-question">{item.question}</h3>
+                <li key={item.question} style={{ padding: '32px 0', borderBottom: '1px solid var(--border)' }}>
+                  <h3 className="faq-question" style={{ fontSize: '19px', fontWeight: 700, marginBottom: '16px', color: 'var(--text)' }}>{item.question}</h3>
                   <div className="faq-answer">
-                    <p>{item.answer}</p>
+                    <p style={{ color: 'var(--text-dim)', fontSize: '16px', lineHeight: 1.7, opacity: 0.8 }}>{item.answer}</p>
                   </div>
                 </li>
               ))}
@@ -193,7 +110,11 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+
+      <Suspense fallback={<div className="h-40 bg-surface" />}>
+        <SiteFooter />
+      </Suspense>
     </div>
   );
 }
+

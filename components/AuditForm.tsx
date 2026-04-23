@@ -1,76 +1,63 @@
-"use client";
-
-import { useState } from "react";
-
-type FormState = "idle" | "loading" | "success" | "error";
+import { ArrowRight, BarChart3, Globe, Zap } from "lucide-react";
 
 export default function AuditForm() {
-  const [state, setState] = useState<FormState>("idle");
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setState("loading");
-
-    const formData = new FormData(event.currentTarget);
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.get("name"),
-          email: formData.get("email"),
-          website: formData.get("website"),
-          visibility: formData.get("visibility"),
-        }),
-      });
-
-      setState(response.ok ? "success" : "error");
-      if (response.ok) {
-        event.currentTarget.reset();
-      }
-    } catch {
-      setState("error");
-    }
-  }
-
   return (
-    <div className="card">
-      <form className="audit-form" onSubmit={handleSubmit}>
-        <div className="grid-form-row">
-          <label>
-            Name
-            <input name="name" type="text" placeholder="Priya Sharma" />
-          </label>
-          <label>
-            Business email
-            <input name="email" type="email" placeholder="you@company.com" required />
-          </label>
+    <div 
+      className="card-bento" 
+      style={{ 
+        padding: '48px', 
+        backgroundColor: 'var(--surface)', 
+        border: '1px solid var(--border)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
+      <div style={{ position: 'absolute', top: 0, right: 0, width: '150px', height: '150px', background: 'radial-gradient(circle, var(--accent-light) 0%, transparent 70%)', opacity: 0.1, zIndex: 0 }} />
+      
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <span className="overline" style={{ color: 'var(--accent)', marginBottom: '16px', display: 'block' }}>REVENUE-FIRST DIAGNOSTICS</span>
+        <h3 className="headline-sm" style={{ marginBottom: '24px', maxWidth: '400px' }}>
+          Stop guessing. <br />
+          <span style={{ color: 'var(--accent)' }}>Benchmark your footprint.</span>
+        </h3>
+        
+        <p style={{ color: "var(--text-dim)", marginBottom: '32px', fontSize: '15px', lineHeight: 1.6, maxWidth: '440px' }}>
+          Our audit engine simulates how ChatGPT, Perplexity, and SearchGPT perceive your brand. 
+          Identify technical drift and citation gaps in minutes.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', marginBottom: '40px' }}>
+          {[
+            { icon: <Zap className="h-4 w-4" />, text: "Free on-page + technical scoreboard" },
+            { icon: <BarChart3 className="h-4 w-4" />, text: "Paid deep crawl with competitor SERP data" },
+            { icon: <Globe className="h-4 w-4" />, text: "Premium HTML report with PDF export" }
+          ].map((item, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ color: 'var(--accent)' }}>{item.icon}</div>
+              <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text)' }}>{item.text}</span>
+            </div>
+          ))}
         </div>
-        <label>
-          Website
-          <input name="website" type="url" placeholder="https://yourcompany.com" required />
-        </label>
-        <label>
-          Current AI visibility
-          <select name="visibility" defaultValue="">
-            <option value="">Select one</option>
-            <option value="never">We are not cited today</option>
-            <option value="some">We appear occasionally</option>
-            <option value="competitor">Competitors appear instead of us</option>
-            <option value="unknown">We have not measured it yet</option>
-          </select>
-        </label>
-        <button className="btn-primary" type="submit" disabled={state === "loading"}>
-          {state === "loading" ? "Submitting..." : "Request Free AI Audit"}
-        </button>
-        {state === "success" ? (
-          <p className="status-note success">Audit request received. The team will respond from hello@itappens.ai.</p>
-        ) : null}
-        {state === "error" ? (
-          <p className="status-note error">Submission failed. Email hello@itappens.ai directly.</p>
-        ) : null}
-      </form>
+
+        <a 
+          href="/audit" 
+          className="btn-primary" 
+          style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: '12px',
+            padding: '16px 32px',
+            textDecoration: 'none'
+          }}
+        >
+          Launch Audit Engine
+          <ArrowRight className="h-4 w-4" />
+        </a>
+        
+        <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '20px', fontFamily: 'var(--font-mono)' }}>
+          Powered by Firecrawl & DataForSEO
+        </p>
+      </div>
     </div>
   );
 }

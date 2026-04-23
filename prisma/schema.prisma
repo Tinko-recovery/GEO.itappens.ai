@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AuditPlan {
+  FREE
+  STARTER
+  GROWTH
+  AUTHORITY
+}
+
+enum AuditStatus {
+  LEAD_CREATED
+  AWAITING_PAYMENT
+  PAYMENT_CONFIRMED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  STRIPE
+  RAZORPAY
+}
+
+model Audit {
+  id                 String          @id @default(cuid())
+  siteUrl            String
+  normalizedDomain   String
+  email              String
+  companyName        String?
+  targetKeywords     String[]
+  shareToken         String          @unique
+  plan               AuditPlan
+  status             AuditStatus     @default(LEAD_CREATED)
+  paymentStatus      PaymentStatus   @default(NOT_REQUIRED)
+  paymentProvider    PaymentProvider?
+  checkoutSessionId  String?         @unique
+  paymentOrderId     String?         @unique
+  paymentId          String?
+  amount             Int             @default(0)
+  currency           String          @default("INR")
+  crawlDepth         Int             @default(5)
+  freeScore          Int?
+  fullScore          Int?
+  submittedIpHash    String?
+  captchaVerifiedAt  DateTime?
+  summaryJson        Json?
+  reportJson         Json?
+  reportHtml         String?
+  errorMessage       String?
+  paymentCompletedAt DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  events             AuditEvent[]
+
+  @@index([email, createdAt])
+  @@index([normalizedDomain, createdAt])
+  @@index([status, createdAt])
+}
+
+model AuditEvent {
+  id        String   @id @default(cuid())
+  auditId   String
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now())
+  audit     Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@index([auditId, createdAt])
+}
+
+model Lead {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  company         String
+  website         String
+  industry        String
+  targetQueries   Json
+  status          String   @default("new")
+  geoScore        Int?
+  geoReport       Json?
+  createdAt       DateTime @default(now())
+  lastContactedAt DateTime?
+  updatedAt       DateTime @updatedAt
+}

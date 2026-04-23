@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import JsonLd from "@/components/JsonLd";
@@ -12,8 +12,9 @@ export function generateStaticParams() {
   return answerPages.map((page) => ({ slug: page.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const page = getAnswerBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const page = getAnswerBySlug(slug);
 
   if (!page) {
     return buildMetadata({
@@ -32,8 +33,9 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   });
 }
 
-export default function AnswerDetailPage({ params }: { params: { slug: string } }) {
-  const page = getAnswerBySlug(params.slug);
+export default async function AnswerDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const page = getAnswerBySlug(slug);
 
   if (!page) {
     notFound();
@@ -51,7 +53,7 @@ export default function AnswerDetailPage({ params }: { params: { slug: string } 
       datePublished: page.publishedAt,
       dateModified: page.updatedAt,
     }),
-    faqSchema(page.faq),
+    faqSchema(page.faq, `/answers/${page.slug}`),
   );
 
   return (
@@ -59,95 +61,91 @@ export default function AnswerDetailPage({ params }: { params: { slug: string } 
       <JsonLd data={pageSchema} />
       <NavBar />
       <main>
-        <header className="section page-hero">
-          <div className="container grid-2col">
-            <div>
-              <p className="overline">{page.query}</p>
-              <h1 className="headline-xl" style={{ marginBottom: 18 }}>
-                {page.title}
-              </h1>
-              <p className="text-sub" style={{ marginBottom: 18 }}>
-                {page.intro}
-              </p>
-              <div className="answer-summary">
-                <p className="overline">Direct answer</p>
-                <p>{page.answerSummary}</p>
+        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--bg)', position: 'relative' }}>
+          <div className="container grid-2col" style={{ gap: '100px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span className="overline" style={{ color: 'var(--brand-blue)', backgroundColor: 'rgba(58, 190, 249, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
+                {page.query}
+              </span>
+              <h1 className="headline-xl" style={{ margin: '32px 0', letterSpacing: '-0.04em', lineHeight: 1.05 }}>{page.title}</h1>
+              <p className="text-sub" style={{ marginBottom: '40px', fontSize: '18px', opacity: 0.8 }}>{page.intro}</p>
+              
+              <div className="card-glass" style={{ padding: '48px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '4px', background: 'var(--brand-blue)' }} />
+                <span className="overline" style={{ fontSize: '12px', color: 'var(--brand-blue)', marginBottom: '20px', display: 'block' }}>Direct Answer</span>
+                <p style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text)', lineHeight: 1.5 }}>{page.answerSummary}</p>
               </div>
             </div>
-            <aside className="cta-panel">
-              <p className="overline">Key takeaways</p>
-              <ul className="check-list" style={{ marginBottom: 18 }}>
-                {page.keyTakeaways.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <div className="pill-list">
-                <li>
-                  <a className="btn-secondary" href="/geo">
-                    /geo
-                  </a>
-                </li>
-                <li>
-                  <a className="btn-secondary" href="/how-it-works">
-                    /how-it-works
-                  </a>
-                </li>
-                <li>
-                  <a className="btn-secondary" href="/case-studies">
-                    /case-studies
-                  </a>
-                </li>
+            <div className="card-bento" style={{ padding: '56px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '40px' }}>
+              <div>
+                <span className="overline" style={{ marginBottom: '20px', color: 'var(--text)' }}>Key Takeaways</span>
+                <ul className="check-list" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {page.keyTakeaways.map((item, i) => (
+                    <li key={i} style={{ fontSize: '15px', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                       <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--brand-green)' }} />
+                       {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </aside>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <a className="btn-secondary" href="/audit" style={{ fontSize: '13px', padding: '14px', borderRadius: '10px', textAlign: 'center' }}>Run Audit</a>
+                <a className="btn-secondary" href="/answers" style={{ fontSize: '13px', padding: '14px', borderRadius: '10px', textAlign: 'center' }}>All Answers</a>
+              </div>
+            </div>
           </div>
         </header>
 
-        <section className="section">
-          <article className="container-narrow article-body">
-            {page.sections.map((section) => (
-              <section key={section.heading}>
-                <h2>{section.heading}</h2>
-                {section.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </section>
-            ))}
-          </article>
+        <section className="section" style={{ padding: '120px 0', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
+          <div className="container-narrow">
+            <article className="article-body" style={{ color: 'var(--text)', lineHeight: 1.8 }}>
+              {page.sections.map((section, sIdx) => (
+                <section key={section.heading} style={{ marginBottom: '80px' }}>
+                  <h2 className="headline-md" style={{ marginBottom: '32px', color: 'var(--text)', fontWeight: 800 }}>{section.heading}</h2>
+                  {section.paragraphs.map((paragraph, pIdx) => (
+                    <p key={pIdx} style={{ fontSize: '18px', color: 'var(--text-dim)', marginBottom: '28px', opacity: 0.9 }}>{paragraph}</p>
+                  ))}
+                </section>
+              ))}
+            </article>
+          </div>
         </section>
 
-        <section className="section section-muted">
-          <div className="container grid-2col">
+        <section className="section" style={{ padding: '120px 0', backgroundColor: 'var(--surface-alt)', borderTop: '1px solid var(--border)' }}>
+          <div className="container grid-2col" style={{ gap: '80px' }}>
             <div>
-              <p className="overline">Visible FAQ</p>
-              <ul className="faq-list">
+              <span className="overline" style={{ marginBottom: '48px', color: 'var(--brand-yellow)', display: 'block' }}>Related Inquiries</span>
+              <ul className="faq-list" style={{ listStyle: 'none' }}>
                 {page.faq.map((item) => (
-                  <li key={item.question}>
-                    <h3 className="faq-question">{item.question}</h3>
+                  <li key={item.question} style={{ padding: '32px 0', borderBottom: '1px solid var(--border)' }}>
+                    <h3 className="faq-question" style={{ fontSize: '19px', fontWeight: 700, marginBottom: '16px', color: 'var(--text)' }}>{item.question}</h3>
                     <div className="faq-answer">
-                      <p>{item.answer}</p>
+                      <p style={{ color: 'var(--text-dim)', fontSize: '16px', lineHeight: 1.7, opacity: 0.8 }}>{item.answer}</p>
                     </div>
                   </li>
                 ))}
               </ul>
             </div>
-            <aside className="card">
-              <p className="overline">Related answers</p>
-              <ul className="stack-list" style={{ marginBottom: 18 }}>
+            <div className="card-glass" style={{ padding: '56px', height: 'fit-content', position: 'relative' }}>
+               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'var(--brand-blue)' }} />
+              <span className="overline" style={{ marginBottom: '32px', color: 'var(--text)', display: 'block' }}>Related Answers</span>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 40px 0', display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {relatedPages.map((item) => (
                   <li key={item.slug}>
-                    <a className="link-accent" href={`/answers/${item.slug}`}>
+                    <a href={`/answers/${item.slug}`} style={{ color: 'var(--brand-blue)', textDecoration: 'none', fontWeight: 600, fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--brand-blue)' }} />
                       {item.query}
                     </a>
                   </li>
                 ))}
               </ul>
-              <p style={{ marginBottom: 12 }}>
-                This page is part of the same internal cluster used to reinforce retrieval and citation signals.
+              <p style={{ fontSize: '15px', color: 'var(--text-dim)', marginBottom: '40px', lineHeight: 1.7, opacity: 0.7 }}>
+                This page is part of our query-led knowledge graph, designed to reinforce retrieval and citation accuracy across LLM platforms.
               </p>
-              <a className="btn-primary" href="/answers">
-                Back to /answers
+              <a className="btn-primary" href="/answers" style={{ width: '100%', textAlign: 'center', padding: '16px', borderRadius: '12px' }}>
+                Back to all answers hub
               </a>
-            </aside>
+            </div>
           </div>
         </section>
       </main>
@@ -155,3 +153,4 @@ export default function AnswerDetailPage({ params }: { params: { slug: string } 
     </div>
   );
 }
+

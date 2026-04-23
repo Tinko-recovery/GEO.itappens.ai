@@ -63,7 +63,7 @@ class GoogleSheetsHandler:
         return creds
 
     def get_topic_by_day(self, day):
-        """Fetches all data for a specific day from the sheet."""
+        """Fetches the topic for a specific day from the sheet."""
         if not self.creds:
             return None
             
@@ -77,37 +77,13 @@ class GoogleSheetsHandler:
                 print('No data found.')
                 return None
             
-            # Columns: Day, Title, Hook, Category, Footer, Status...
-            print(f"--- DEBUG: Searching for Day '{day}' in {len(values)-1} rows... ---")
-            for i, row in enumerate(values[1:]):
-                if not row or len(row) == 0:
-                    continue
-                
-                # Clean the value: remove whitespace, handle common prefixes
-                raw_val = str(row[0]).strip().lower()
-                
-                # Handle '1', '1.0', 'Day 1', 'day 1'
-                match_val = raw_val.replace("day", "").strip().split('.')[0]
-                
-                if i < 10:
-                    print(f"--- DEBUG: Row {i+1} Column A: '{raw_val}' -> Matched as: '{match_val}'")
-
-                if match_val == str(day):
-                    print(f"--- DEBUG: SUCCESS! Found Day {day} at row {i+2} ---")
-                    # Fill missing columns with empty strings
-                    while len(row) < 6:
-                        row.append("")
+            # Assuming Day is in Column A (index 0) and Topic in Column B (index 1)
+            # And row 0 is header
+            for row in values[1:]:
+                if len(row) >= 2 and str(row[0]) == str(day):
+                    return row[1]
                     
-                    return {
-                        "day": row[0],
-                        "title": row[1],
-                        "hook": row[2],
-                        "category": row[3],
-                        "footer": row[4],
-                        "directive": row[5]
-                    }
-            
-            print(f"--- DEBUG: Day {day} not found in the first {len(values)} rows.")
+            print(f"Day {day} not found in sheet.")
             return None
 
         except HttpError as err:

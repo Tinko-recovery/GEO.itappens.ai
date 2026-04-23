@@ -36,88 +36,116 @@ const rows = [
 
 export default function ProofSection() {
     return (
-        <section id="proof" style={{ paddingBottom: '80px', background: 'var(--surface)' }}>
-            <div style={{ padding: '80px 48px 0', display: 'flex', alignItems: 'flex-start', gap: '48px', marginBottom: '48px' }}>
-                <div style={{ fontSize: '10px', letterSpacing: '2px', color: 'var(--muted2)', paddingTop: '4px', minWidth: '32px' }}>
+        <section id="solutions" style={{ paddingBottom: '140px', background: 'var(--bg)', position: 'relative' }}>
+            <div className="container" style={{ padding: '140px 0 64px', display: 'flex', alignItems: 'flex-start', gap: '48px' }}>
+                <div style={{ fontSize: '14px', fontFamily: 'var(--font-mono)', letterSpacing: '2px', color: 'var(--brand-blue)', paddingTop: '6px', minWidth: '32px', opacity: 0.6 }}>
                     02
                 </div>
                 <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>
-                        The Evidence
-                    </div>
-                    <h2 className="headline-lg">
-                        itappens.ai is a verified primary source 
-                        <span style={{ display: 'block', paddingLeft: '56px', color: 'var(--text2)' }}>
-                            in AI search for <span style={{ color: 'var(--accent)' }}>GEO-specific queries.</span>
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                        <span className="overline" style={{ color: 'var(--brand-blue)', backgroundColor: 'rgba(58, 190, 249, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
+                            The Evidence
                         </span>
-                    </h2>
-                    <p style={{
-                        fontSize: '13px', color: 'var(--text2)', maxWidth: '480px', lineHeight: '1.8',
-                        marginTop: '20px', borderLeft: '2px solid var(--surface3)', paddingLeft: '20px'
-                    }}>
-                        Traditional SEO metrics are collapsing for informational queries as AI search takes over. The brands that move now will define the next decade of discovery.
-                    </p>
+                        <h2 className="headline-lg" style={{ marginTop: '24px', lineHeight: 1.1 }}>
+                            itappens.ai is a verified primary source 
+                            <span style={{ display: 'block', paddingLeft: '56px', color: 'var(--text-dim)', opacity: 0.8 }}>
+                                in AI search for <span style={{ color: 'var(--brand-blue)' }}>GEO-specific queries.</span>
+                            </span>
+                        </h2>
+                        <p className="text-sub" style={{
+                            marginTop: '40px', borderLeft: '2px solid var(--brand-blue)', paddingLeft: '32px', fontSize: '17px', opacity: 0.8
+                        }}>
+                            Traditional SEO metrics are collapsing for informational queries as AI search takes over. The brands that move now will define the next decade of discovery.
+                        </p>
+                    </motion.div>
                 </div>
             </div>
 
-            <div style={{ margin: '0 48px', border: '1px solid var(--border2)', overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                        <tr>
-                            <th style={{
-                                background: 'var(--surface2)', padding: '14px 20px', textAlign: 'left',
-                                fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase',
-                                color: 'var(--muted)', borderBottom: '1px solid var(--border2)', fontWeight: 500
-                            }}>
-                                Metric
-                            </th>
-                            <th style={{
-                                background: 'var(--surface2)', padding: '14px 20px', textAlign: 'left',
-                                fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase',
-                                color: 'var(--muted)', borderBottom: '1px solid var(--border2)', fontWeight: 500
-                            }}>
-                                Traditional Marketing
-                            </th>
-                            <th style={{
-                                background: 'var(--surface2)', padding: '14px 20px', textAlign: 'left',
-                                fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase',
-                                color: 'var(--muted)', borderBottom: '1px solid var(--border2)', fontWeight: 500
-                            }}>
-                                itappens.ai GEO
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows.map((row, idx) => (
-                            <tr key={idx} style={{ transition: 'background 0.2s' }}>
-                                <td style={{ padding: '16px 20px', fontSize: '12px', borderBottom: '1px solid var(--border)', color: 'var(--text2)', fontWeight: 500 }}>
-                                    {row.metric}
-                                </td>
-                                <td style={{ padding: '16px 20px', fontSize: '11px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', lineHeight: 1.6 }}>
-                                    {row.old}
-                                </td>
-                                <td style={{ padding: '16px 20px', fontSize: '12px', borderBottom: '1px solid var(--border)', color: 'var(--accent)', fontWeight: 500, lineHeight: 1.6 }}>
-                                    {row.new}
-                                </td>
+            <div className="container">
+                <motion.div 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    className="card-glass"
+                    style={{ overflow: 'hidden' }}
+                >
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead>
+                            <tr>
+                                <th style={{
+                                    background: 'rgba(255, 255, 255, 0.02)', padding: '24px', textAlign: 'left',
+                                    fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase',
+                                    color: 'var(--text-muted)', borderBottom: '1px solid var(--border)', fontWeight: 700
+                                }}>
+                                    Metric
+                                </th>
+                                <th style={{
+                                    background: 'rgba(255, 255, 255, 0.02)', padding: '24px', textAlign: 'left',
+                                    fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase',
+                                    color: 'var(--text-muted)', borderBottom: '1px solid var(--border)', fontWeight: 700
+                                }}>
+                                    Traditional Marketing
+                                </th>
+                                <th style={{
+                                    background: 'rgba(58, 190, 249, 0.03)', padding: '24px', textAlign: 'left',
+                                    fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase',
+                                    color: 'var(--brand-blue)', borderBottom: '1px solid var(--border)', fontWeight: 700
+                                }}>
+                                    itappens.ai GEO
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {rows.map((row, idx) => (
+                                <motion.tr 
+                                    key={idx} 
+                                    whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.01)' }}
+                                    style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }}
+                                >
+                                    <td style={{ padding: '24px', fontSize: '15px', color: 'var(--text)', fontWeight: 600 }}>
+                                        {row.metric}
+                                    </td>
+                                    <td style={{ padding: '24px', fontSize: '15px', color: 'var(--text-dim)', lineHeight: 1.6, opacity: 0.7 }}>
+                                        {row.old}
+                                    </td>
+                                    <td style={{ padding: '24px', fontSize: '15px', color: 'var(--brand-green)', fontWeight: 600, lineHeight: 1.6 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--brand-green)' }} />
+                                            {row.new}
+                                        </div>
+                                    </td>
+                                </motion.tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </motion.div>
 
-            <div style={{
-                margin: '32px 48px 0', padding: '24px 28px', border: '1px solid var(--accent-border)',
-                background: 'var(--accent-dim)', display: 'flex', alignItems: 'flex-start', gap: '16px'
-            }}>
-                <div style={{ fontSize: '20px', flexShrink: 0 }}>🇮🇳</div>
-                <div>
-                    <div style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px' }}>
-                        The Window Is Open
+                <motion.div 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 }}
+                    style={{
+                        marginTop: '56px', padding: '40px', borderRadius: '24px', border: '1px solid var(--border)',
+                        background: 'rgba(57, 181, 73, 0.05)', display: 'flex', alignItems: 'flex-start', gap: '24px'
+                    }}
+                >
+                    <div style={{ fontSize: '32px', flexShrink: 0 }}>🇮🇳</div>
+                    <div>
+                        <div className="overline" style={{ fontSize: '12px', marginBottom: '12px', color: 'var(--brand-green)', backgroundColor: 'rgba(57, 181, 73, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
+                            The Window Is Open
+                        </div>
+                        <p style={{ fontSize: '16px', color: 'var(--text-dim)', lineHeight: 1.8, opacity: 0.9 }}>
+                            With fewer than 200 Indian brands optimised for AI citations today, the arbitrage window is wide open. Brands that establish AI entity authority now will be treated as legacy experts by AI models for years. The window closes as GEO adoption accelerates.
+                        </p>
                     </div>
-                    <div style={{ fontSize: '13px', color: 'var(--text2)', lineHeight: 1.8 }}>
-                        With fewer than 200 Indian brands optimised for AI citations today, the arbitrage window is wide open. Brands that establish AI entity authority now will be treated as legacy experts by AI models for years. The window closes as GEO adoption accelerates.
-                    </div>
-                </div>
+                </motion.div>
             </div>
         </section>
     );

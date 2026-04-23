@@ -1,7 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
 import "./globals.css";
-import "./pillar1.css";
 
 import { siteConfig } from "@/lib/content/site";
 
@@ -42,18 +41,27 @@ export const metadata: Metadata = {
   },
 };
 
+import Auth0Provider from '@/components/providers/Auth0Provider';
+import { Suspense } from 'react';
+import JsonLd from "@/components/JsonLd";
+import { organizationSchema } from "@/lib/seo/schema";
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-IN">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="AI Summary" />
+        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Full AI Reference" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1, noarchive" />
       </head>
-      <body>{children}</body>
+      <body>
+        <JsonLd data={organizationSchema()} />
+        <Auth0Provider>
+          <Suspense fallback={<div className="min-h-screen bg-bg animate-pulse" />}>
+            {children}
+          </Suspense>
+        </Auth0Provider>
+      </body>
     </html>
   );
 }

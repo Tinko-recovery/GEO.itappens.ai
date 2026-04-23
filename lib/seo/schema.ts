@@ -32,14 +32,17 @@ export function organizationSchema(): Schema {
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     legalName: siteConfig.legalName,
+    description: siteConfig.description,
     url: siteConfig.url,
     logo: `${siteConfig.url}/favicon.svg`,
     email: siteConfig.email,
     telephone: siteConfig.phone,
     sameAs: siteConfig.sameAs,
+    areaServed: "India",
     address: {
       "@type": "PostalAddress",
       addressLocality: siteConfig.city,
+      addressRegion: "Karnataka",
       addressCountry: "IN",
     },
   };
@@ -62,14 +65,17 @@ export function serviceSchema(input: ServiceInput): Schema {
   };
 }
 
-export function faqSchema(items: FaqItem[]): Schema {
+export function faqSchema(items: FaqItem[], path?: string): Schema {
   return {
     "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
+    mainEntityOfPage: path ? { "@id": absoluteUrl(path) } : undefined,
+    mainEntity: items.map((item, index) => ({
       "@type": "Question",
+      "@id": path ? `${absoluteUrl(path)}#q${index + 1}` : undefined,
       name: item.question,
       acceptedAnswer: {
         "@type": "Answer",
+        "@id": path ? `${absoluteUrl(path)}#a${index + 1}` : undefined,
         text: item.answer,
       },
     })),

@@ -6,7 +6,7 @@ app = Flask('')
 
 @app.route('/')
 def home():
-    return "itContents Engine is running! Home: https://itappens.ai/itcontents"
+    return "Content Engine is running!"
 
 def run():
     port = int(os.environ.get("PORT", 8080))
