@@ -1,0 +1,172 @@
+{
+  "name": "Scenario 2: Lead Nurturing OS",
+  "flow": [
+    {
+      "id": 1,
+      "module": "notion:ActionSearchObjects",
+      "version": 1,
+      "parameters": {
+        "connection": "CONFIGURE_IN_MAKE"
+      },
+      "mapper": {
+        "database": "{{NOTION_LEADS_DB_ID}}",
+        "filter": {
+          "and": [
+            {
+              "property": "Status",
+              "select": {
+                "equals": "New"
+              }
+            }
+          ]
+        }
+      },
+      "metadata": {
+        "designer": {
+          "x": -600,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:Iterator",
+      "version": 1,
+      "parameters": {
+        "array": "{{1.results}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": -300,
+          "y": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "gateway:Router",
+      "version": 1,
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "routes": [
+        {
+          "id": 4,
+          "condition": [
+            {
+              "left": "{{2.properties.\"Last Contacted\".date.start}}",
+              "operator": "exists",
+              "right": false
+            }
+          ],
+          "metadata": {
+            "label": "Route A: Initial Follow-up (Day 2)"
+          }
+        },
+        {
+          "id": 5,
+          "condition": [
+            {
+              "left": "{{2.properties.\"Last Contacted\".date.start}}",
+              "operator": "time:before",
+              "right": "{{addDays(now; -3)}}"
+            },
+             {
+              "left": "{{2.properties.\"Last Contacted\".date.start}}",
+              "operator": "time:after",
+              "right": "{{addDays(now; -7)}}"
+            }
+          ],
+          "metadata": {
+            "label": "Route B: Persistance (Day 5)"
+          }
+        },
+        {
+          "id": 6,
+           "condition": [
+            {
+              "left": "{{2.properties.\"Last Contacted\".date.start}}",
+              "operator": "time:before",
+              "right": "{{addDays(now; -8)}}"
+            }
+          ],
+          "metadata": {
+            "label": "Route C: Final Hail Mary (Day 10)"
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "module": "http:ActionRequest",
+      "version": 1,
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "post",
+        "headers": [
+          { "name": "Authorization", "value": "Bearer {{OPENAI_API_KEY}}" }
+        ],
+        "body": "{\"model\": \"gpt-4o-mini\", \"messages\": [{\"role\": \"system\", \"content\": \"You are an outreach specialist for itappens.ai. Write a short follow-up email. Context: {{IF(4.active; 'Initial Day 2 follow-up'; IF(5.active; 'Day 5 follow-up, mention competitors growing', 'Final follow-up, leave door open'))}}. Reference GEO Score: {{2.properties.GEO Score.number}}. Max 100 words. CTA: 15-min call.\"}, {\"role\": \"user\", \"content\": \"Lead: {{2.properties.Name.title[0].text.content}} at {{2.properties.Company.rich_text[0].text.content}}\"}]}",
+        "type": "json"
+      },
+      "metadata": {
+        "designer": { "x": 400, "y": 0 }
+      }
+    },
+    {
+      "id": 11,
+      "module": "brevo:ActionSendEmail",
+      "version": 1,
+      "parameters": {
+        "connection": "CONFIGURE_IN_MAKE"
+      },
+      "mapper": {
+        "to": [{ "email": "{{2.properties.Email.email}}" }],
+        "subject": "Quick note on {{2.properties.Company.rich_text[0].text.content}}'s GEO score",
+        "htmlContent": "{{10.data.choices[0].message.content}}"
+      },
+      "metadata": {
+        "designer": { "x": 700, "y": 0 }
+      }
+    },
+    {
+      "id": 12,
+      "module": "http:ActionRequest",
+      "version": 1,
+      "parameters": {
+        "url": "https://itappens.ai/api/webhooks/make",
+        "method": "post",
+        "headers": [
+          { "name": "x-webhook-secret", "value": "{{MAKE_WEBHOOK_SECRET}}" }
+        ],
+        "body": "{\"event\": \"lead_contacted\", \"leadId\": \"{{2.properties.Lead ID.rich_text[0].text.content}}\"}",
+        "type": "json"
+      },
+      "metadata": {
+        "designer": { "x": 1000, "y": 0 }
+      }
+    },
+    {
+      "id": 13,
+      "module": "notion:ActionUpdateDatabaseItem",
+      "version": 1,
+      "parameters": {
+        "connection": "CONFIGURE_IN_MAKE",
+        "pageId": "{{2.id}}"
+      },
+      "mapper": {
+        "properties": {
+          "Status": { "select": { "name": "Contacted" } },
+          "Last Contacted": { "date": { "start": "{{now}}" } }
+        }
+      },
+      "metadata": {
+        "designer": { "x": 1300, "y": 0 }
+      }
+    }
+  ],
+  "metadata": { "version": 1 }
+}

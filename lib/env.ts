@@ -37,6 +37,7 @@ const envSchema = z.object({
   WATI_PHONE_NUMBER: z.string().default("+919353015844"),
   NOTION_API_KEY: z.string().default(""),
   NOTION_LEADS_DB_ID: z.string().default(""),
+  NOTION_CLIENTS_DB_ID: z.string().default(""),
   MAKE_WEBHOOK_URL: z.string().default(""),
   MAKE_WEBHOOK_SECRET: z.string().default(""),
 });

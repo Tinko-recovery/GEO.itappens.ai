@@ -1,0 +1,97 @@
+{
+	"name": "Scenario 4: Periodic Analytics (Monitoring & Reporting)",
+	"flow": [
+		{
+			"id": 1,
+			"module": "notion:ActionWatchDatabaseItems",
+			"version": 1,
+			"parameters": {
+				"connection": "CONFIGURE_IN_MAKE",
+				"database": "CONFIGURE_IN_MAKE"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": -300,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 2,
+			"module": "builtin:Filter",
+			"version": 1,
+			"parameters": {
+				"conditions": [
+					{
+						"left": "{{1.properties.Status.select.name}}",
+						"operator": "text:equal",
+						"right": "Client"
+					}
+				]
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": 0,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 3,
+			"module": "http:ActionRequest",
+			"version": 1,
+			"parameters": {
+				"url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={{GEMINI_API_KEY}}",
+				"method": "post",
+				"headers": [
+					{
+						"name": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": "{\"contents\": [{\"parts\": [{\"text\": \"You are a GEO citation monitor for {{1.properties.Company.rich_text[0].text.content}}. Weekly check for queries: {{1.properties.Queries.rich_text[0].text.content}}. Determine if the brand is cited in AI search results. Output ONLY JSON: {\\\"citations_found\\\": true/false, \\\"summary\\\": \\\"\\\"}\"}]}]}",
+				"type": "json"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": 300,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 4,
+			"module": "notion:ActionUpdateDatabaseItem",
+			"version": 1,
+			"parameters": {
+				"connection": "CONFIGURE_IN_MAKE",
+				"item": "{{1.id}}"
+			},
+			"mapper": {
+				"properties": {
+					"Last Audit Details": {
+						"rich_text": [
+							{
+								"text": {
+									"content": "{{3.data.candidates[0].content.parts[0].text}}"
+								}
+							}
+						]
+					}
+				}
+			},
+			"metadata": {
+				"designer": {
+					"x": 600,
+					"y": 0
+				}
+			}
+		}
+	],
+	"metadata": {
+		"version": 1
+	}
+}

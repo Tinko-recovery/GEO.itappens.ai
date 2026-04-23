@@ -55,6 +55,17 @@ export async function POST(req: NextRequest) {
         break;
       }
 
+      case "payment_reminder_sent": {
+        await prisma.lead.update({
+          where: { id: leadId },
+          data: {
+            status: "payment_reminded",
+            lastContactedAt: new Date(),
+          },
+        });
+        break;
+      }
+
       default:
         return NextResponse.json({ success: false, message: "Unknown event type" }, { status: 400 });
     }
