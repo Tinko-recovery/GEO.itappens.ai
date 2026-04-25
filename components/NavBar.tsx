@@ -147,18 +147,20 @@ export default function NavBar() {
 
         <div style={{ flex: 1 }} />
 
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          {!isLoading && (
-            user ? (
-              <a href="/itcontents" className="btn-primary" style={{ padding: '10px 24px', fontSize: '14px', borderRadius: '12px' }}>
-                Dashboard
-              </a>
-            ) : (
-              <a href="/auth/login" className="btn-secondary" style={{ padding: '10px 24px', fontSize: '14px', borderRadius: '12px' }}>
-                Log In
-              </a>
-            )
-          )}
+        <div className="flex items-center gap-4">
+          <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            {!isLoading && (
+              user ? (
+                <a href="/itcontents" className="btn-primary" style={{ padding: '10px 24px', fontSize: '14px', borderRadius: '12px' }}>
+                  Dashboard
+                </a>
+              ) : (
+                <a href="/auth/login" className="btn-secondary" style={{ padding: '10px 24px', fontSize: '14px', borderRadius: '12px' }}>
+                  Log In
+                </a>
+              )
+            )}
+          </div>
           
           <button 
             className="hamburger-btn" 
@@ -204,9 +206,19 @@ export default function NavBar() {
               {link.label}
             </a>
           ))}
-          <a href="/itcontents" className="btn-primary" style={{ textAlign: "center" }}>
-            Get Started
-          </a>
+          <div style={{ padding: '12px 0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {!isLoading && (
+              user ? (
+                <a href="/itcontents" className="btn-primary" style={{ textAlign: "center" }}>
+                  Dashboard
+                </a>
+              ) : (
+                <a href="/auth/login" className="btn-secondary" style={{ textAlign: "center" }}>
+                  Log In
+                </a>
+              )
+            )}
+          </div>
         </div>
       )}
     </nav>
