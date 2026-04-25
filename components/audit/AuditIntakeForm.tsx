@@ -16,13 +16,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import type { AuditPlanKey } from "@/lib/audit/types";
 
+const queryOptions = [
+  "Does AI identify our brand as a category leader in our industry?",
+  "How well are our current products/services recommended by AI?",
+  "What are the top 3 strengths and weaknesses AI associates with us?",
+  "How does our brand sentiment compare against our primary competitors?",
+  "Is our website cited as an authoritative source for industry data?",
+  "Are our current pricing, offers, and locations accurately reflected?",
+  "What specific industry trends or pain points does AI link to us?",
+];
+
 const formSchema = z.object({
   name: z.string().min(2, "Name is required."),
   email: z.string().email("Enter a valid business email."),
   company: z.string().min(2, "Company name is required."),
   website: z.string().min(4, "Enter a valid website URL."),
   industry: z.string().min(2, "Industry is required."),
-  query1: z.string().min(2, "Query 1 is required."),
+  query1: z.string().min(2, "Please select at least one audit question."),
   query2: z.string().optional(),
   query3: z.string().optional(),
   captchaAnswer: z.string().min(1, "Solve the captcha."),
@@ -238,11 +248,58 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
             </div>
 
             <div className="grid gap-2">
-              <Label>Target Queries (Top 3)</Label>
-              <div className="grid grid-cols-3 gap-2">
-                <Input placeholder="Query 1" {...form.register("query1")} style={{ backgroundColor: 'var(--surface)', borderRadius: '10px' }} />
-                <Input placeholder="Query 2" {...form.register("query2")} style={{ backgroundColor: 'var(--surface)', borderRadius: '10px' }} />
-                <Input placeholder="Query 3" {...form.register("query3")} style={{ backgroundColor: 'var(--surface)', borderRadius: '10px' }} />
+              <Label>Target Audit Questions (Choose Top 3)</Label>
+              <div className="flex flex-col gap-3">
+                <select 
+                  {...form.register("query1")} 
+                  style={{ 
+                    backgroundColor: 'var(--surface)', 
+                    borderRadius: '10px', 
+                    padding: '12px', 
+                    fontSize: '14px', 
+                    color: 'var(--text)', 
+                    border: '1px solid var(--border)',
+                    width: '100%',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="" disabled>Question 1 (Required) — Pick what to audit...</option>
+                  {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
+                </select>
+
+                <select 
+                  {...form.register("query2")} 
+                  style={{ 
+                    backgroundColor: 'var(--surface)', 
+                    borderRadius: '10px', 
+                    padding: '12px', 
+                    fontSize: '14px', 
+                    color: 'var(--text)', 
+                    border: '1px solid var(--border)',
+                    width: '100%',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="">Question 2 (Optional) — Pick another...</option>
+                  {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
+                </select>
+
+                <select 
+                  {...form.register("query3")} 
+                  style={{ 
+                    backgroundColor: 'var(--surface)', 
+                    borderRadius: '10px', 
+                    padding: '12px', 
+                    fontSize: '14px', 
+                    color: 'var(--text)', 
+                    border: '1px solid var(--border)',
+                    width: '100%',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="">Question 3 (Optional) — Pick another...</option>
+                  {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
+                </select>
               </div>
               {form.formState.errors.query1 && <p className="text-xs text-red-500">{form.formState.errors.query1.message}</p>}
             </div>
