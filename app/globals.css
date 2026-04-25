@@ -25,42 +25,43 @@
   }
 }
 
-/* ─── DESIGN TOKENS: INTERNATIONAL STANDARDS (DEEP SPACE) ────────── */
+/* ─── DESIGN TOKENS: ADSMURAI FRAMEWORK (DEEP VIOLET + NEON) ─────── */
 :root {
-  /* Backgrounds — Deep, additive space */
-  --bg: #08090A;         
-  --surface: #101214;
-  --surface-hover: #16191D;
-  --surface-alt: #0B0E14;
+  /* Backgrounds — Deep violet space base */
+  --bg: #200e38;         
+  --surface: rgba(44, 20, 77, 0.6); /* Glassy layer */
+  --surface-hover: rgba(57, 26, 99, 0.8);
+  --surface-alt: #170a29;
 
   /* Text — Ultra high legibility */
-  --text: #FFFFFF;       
-  --text-dim: #94A3B8;   
-  --text-muted: #64748B; 
+  --text: #ffffff;       
+  --text-dim: #b3b5bd;   
+  --text-muted: #817690; 
 
-  /* Brand Accents (Multi-color Identity) */
-  --brand-blue: #3ABEF9;
-  --brand-yellow: #F9D949;
-  --brand-red: #F45050;
-  --brand-green: #39B549;
+  /* Brand Accents (Neon colors from Adsmurai) */
+  --brand-blue: #00a4bd; /* Teal */
+  --brand-yellow: #ff9e48;
+  --brand-red: #ff486d; /* Vibrant Pink */
+  --brand-green: #0E6B73;
 
   /* Functional Accents */
-  --accent: var(--brand-blue);
-  --accent-soft: rgba(58, 190, 249, 0.08);
-  --accent-muted: rgba(58, 190, 249, 0.15);
+  /* Using the vibrant pink for primary emphasis */
+  --accent: var(--brand-red);
+  --accent-soft: rgba(255, 72, 109, 0.08);
+  --accent-muted: rgba(255, 72, 109, 0.15);
   
   /* Borders & Dividers — Minimalist structural lines */
-  --border: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(255, 255, 255, 0.12);
-  --border-accent: var(--brand-blue);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.18);
+  --border-accent: var(--brand-red);
 
   /* Glassmorphism — The "Premium" layer */
-  --glass-bg: rgba(16, 18, 20, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(32, 14, 56, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.15);
 
   /* Elevation */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.5);
 
   /* Typography */
   --font-display: 'Sora', system-ui, sans-serif;
@@ -139,6 +140,8 @@ h2 { font-weight: 700; }
 
 .card-bento {
   background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: 40px;
@@ -169,8 +172,8 @@ h2 { font-weight: 700; }
   align-items: center;
   justify-content: center;
   padding: 14px 28px;
-  background: var(--brand-blue);
-  color: #000000;
+  background: var(--accent);
+  color: #FFFFFF;
   border-radius: 12px;
   font-weight: 600;
   font-size: 15px;
@@ -182,8 +185,9 @@ h2 { font-weight: 700; }
 
 .btn-primary:hover {
   background: #FFFFFF;
+  color: #000000;
   transform: scale(1.02);
-  box-shadow: 0 0 20px rgba(58, 190, 249, 0.3);
+  box-shadow: 0 0 20px rgba(255, 72, 109, 0.4);
 }
 
 .btn-secondary {
