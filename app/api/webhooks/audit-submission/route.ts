@@ -57,8 +57,11 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Audit submission error:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to process audit submission" },
-      { status: 200 } // Per requirement: never return 500 to the user
+      { 
+        success: false, 
+        message: error instanceof Error ? error.message : "Failed to process audit submission" 
+      },
+      { status: 200 }
     );
   }
 }
