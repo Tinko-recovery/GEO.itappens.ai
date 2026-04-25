@@ -103,13 +103,22 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
         captchaAnswer: values.captchaAnswer,
       };
 
-      const response = await fetch("/api/webhooks/audit-submission", {
+      const response = await fetch("/api/audit/free", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const data = await response.json();
+
+      if (response.ok && data.shareToken) {
+        setSuccess(true);
+        // After showing success for 3 seconds, redirect to the report
+        setTimeout(() => {
+          window.location.href = `/audit/report/${data.shareToken}`;
+        }, 3000);
+        return;
+      }
 
       if (!response.ok || !data.success) {
         setMessage(data?.message || "Error submitting audit. Please try again.");

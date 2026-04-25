@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const FLASK_URL = 'http://localhost:8080'; // Updated to match your running engine
+const FLASK_URL = process.env.SOCIAL_ENGINE_URL || 'http://localhost:8080';
 
 export async function GET(request: Request, props: { params: Promise<{ route: string[] }> }) {
   const params = await props.params;
