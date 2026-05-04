@@ -1,8 +1,8 @@
 import { getPostData } from "@/lib/blog";
 import { notFound } from "next/navigation";
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-    const { slug } = await params;
+export default async function BlogPost(props: { params: Promise<{ slug: string }> }) {
+    const { slug } = await props.params;
     let post;
     try {
         post = await getPostData(slug);

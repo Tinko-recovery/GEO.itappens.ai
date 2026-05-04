@@ -3,9 +3,10 @@ import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { notFound } from "next/navigation";
 
-export default async function ClientPortal({ params }: { params: { token: string } }) {
+export default async function ClientPortal(props: { params: Promise<{ token: string }> }) {
+    const { token } = await props.params;
     const client = await prisma.clientProfile.findUnique({
-        where: { token: params.token },
+        where: { token: token },
         include: { posts: { orderBy: { createdAt: 'desc' }, take: 10 } }
     });
 
