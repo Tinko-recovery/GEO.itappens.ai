@@ -126,18 +126,19 @@ async function publishToBuffer(client: any, content: { linkedin: string, twitter
 }
 
 async function sendToBuffer(token: string, profileId: string, text: string) {
+    const params = new URLSearchParams();
+    params.append("text", text);
+    params.append("profile_ids[]", profileId);
+    params.append("shorten", "true");
+    params.append("now", "true");
+
     const res = await fetch("https://api.bufferapp.com/1/updates/create.json", {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: new URLSearchParams({
-            text: text,
-            profile_ids: [profileId],
-            shorten: "true",
-            now: "true" // Publish immediately for autonomous SaaS
-        })
+        body: params.toString()
     });
 
     const data = await res.json();
