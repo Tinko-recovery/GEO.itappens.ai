@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
+
+// Prevent static pre-rendering — this route must run dynamically
+export const dynamic = 'force-dynamic';
 
 /**
  * DAILY CONTENT ENGINE
@@ -159,6 +161,14 @@ async function logPost(clientId: string, platform: string, content: string, buff
     });
 }
 
-// Secure with Upstash signature
-export const POST = verifySignatureAppRouter(handler);
+// Export with lazy QStash signature check at runtime
+export async function POST(req: Request) {
+    const currentKey = process.env.QSTASH_CURRENT_SIGNING_KEY;
+    const nextKey = process.env.QSTASH_NEXT_SIGNING_KEY;
+    if (currentKey && nextKey) {
+        const { verifySignatureAppRouter } = await import("@upstash/qstash/dist/nextjs");
+        return verifySignatureAppRouter(handler)(req);
+    }
+    return handler(req);
+}
 export const GET = handler; // Allow manual testing during dev

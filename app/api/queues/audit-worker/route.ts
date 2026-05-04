@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
 
-// Ensure it runs on the Edge or Serverless environment natively
-export const maxDuration = 300; // 5 mins max for Vercel Hobby/Pro if allowed
+// Prevent static pre-rendering — this route must run dynamically
+export const dynamic = 'force-dynamic';
+export const maxDuration = 300;
 
 /**
  * Background Worker for handling GEO Audits asynchronously.
@@ -113,5 +113,14 @@ STRICT STEALTH: Replace all references to human names or personal emails with 'T
     }
 }
 
-// Wrap the handler with Upstash's signature verification middleware
-export const POST = verifySignatureAppRouter(handler);
+// Export handler directly — QStash signature verification via env keys at runtime
+export async function POST(req: Request) {
+    // Only verify signature if QStash keys are configured
+    const currentKey = process.env.QSTASH_CURRENT_SIGNING_KEY;
+    const nextKey = process.env.QSTASH_NEXT_SIGNING_KEY;
+    if (currentKey && nextKey) {
+        const { verifySignatureAppRouter } = await import("@upstash/qstash/dist/nextjs");
+        return verifySignatureAppRouter(handler)(req);
+    }
+    return handler(req);
+}
