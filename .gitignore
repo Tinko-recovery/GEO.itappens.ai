@@ -1,45 +1,55 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Project Specific
-memory/*.json
-memory/*.md
-workspace/
-storage/
-run_log*.txt
-error_log.txt
-*.log
+# testing
+/coverage
 
-# Claude Code
-.claude/
+# next.js
+/.next/
+/out/
 
-# OS
+# production
+/build
+
+# misc
 .DS_Store
-Thumbs.db
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# secrets — never commit these
+token.json
+credentials.json
+
+# itappens SaaS
+.claude/
+.next-prod/
+.next-verify/
+.next-verify-2/
+*.log
+*.txt
+__pycache__/
+memory/*.json

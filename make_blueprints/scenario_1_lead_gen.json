@@ -1,0 +1,235 @@
+{
+	"name": "Scenario 1: Lead Gen & GEO Audit",
+	"flow": [
+		{
+			"id": 1,
+			"module": "gateway:CustomWebhooks",
+			"version": 1,
+			"parameters": {
+				"hook": "CONFIGURE_IN_MAKE"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": -450,
+					"y": 0
+				},
+				"expect": [
+					{
+						"name": "leadId",
+						"type": "text"
+					},
+					{
+						"name": "name",
+						"type": "text"
+					},
+					{
+						"name": "email",
+						"type": "email"
+					},
+					{
+						"name": "company",
+						"type": "text"
+					},
+					{
+						"name": "website",
+						"type": "text"
+					},
+					{
+						"name": "industry",
+						"type": "text"
+					},
+					{
+						"name": "targetQueries",
+						"type": "array",
+						"spec": {
+							"type": "text"
+						}
+					}
+				]
+			}
+		},
+		{
+			"id": 2,
+			"module": "http:ActionRequest",
+			"version": 1,
+			"parameters": {
+				"url": "https://google.serper.dev/search",
+				"method": "post",
+				"headers": [
+					{
+						"name": "X-API-KEY",
+						"value": "CONFIGURE_IN_MAKE"
+					}
+				],
+				"body": "{\"q\": \"{{1.company}} {{1.targetQueries[0]}}\", \"num\": 10}",
+				"type": "json"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": -150,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 3,
+			"module": "http:ActionRequest",
+			"version": 1,
+			"parameters": {
+				"url": "https://api.anthropic.com/v1/messages",
+				"method": "post",
+				"headers": [
+					{
+						"name": "x-api-key",
+						"value": "CONFIGURE_IN_MAKE"
+					},
+					{
+						"name": "anthropic-version",
+						"value": "2023-06-01"
+					},
+					{
+						"name": "content-type",
+						"value": "application/json"
+					}
+				],
+				"body": "{\"model\": \"claude-haiku-4-5-20251001\", \"max_tokens\": 1000, \"system\": \"You are a GEO auditor for itappens.ai. Score the brand 0-100 across 5 pillars: semantic_identity (0-20), content_quality (0-20), schema_infrastructure (0-20), entity_authority (0-20), citation_presence (0-20). Output ONLY valid JSON with this structure: {\\\"company\\\":\\\"\\\",\\\"overall_score\\\":0,\\\"pillar_scores\\\":{\\\"semantic_identity\\\":{\\\"score\\\":0,\\\"max\\\":20,\\\"gap\\\":\\\"\\\"},\\\"content_quality\\\":{\\\"score\\\":0,\\\"max\\\":20,\\\"gap\\\":\\\"\\\"},\\\"schema_infrastructure\\\":{\\\"score\\\":0,\\\"max\\\":20,\\\"gap\\\":\\\"\\\"},\\\"entity_authority\\\":{\\\"score\\\":0,\\\"max\\\":20,\\\"gap\\\":\\\"\\\"},\\\"citation_presence\\\":{\\\"score\\\":0,\\\"max\\\":20,\\\"gap\\\":\\\"\\\"}},\\\"quick_wins\\\":[\\\"\\\",\\\"\\\",\\\"\\\"],\\\"summary\\\":\\\"\\\",\\\"cta\\\":\\\"Book a free 30-min GEO strategy call at itappens.ai\\\"}\", \"messages\": [{\"role\": \"user\", \"content\": \"Company: {{1.company}}\\nWebsite: {{1.website}}\\nIndustry: {{1.industry}}\\nTarget Queries: {{1.targetQueries}}\\nSearch Results: {{2.data}}\"}]}",
+				"type": "json"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": 150,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 4,
+			"module": "http:ActionRequest",
+			"version": 1,
+			"parameters": {
+				"url": "https://itappens.ai/api/webhooks/make",
+				"method": "post",
+				"headers": [
+					{
+						"name": "x-webhook-secret",
+						"value": "CONFIGURE_IN_MAKE"
+					}
+				],
+				"body": "{\"event\": \"lead_scored\", \"leadId\": \"{{1.leadId}}\", \"geoScore\": {{3.data.content[0].text.overall_score}}, \"geoReport\": {{3.data.content[0].text}}}",
+				"type": "json"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": 450,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 5,
+			"module": "brevo:ActionSendEmail",
+			"version": 1,
+			"parameters": {
+				"connection": "CONFIGURE_IN_MAKE"
+			},
+			"mapper": {
+				"to": [
+					{
+						"email": "{{1.email}}",
+						"name": "{{1.name}}"
+					}
+				],
+				"subject": "Your GEO Audit is Ready — {{1.company}}",
+				"htmlContent": "<h1>Your GEO Score: {{3.data.content[0].text.overall_score}}/100</h1><p>{{3.data.content[0].text.summary}}</p><h3>Quick Wins:</h3><ul>{{#each 3.data.content[0].text.quick_wins}}<li>{{this}}</li>{{/each}}</ul><p><a href='https://itappens.ai'>Book a Strategy Call</a></p>"
+			},
+			"metadata": {
+				"designer": {
+					"x": 750,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 6,
+			"module": "http:ActionRequest",
+			"version": 1,
+			"parameters": {
+				"url": "https://live-mt-server.wati.io/api/v1/sendSessionMessage/+919353015844",
+				"method": "post",
+				"headers": [
+					{
+						"name": "Authorization",
+						"value": "Bearer CONFIGURE_IN_MAKE"
+					}
+				],
+				"body": "{\"messageText\": \"New GEO lead: {{1.company}} ({{1.email}}) — Score: {{3.data.content[0].text.overall_score}}/100. Check Notion.\"}",
+				"type": "json"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": 1050,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 7,
+			"module": "notion:ActionCreateDatabaseItem",
+			"version": 1,
+			"parameters": {
+				"connection": "CONFIGURE_IN_MAKE",
+				"database": "CONFIGURE_IN_MAKE"
+			},
+			"mapper": {
+				"properties": {
+					"Name": {
+						"title": [
+							{
+								"text": {
+									"content": "{{1.name}}"
+								}
+							}
+						]
+					},
+					"Email": {
+						"email": "{{1.email}}"
+					},
+					"Company": {
+						"rich_text": [
+							{
+								"text": {
+									"content": "{{1.company}}"
+								}
+							}
+						]
+					},
+					"Website": {
+						"url": "{{1.website}}"
+					},
+					"GEO Score": {
+						"number": "{{3.data.content[0].text.overall_score}}"
+					},
+					"Status": {
+						"select": {
+							"name": "New"
+						}
+					}
+				}
+			},
+			"metadata": {
+				"designer": {
+					"x": 1350,
+					"y": 0
+				}
+			}
+		}
+	],
+	"metadata": {
+		"version": 1
+	}
+}

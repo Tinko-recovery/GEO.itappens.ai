@@ -6,7 +6,7 @@ Blocks until you reply.
 """
 
 from typing import Optional, Any
-from crewai_tools import BaseTool
+from crewai.tools import BaseTool
 import asyncio
 import logging
 

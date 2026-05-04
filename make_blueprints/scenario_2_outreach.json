@@ -1,0 +1,131 @@
+{
+	"name": "Scenario 2: Outreach Nurturing",
+	"flow": [
+		{
+			"id": 1,
+			"module": "notion:ActionWatchDatabaseItems",
+			"version": 1,
+			"parameters": {
+				"connection": "CONFIGURE_IN_MAKE",
+				"database": "CONFIGURE_IN_MAKE"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": -300,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 2,
+			"module": "builtin:Filter",
+			"version": 1,
+			"parameters": {
+				"conditions": [
+					{
+						"left": "{{1.properties.Status.select.name}}",
+						"operator": "text:equal",
+						"right": "New"
+					},
+					{
+						"left": "{{1.properties.\"Last Contacted\".date.start}}",
+						"operator": "time:before",
+						"right": "{{addDays(now; -2)}}"
+					}
+				]
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": 0,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 3,
+			"module": "http:ActionRequest",
+			"version": 1,
+			"parameters": {
+				"url": "https://api.openai.com/v1/chat/completions",
+				"method": "post",
+				"headers": [
+					{
+						"name": "Authorization",
+						"value": "Bearer {{OPENAI_API_KEY}}"
+					},
+					{
+						"name": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": "{\"model\": \"gpt-4o-mini\", \"messages\": [{\"role\": \"system\", \"content\": \"You are an outreach specialist for itappens.ai. Write a short, personalized follow-up email. Mention that we analyzed their brand {{1.properties.Company.rich_text[0].text.content}} and found specific GEO gaps. Mention the proof point: New KR Inn reached #3 on Google Hotels after working with us. Clear CTA: book a 15-min strategy call. Max 120 words.\"}, {\"role\": \"user\", \"content\": \"Write email for {{1.properties.Name.title[0].text.content}} at {{1.properties.Company.rich_text[0].text.content}}. Industry: {{1.properties.Industry.select.name}}\"}]}",
+				"type": "json"
+			},
+			"mapper": {},
+			"metadata": {
+				"designer": {
+					"x": 300,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 4,
+			"module": "brevo:ActionSendEmail",
+			"version": 1,
+			"parameters": {
+				"connection": "CONFIGURE_IN_MAKE"
+			},
+			"mapper": {
+				"to": [
+					{
+						"email": "{{1.properties.Email.email}}",
+						"name": "{{1.properties.Name.title[0].text.content}}"
+					}
+				],
+				"subject": "Quick question regarding {{1.properties.Company.rich_text[0].text.content}} SEO/GEO",
+				"htmlContent": "{{3.data.choices[0].message.content}}"
+			},
+			"metadata": {
+				"designer": {
+					"x": 600,
+					"y": 0
+				}
+			}
+		},
+		{
+			"id": 5,
+			"module": "notion:ActionUpdateDatabaseItem",
+			"version": 1,
+			"parameters": {
+				"connection": "CONFIGURE_IN_MAKE",
+				"item": "{{1.id}}"
+			},
+			"mapper": {
+				"properties": {
+					"Last Contacted": {
+						"date": {
+							"start": "{{now}}"
+						}
+					},
+					"Status": {
+						"select": {
+							"name": "Nurturing"
+						}
+					}
+				}
+			},
+			"metadata": {
+				"designer": {
+					"x": 900,
+					"y": 0
+				}
+			}
+		}
+	],
+	"metadata": {
+		"version": 1
+	}
+}

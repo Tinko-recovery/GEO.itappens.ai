@@ -7,7 +7,14 @@ All outputs pass through the Quality Gate before delivery.
 """
 
 import logging
+from crewai import Agent, Task, Crew, Process
+from crewai_tools import SerperDevTool
+from tools.human_link import HumanLinkTool
+from tools.knowledge_ingestion_tool import KnowledgeIngestionTool
+from tools.buffer_tool import BufferPostTool
+from tools.file_tool import read_file_tool, write_file_tool
 
+logger = logging.getLogger(__name__)
 def build_marketing_crew(
     team_id: str,
     marketing_brief: dict,
@@ -91,7 +98,7 @@ def build_marketing_crew(
             "You use the 'itcontents/knowledge/' vault as your ground truth."
         ),
         llm=llm_sonnet,
-        tools=[ingestion_tool, serper_tool, read_file_tool],
+        tools=[serper_tool, read_file_tool],
         verbose=True,
         allow_delegation=False,
     )

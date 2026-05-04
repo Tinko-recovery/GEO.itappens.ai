@@ -58,9 +58,9 @@ class TeamFactory:
         self._telegram = telegram_notifier
 
         # CrewAI 1.x uses LiteLLM internally — pass model name strings directly.
-        # Format: "anthropic/<model-id>" tells LiteLLM to use the Anthropic provider.
-        self._llm_sonnet = f"anthropic/{CLAUDE_SONNET}"
-        self._llm_haiku = f"anthropic/{CLAUDE_HAIKU}"
+        # Format: "gemini/<model-id>" tells LiteLLM to use the Gemini provider.
+        self._llm_sonnet = f"gemini/gemini-1.5-pro-latest"
+        self._llm_haiku = f"gemini/gemini-1.5-flash"
         
         self._activity_path = Path(__file__).parent.parent / "memory" / "activity_log.json"
         self._history_path = Path(__file__).parent.parent / "memory" / "job_history.json"

@@ -6,7 +6,7 @@ to the human founder via Telegram and wait for a selection.
 """
 
 from typing import Any, List
-from crewai_tools import BaseTool
+from crewai.tools import BaseTool
 import asyncio
 import logging
 

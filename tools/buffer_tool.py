@@ -9,7 +9,7 @@ import os
 import logging
 import httpx
 from typing import List, Dict, Any, Optional
-from crewai_tools import BaseTool
+from crewai.tools import BaseTool
 from pydantic import Field
 
 logger = logging.getLogger(__name__)
