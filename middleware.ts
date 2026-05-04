@@ -51,7 +51,11 @@ export async function middleware(request: NextRequest) {
   }
 
   // 3. Auth0 v4 Middleware
-  // This automatically handles the built-in auth routes (/auth/login, /auth/callback, etc.)
+  const publicRoutes = ["/", "/onboard", "/docs", "/geo", "/how-it-works", "/privacy"];
+  if (publicRoutes.includes(pathname)) {
+    return NextResponse.next();
+  }
+
   return await auth0.middleware(request);
 }
 
