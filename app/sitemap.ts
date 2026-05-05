@@ -1,4 +1,4 @@
-﻿import type { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 import { answerPages } from "@/lib/content/answers";
 import { siteConfig } from "@/lib/content/site";
@@ -6,6 +6,7 @@ import { siteConfig } from "@/lib/content/site";
 const staticRoutes = [
   "",
   "/geo",
+  "/geo-guide",
   "/how-it-works",
   "/case-studies",
   "/answers",

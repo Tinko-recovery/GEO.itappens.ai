@@ -39,6 +39,11 @@ export function organizationSchema(): Schema {
     telephone: siteConfig.phone,
     sameAs: siteConfig.sameAs,
     areaServed: "India",
+    founder: {
+      "@type": "Person",
+      name: siteConfig.founder,
+    },
+    serviceType: siteConfig.serviceType,
     address: {
       "@type": "PostalAddress",
       addressLocality: siteConfig.city,

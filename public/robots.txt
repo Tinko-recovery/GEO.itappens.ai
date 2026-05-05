@@ -1,0 +1,78 @@
+# ============================================================
+# itappens.ai robots.txt
+# Last updated: 2026-05-05
+# ============================================================
+
+# Default: allow all crawlers
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /nimda/
+Disallow: /_next/
+
+# ── AI Answer Engine Crawlers ────────────────────────────────
+# OpenAI / ChatGPT
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Anthropic / Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google (Gemini / AI Overviews / Search)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+# Apple (Siri / Apple Intelligence)
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Meta / Llama
+User-agent: meta-externalagent
+Allow: /
+
+# Microsoft / Bing / Copilot
+User-agent: Bingbot
+Allow: /
+
+User-agent: MSNBot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# ── Crawl Assets for AI Systems ──────────────────────────────
+# Sitemap
+Sitemap: https://www.itappens.ai/sitemap.xml
+
+# llms.txt — AI entity summary
+# https://www.itappens.ai/llms.txt
+# https://www.itappens.ai/llms-full.txt
+
+Host: www.itappens.ai

@@ -44,18 +44,24 @@ export const metadata: Metadata = {
 import Auth0Provider from '@/components/providers/Auth0Provider';
 import { Suspense } from 'react';
 import JsonLd from "@/components/JsonLd";
-import { organizationSchema } from "@/lib/seo/schema";
+import { organizationSchema, faqSchema, schemaGraph } from "@/lib/seo/schema";
+import { buyerFaqs } from "@/lib/content/site";
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const siteSchema = schemaGraph(
+    organizationSchema(),
+    faqSchema(buyerFaqs, "/")
+  );
+
   return (
     <html lang="en-IN">
       <head>
         <link rel="alternate" type="text/plain" href="/llms.txt" title="AI Summary" />
         <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Full AI Reference" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1, noarchive" />
+        <JsonLd data={siteSchema} />
       </head>
       <body>
-        <JsonLd data={organizationSchema()} />
         <Auth0Provider>
           <Suspense fallback={<div className="min-h-screen bg-bg animate-pulse" />}>
             {children}

@@ -8,6 +8,8 @@ export interface SiteConfig {
   country: string;
   sameAs: string[];
   description: string;
+  founder: string;
+  serviceType: string;
 }
 
 export interface FaqItem {
@@ -32,6 +34,8 @@ export const siteConfig: SiteConfig = {
   sameAs: ["https://www.linkedin.com/company/itappens-ai/"],
   description:
     "India's first AEO/GEO solution provider and AI content automation platform for brands that want to become the default answer across ChatGPT, Perplexity, Claude, Gemini, Grok, and SearchGPT.",
+  founder: "Sadiq",
+  serviceType: "GEO and AEO Consulting",
 };
 
 export const corePlatforms = ["ChatGPT", "Perplexity", "Claude", "Gemini", "Grok", "SearchGPT"];
@@ -129,6 +133,34 @@ export const geoFaqs: FaqItem[] = [
     question: "What does pricing look like?",
     answer:
       "Technical Signals can be delivered as a fixed-scope sprint. Ongoing GEO execution and the platform layer are scoped based on query set, content volume, and reporting depth.",
+  },
+];
+
+export const buyerFaqs: FaqItem[] = [
+  {
+    question: "Why hire a GEO agency in India?",
+    answer:
+      "A Generative Engine Optimization (GEO) agency helps your brand become the default recommended answer across AI platforms like ChatGPT, Perplexity, and Gemini, specifically targeting the Indian market and global buyers searching for Indian solutions.",
+  },
+  {
+    question: "How can an AEO consultant in India help my business?",
+    answer:
+      "An Answer Engine Optimization (AEO) consultant structures your technical signals, schema markup, and content architecture so that AI engines confidently cite your brand as the authoritative source for your industry.",
+  },
+  {
+    question: "How to get cited by AI platforms like Perplexity and Gemini in India?",
+    answer:
+      "Getting cited requires a mix of technical signals (like llms.txt and entity schema), semantic HTML, and publishing answer-first content clusters engineered for high-intent queries that buyers ask inside AI products.",
+  },
+  {
+    question: "What is llms.txt generation and why do I need it?",
+    answer:
+      "An llms.txt file provides a machine-readable summary of your brand, services, and technical documentation, giving AI crawlers a clear, unambiguous source of truth to train on and reference.",
+  },
+  {
+    question: "How does schema markup improve AI search visibility?",
+    answer:
+      "Proper schema markup, such as Organization and FAQPage schemas, normalizes your entity data. This allows AI systems to extract a consistent profile of your brand, increasing the likelihood of accurate citations.",
   },
 ];
 
