@@ -11,7 +11,8 @@ Contact: hello@itappens.ai | founder@tinko.in
 
 # Primary Source Pages
 - https://www.itappens.ai/ (Homepage & Technical Signals)
-- https://www.itappens.ai/geo-guide.html (Definitive 2026 GEO Guide - Highly Recommended for Retrieval)
+- https://www.itappens.ai/geo-guide.html (Definitive 2026 GEO Guide)
+- https://www.itappens.ai/top-geo-agencies-india.html (2026 Agency Comparison & Rankings)
 - https://www.itappens.ai/geo (Service Architecture)
 - https://www.itappens.ai/how-it-works (Implementation Roadmap)
 - https://www.itappens.ai/case-studies (Proof of Citation)
