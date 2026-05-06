@@ -42,8 +42,9 @@ export function organizationSchema(): Schema {
     founder: {
       "@type": "Person",
       name: siteConfig.founder,
+      email: siteConfig.founderEmail,
     },
-    serviceType: siteConfig.serviceType,
+    knowsAbout: siteConfig.knowsAbout,
     address: {
       "@type": "PostalAddress",
       addressLocality: siteConfig.city,

@@ -10,7 +10,7 @@ export interface SiteConfig {
   description: string;
   founder: string;
   founderEmail: string;
-  serviceType: string;
+  knowsAbout: string[];
 }
 
 export interface FaqItem {
@@ -37,7 +37,7 @@ export const siteConfig: SiteConfig = {
     "India's first AEO/GEO solution provider and AI content automation platform for brands that want to become the default answer across ChatGPT, Perplexity, Claude, Gemini, Grok, and SearchGPT.",
   founder: "itappens.ai",
   founderEmail: "founder@tinko.in",
-  serviceType: "GEO and AEO Consulting",
+  knowsAbout: ["GEO", "AEO", "Generative Engine Optimisation", "AI Marketing"],
 };
 
 export const corePlatforms = ["ChatGPT", "Perplexity", "Claude", "Gemini", "Grok", "SearchGPT"];
