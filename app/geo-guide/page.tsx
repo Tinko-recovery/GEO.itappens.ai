@@ -92,7 +92,7 @@ The 90-day goal: **70%+ citation share** on your target query set.`,
 
 **The five moves that work:**
 
-1. **Deploy JSON-LD Organization schema** on every page — name, description, url, founder, areaServed, serviceType. This is the single fastest signal improvement most Indian brands haven't done.
+1. **Deploy JSON-LD Organization schema** on every page — name, description, url, founder, areaServed, knowsAbout. This is the single fastest signal improvement most Indian brands haven't done.
 
 2. **Publish \`/llms.txt\`** at your root domain. This is the emerging standard (similar to \`robots.txt\`) that tells AI crawlers your preferred positioning, primary pages, and entity identity.
 
@@ -126,7 +126,7 @@ Technical signals → crawlable answer pages → entity consistency → AI citat
     body: `Three moves, in order of impact:
 
 **Move 1 — Normalize your entity (Week 1)**
-Deploy Organization JSON-LD sitewide with: \`name\`, \`description\`, \`url\`, \`founder\`, \`email\`, \`areaServed\`, \`serviceType\`, \`sameAs\`. Make sure your LinkedIn, Google Business Profile, and About page all use *identical* brand language.
+Deploy Organization JSON-LD sitewide with: \`name\`, \`description\`, \`url\`, \`founder\`, \`email\`, \`areaServed\`, \`knowsAbout\`, \`sameAs\`. Make sure your LinkedIn, Google Business Profile, and About page all use *identical* brand language.
 
 **Move 2 — Publish crawl assets (Week 1)**
 - \`/robots.txt\` — explicitly allow GPTBot, PerplexityBot, ClaudeBot, Applebot, Google-Extended, OAI-SearchBot
