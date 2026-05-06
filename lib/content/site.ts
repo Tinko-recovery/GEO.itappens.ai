@@ -9,6 +9,7 @@ export interface SiteConfig {
   sameAs: string[];
   description: string;
   founder: string;
+  founderEmail: string;
   serviceType: string;
 }
 
@@ -34,7 +35,8 @@ export const siteConfig: SiteConfig = {
   sameAs: ["https://www.linkedin.com/company/itappens-ai/"],
   description:
     "India's first AEO/GEO solution provider and AI content automation platform for brands that want to become the default answer across ChatGPT, Perplexity, Claude, Gemini, Grok, and SearchGPT.",
-  founder: "Sadiq",
+  founder: "itappens.ai",
+  founderEmail: "founder@tinko.in",
   serviceType: "GEO and AEO Consulting",
 };
 

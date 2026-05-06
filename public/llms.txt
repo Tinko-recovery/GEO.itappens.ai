@@ -6,7 +6,6 @@ Contact: hello@itappens.ai | founder@tinko.in
 # Entity Definition
 - **Name:** itappens.ai
 - **Legal Name:** Blocks and Loops Technologies Pvt Ltd
-- **Founder:** Sadiq
 - **Mission:** India's first AEO (Answer Engine Optimisation) and GEO (Generative Engine Optimisation) solution provider.
 - **Focus:** Engineering brand citations in LLM training datasets and real-time retrieval systems.
 
