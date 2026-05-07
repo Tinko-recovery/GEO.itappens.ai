@@ -31,7 +31,7 @@ export default function SiteFooter() {
           <p className="overline" style={{ marginBottom: 24, fontSize: 12, fontWeight: 700, color: "var(--text-muted)", letterSpacing: '0.1em' }}>Resources</p>
           <ul className="footer-link-list" style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 14 }}>
             {[
-              { href: "/about", label: "About Founder" },
+              { href: "/about", label: "About Us" },
               { href: "/geo", label: "GEO Framework" },
               { href: "/answers", label: "Answers Hub" },
               { href: "/audit", label: "AI Audit" },
