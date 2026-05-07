@@ -68,6 +68,11 @@ export function personSchema(input: PersonInput): Schema {
     jobTitle: input.jobTitle,
     description: input.description,
     sameAs: input.sameAs,
+    knowsAbout: siteConfig.knowsAbout,
+    alumniOf: {
+      "@type": "Organization",
+      "name": "Kyndryl"
+    },
     worksFor: {
       "@id": `${siteConfig.url}/#organization`,
     },
