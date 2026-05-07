@@ -20,10 +20,14 @@ type ArticleInput = {
 };
 
 type HowToInput = {
-  name: string;
-  description: string;
-  path: string;
   steps: HowToStep[];
+};
+
+type PersonInput = {
+  name: string;
+  jobTitle: string;
+  description: string;
+  sameAs: string[];
 };
 
 export function organizationSchema(): Schema {
@@ -38,9 +42,11 @@ export function organizationSchema(): Schema {
     email: siteConfig.email,
     telephone: siteConfig.phone,
     sameAs: siteConfig.sameAs,
-    areaServed: "India",
+    areaServed: "Worldwide",
+    foundingDate: "2025",
     founder: {
       "@type": "Person",
+      "@id": `${siteConfig.url}/#person`,
       name: siteConfig.founder,
       email: siteConfig.founderEmail,
     },
@@ -50,6 +56,20 @@ export function organizationSchema(): Schema {
       addressLocality: siteConfig.city,
       addressRegion: "Karnataka",
       addressCountry: "IN",
+    },
+  };
+}
+
+export function personSchema(input: PersonInput): Schema {
+  return {
+    "@type": "Person",
+    "@id": `${siteConfig.url}/#person`,
+    name: input.name,
+    jobTitle: input.jobTitle,
+    description: input.description,
+    sameAs: input.sameAs,
+    worksFor: {
+      "@id": `${siteConfig.url}/#organization`,
     },
   };
 }

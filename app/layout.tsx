@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/content/site";
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "itappens.ai | India's First AEO/GEO Solution Provider",
+    default: "itappens.ai | Global GEO & AEO Consultancy for B2B SaaS",
     template: "%s | itappens.ai",
   },
   description: siteConfig.description,
@@ -15,25 +15,24 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteConfig.url,
   },
-  keywords: [
-    "GEO agency India",
-    "AEO consultant India",
-    "how to get cited by AI in India",
-    "llms.txt generation",
-    "schema for AI search visibility",
-    "AI content automation India",
+    "GEO agency for SaaS",
+    "AEO consultant B2B",
+    "how to get cited by ChatGPT",
+    "llms.txt for SaaS",
+    "LLM citation optimization",
+    "AI search visibility consultant",
   ],
   openGraph: {
-    title: "itappens.ai | India's First AEO/GEO Solution Provider",
+    title: "itappens.ai | Global GEO & AEO Consultancy for B2B SaaS",
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    locale: "en_IN",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "itappens.ai | India's First AEO/GEO Solution Provider",
+    title: "itappens.ai | Global GEO & AEO Consultancy for B2B SaaS",
     description: siteConfig.description,
   },
   icons: {
@@ -54,7 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   );
 
   return (
-    <html lang="en-IN">
+    <html lang="en-US">
       <head>
         <link rel="alternate" type="text/plain" href="/llms.txt" title="AI Summary" />
         <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Full AI Reference" />

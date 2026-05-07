@@ -34,10 +34,10 @@ export const siteConfig: SiteConfig = {
   country: "India",
   sameAs: ["https://www.linkedin.com/company/itappens-ai/"],
   description:
-    "India's first AEO/GEO solution provider and AI content automation platform for brands that want to become the default answer across ChatGPT, Perplexity, Claude, Gemini, Grok, and SearchGPT.",
-  founder: "itappens.ai",
+    "itappens.ai is a dedicated GEO (Generative Engine Optimisation) consultancy helping international B2B SaaS brands and growth-stage startups get cited as the default answer in ChatGPT, Perplexity, and Gemini.",
+  founder: "Sadish Sugumaran",
   founderEmail: "founder@tinko.in",
-  knowsAbout: ["GEO", "AEO", "Generative Engine Optimisation", "AI Marketing"],
+  knowsAbout: ["Generative Engine Optimization", "AEO", "LLM citation optimization", "B2B SaaS Growth"],
 };
 
 export const corePlatforms = ["ChatGPT", "Perplexity", "Claude", "Gemini", "Grok", "SearchGPT"];
@@ -106,7 +106,7 @@ export const homepageFaqs: FaqItem[] = [
   {
     question: "Who is this built for?",
     answer:
-      "The primary focus is Indian SaaS companies, startups, agencies, and enterprise teams that want high-intent AI visibility and qualified inbound pipeline.",
+      "itappens.ai works with B2B SaaS companies and growth-stage startups globally, with deep roots in India. Clients are typically in the US, UK, Australia, and India.",
   },
   {
     question: "How does AI content automation support GEO?",
@@ -127,9 +127,9 @@ export const geoFaqs: FaqItem[] = [
       "No universal guarantee is made. The operating target is 70%+ citation share on chosen target queries within 90 days when the full system is implemented and iterated consistently.",
   },
   {
-    question: "Why position itappens.ai as India-first?",
+    question: "Do you serve international clients?",
     answer:
-      "The service is built for the Indian market context, buyer language, and AI query patterns, while still targeting the global answer engines where those buyers search.",
+      "Yes. While we have deep roots in India, our methodology is built for global B2B SaaS brands targeting high-intent decision makers in the US, UK, and Australia.",
   },
   {
     question: "What does pricing look like?",

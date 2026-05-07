@@ -13,19 +13,19 @@ import { buildMetadata } from "@/lib/seo/metadata";
 import { faqSchema, organizationSchema, schemaGraph, serviceSchema } from "@/lib/seo/schema";
 
 export const metadata: Metadata = buildMetadata({
-  title: "itappens.ai | India's First AEO/GEO Solution Provider",
+  title: "itappens.ai | Global GEO & AEO Consultancy for B2B SaaS",
   description:
-    "India's first AEO/GEO solution provider and AI content automation platform for brands that want to become the default answer across major AI engines.",
+    "itappens.ai is a dedicated GEO consultancy helping international B2B SaaS brands and startups get cited in ChatGPT, Perplexity, and Gemini.",
   path: "/",
-  keywords: ["GEO agency India", "AEO consultant India", "how to get cited by AI in India"],
+  keywords: ["GEO agency for SaaS", "AEO consultant B2B", "LLM citation optimization"],
 });
 
 const homepageSchema = schemaGraph(
   organizationSchema(),
   serviceSchema({
-    name: "AEO and GEO services for Indian brands",
+    name: "GEO and AEO consultancy for B2B SaaS",
     description:
-      "Technical Signals, answer-engine content, entity-building, and tracking for brands that want to become the default answer across AI platforms.",
+      "Technical Signals, answer-engine content hubs, entity-building, and citation tracking for global SaaS brands.",
     path: "/",
   }),
   faqSchema(homepageFaqs),

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import BrandLogo from "./BrandLogo";
 
 const links = [
+  { label: "About", href: "/about" },
   { label: "Audit", href: "/audit" },
   { label: "GEO Setup", href: "/geo" },
   { label: "Solutions", href: "/#solutions", id: "solutions" },

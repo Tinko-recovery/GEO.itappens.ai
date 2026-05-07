@@ -100,36 +100,15 @@ export default function HeroSection() {
                 >
                     <p style={{ 
                         fontFamily: 'var(--font-mono)', 
-                        fontSize: '12px', 
-                        textTransform: 'uppercase', 
-                        letterSpacing: '0.2em', 
-                        color: 'var(--text-muted)', 
+                        fontSize: '14px', 
+                        color: 'var(--text-dim)', 
                         marginBottom: '40px',
-                        textAlign: 'center'
+                        textAlign: 'center',
+                        opacity: 0.8
                     }}>
-                        Trusted by industry leaders in logistics & manufacturing
+                        Currently serving select clients in hospitality and industrial sectors across India. <br />
+                        <span style={{ color: 'var(--brand-blue)', fontWeight: 600 }}>International onboarding open.</span>
                     </p>
-                    <div style={{ 
-                        display: 'flex', 
-                        gap: '80px', 
-                        justifyContent: 'center', 
-                        alignItems: 'center', 
-                        opacity: 0.5, 
-                        filter: 'grayscale(100%) brightness(200%)', 
-                        flexWrap: 'wrap' 
-                    }}>
-                        {['Logistics Global', 'KIADB Manufacturing', 'TechCorp India', 'Narsapura Auto'].map(name => (
-                          <span key={name} style={{ 
-                            fontFamily: 'var(--font-display)', 
-                            fontWeight: 700, 
-                            fontSize: '20px', 
-                            letterSpacing: '-0.02em',
-                            color: 'var(--text-dim)'
-                          }}>
-                            {name}
-                          </span>
-                        ))}
-                    </div>
                 </motion.div>
             </div>
         </section>
