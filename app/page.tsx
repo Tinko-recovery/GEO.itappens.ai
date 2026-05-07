@@ -7,6 +7,7 @@ import HeroSection from "@/components/sections/HeroSection";
 import ProblemSection from "@/components/sections/ProblemSection";
 import ProofSection from "@/components/sections/ProofSection";
 import GEOExplanation from "@/components/sections/GEOExplanation";
+import FounderTrustSection from "@/components/sections/FounderTrustSection";
 import AuditForm from "@/components/AuditForm";
 import { homepageFaqs } from "@/lib/content/site";
 import { buildMetadata } from "@/lib/seo/metadata";
@@ -44,6 +45,7 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <ProblemSection />
+        <FounderTrustSection />
         <ProofSection />
         <GEOExplanation />
 

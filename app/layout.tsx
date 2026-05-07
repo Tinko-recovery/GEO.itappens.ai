@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteConfig.url,
   },
+  keywords: [
     "GEO agency for SaaS",
     "AEO consultant B2B",
     "how to get cited by ChatGPT",

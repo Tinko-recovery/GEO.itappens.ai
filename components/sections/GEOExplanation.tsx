@@ -20,13 +20,13 @@ const pillars = [
     title: "Entity Corroboration",
     description: "Connecting your brand to trusted external nodes to verify authority and build cross-engine trust.",
     icon: <Share2 className="w-6 h-6" />,
-    color: "var(--brand-yellow)"
+    color: "var(--brand-orange)"
   },
   {
     title: "Citation Tracking",
     description: "Closing the loop with weekly engine-by-engine tracking to monitor and defend your AI visibility.",
     icon: <ShieldCheck className="w-6 h-6" />,
-    color: "var(--brand-red)"
+    color: "var(--brand-pink)"
   }
 ];
 

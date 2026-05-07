@@ -4,112 +4,122 @@ import { motion } from 'framer-motion';
 export default function HeroSection() {
     return (
         <section id="hero" style={{
-            minHeight: '90vh',
-            padding: '160px 0 120px',
+            minHeight: '100vh',
+            padding: '180px 0 120px',
             display: 'flex',
             alignItems: 'center',
             backgroundColor: 'var(--bg)',
             overflow: 'hidden',
             position: 'relative',
         }}>
-            {/* Animated Mesh Gradient Background — International SaaS Style */}
+            {/* Ultra-Premium Agentic Background */}
             <div style={{
                 position: 'absolute',
                 top: 0, left: 0, right: 0, bottom: 0,
                 background: `
-                  radial-gradient(circle at 20% 30%, rgba(58, 190, 249, 0.15) 0%, transparent 40%),
-                  radial-gradient(circle at 80% 20%, rgba(244, 80, 80, 0.1) 0%, transparent 40%),
-                  radial-gradient(circle at 50% 80%, rgba(57, 181, 73, 0.1) 0%, transparent 40%),
-                  radial-gradient(circle at 10% 90%, rgba(249, 217, 73, 0.08) 0%, transparent 40%)
+                    radial-gradient(circle at 15% 15%, rgba(0, 245, 255, 0.08) 0%, transparent 40%),
+                    radial-gradient(circle at 85% 85%, rgba(255, 0, 122, 0.08) 0%, transparent 40%),
+                    radial-gradient(circle at 50% 50%, rgba(10, 10, 20, 1) 0%, transparent 100%)
                 `,
-                filter: 'blur(80px)',
                 zIndex: 0
+            }} />
+            
+            {/* Moving Grid Pattern */}
+            <div style={{
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+                backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)`,
+                backgroundSize: '60px 60px',
+                maskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
+                WebkitMaskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
+                zIndex: 1
             }} />
 
             <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-                <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
+                <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
                     <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                     >
                         <span className="overline" style={{ 
-                            backgroundColor: 'rgba(58, 190, 249, 0.1)', 
-                            color: 'var(--brand-blue)',
-                            padding: '6px 12px',
-                            borderRadius: '100px',
-                            display: 'inline-block',
-                            backdropFilter: 'blur(8px)',
-                            border: '1px solid rgba(58, 190, 249, 0.1)'
+                            marginBottom: '32px',
+                            padding: '6px 16px',
+                            background: 'rgba(0, 245, 255, 0.05)',
+                            borderColor: 'rgba(0, 245, 255, 0.2)',
+                            boxShadow: '0 0 20px rgba(0, 245, 255, 0.1)'
                         }}>
-                            Introducing The Agentic Web
+                            The Citation Layer for B2B SaaS
                         </span>
                     </motion.div>
                     
                     <motion.h1 
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ delay: 0.1, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                         className="headline-xl" 
-                        style={{ margin: '32px 0', letterSpacing: '-0.05em', lineHeight: 1.0 }}
+                        style={{ margin: '0 0 32px', letterSpacing: '-0.06em', fontWeight: 900 }}
                     >
-                        The Citation Layer <br /> 
-                        <span style={{ 
-                            background: 'linear-gradient(to right, var(--brand-blue), var(--brand-green))',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent'
-                        }}>for the AI-First Internet.</span>
+                        Master the <span style={{ 
+                            color: 'var(--brand-blue)',
+                            textShadow: '0 0 40px rgba(0, 245, 255, 0.3)'
+                        }}>Agentic Web.</span> <br />
+                        Dominate LLM Citations.
                     </motion.h1>
                     
                     <motion.p 
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ delay: 0.2, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                         className="text-sub" 
-                        style={{ margin: '0 auto 56px', maxWidth: '720px', fontSize: '18px', opacity: 0.8 }}
+                        style={{ margin: '0 auto 64px', maxWidth: '800px', fontSize: '20px', lineHeight: 1.6, color: 'var(--text-dim)' }}
                     >
-                        We ensure your brand is the primary source when LLMs like ChatGPT, Perplexity, and SearchGPT answer questions about your industry. Entity-first, engineering-led optimization.
+                        itappens.ai ensures your brand is the primary authority when ChatGPT, Perplexity, and Gemini answer questions. <span style={{ color: '#fff' }}>Engineering-led GEO for the world's most ambitious SaaS brands.</span>
                     </motion.p>
                     
                     <motion.div 
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}
+                        transition={{ delay: 0.3, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap' }}
                     >
-                        <a href="/audit" className="btn-primary" style={{ padding: '20px 48px', fontSize: '16px', borderRadius: '16px' }}>
-                            Start Free GEO Snapshot
+                        <a href="/audit" className="btn-primary" style={{ padding: '22px 56px', fontSize: '17px', borderRadius: '16px' }}>
+                            Get Free GEO Snapshot
                         </a>
-                        <a href="/itcontents" className="btn-secondary" style={{ 
-                            padding: '20px 48px', 
-                            fontSize: '16px', 
+                        <a href="/about" className="btn-secondary" style={{ 
+                            padding: '22px 56px', 
+                            fontSize: '17px', 
                             borderRadius: '16px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                            backdropFilter: 'blur(12px)'
+                            background: 'rgba(255, 255, 255, 0.02)',
+                            backdropFilter: 'blur(20px)'
                         }}>
-                            Automate Social Visibility →
+                            Meet the Founder →
                         </a>
                     </motion.div>
-                </div>
 
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1, duration: 1.5 }}
-                    style={{ marginTop: '120px', borderTop: '1px solid var(--border)', paddingTop: '48px' }}
-                >
-                    <p style={{ 
-                        fontFamily: 'var(--font-mono)', 
-                        fontSize: '14px', 
-                        color: 'var(--text-dim)', 
-                        marginBottom: '40px',
-                        textAlign: 'center',
-                        opacity: 0.8
-                    }}>
-                        Currently serving select clients in hospitality and industrial sectors across India. <br />
-                        <span style={{ color: 'var(--brand-blue)', fontWeight: 600 }}>International onboarding open.</span>
-                    </p>
-                </motion.div>
+                    {/* Authority Signal */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.8, duration: 2 }}
+                        style={{ marginTop: '140px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                    >
+                        <div style={{ 
+                            width: '1px', height: '80px', 
+                            background: 'linear-gradient(to bottom, var(--brand-blue), transparent)',
+                            marginBottom: '32px'
+                        }} />
+                        <p style={{ 
+                            fontFamily: 'var(--font-mono)', 
+                            fontSize: '12px', 
+                            color: 'var(--text-muted)', 
+                            letterSpacing: '0.2em',
+                            textTransform: 'uppercase'
+                        }}>
+                            Currently Onboarding Global B2B SaaS Founders
+                        </p>
+                    </motion.div>
+                </div>
             </div>
         </section>
     );

@@ -18,9 +18,9 @@ const rows = [
         new: 'Semantic entity + information density'
     },
     {
-        metric: 'Indian market saturation',
-        old: '5M+ competing domains on Google',
-        new: 'Under 200 GEO-optimised brands in India today'
+        metric: 'Market saturation',
+        old: 'Millions of competing domains on Google',
+        new: 'Under 1,000 GEO-optimised B2B SaaS brands globally'
     },
     {
         metric: 'Long-term asset value',
@@ -38,7 +38,7 @@ export default function ProofSection() {
     return (
         <section id="solutions" style={{ paddingBottom: '140px', background: 'var(--bg)', position: 'relative' }}>
             <div className="container" style={{ padding: '140px 0 64px', display: 'flex', alignItems: 'flex-start', gap: '48px' }}>
-                <div style={{ fontSize: '14px', fontFamily: 'var(--font-mono)', letterSpacing: '2px', color: 'var(--brand-blue)', paddingTop: '6px', minWidth: '32px', opacity: 0.6 }}>
+                <div style={{ fontSize: '14px', fontFamily: 'var(--font-mono)', letterSpacing: '2px', color: 'var(--brand-blue)', paddingTop: '6px', minWidth: '32px', opacity: 0.8 }}>
                     02
                 </div>
                 <div style={{ flex: 1 }}>
@@ -93,8 +93,6 @@ export default function ProofSection() {
                                     Traditional Marketing
                                 </th>
                                 <th style={{
-                                    background: 'rgba(58, 190, 249, 0.03)', padding: '24px', textAlign: 'left',
-                                    fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase',
                                     color: 'var(--brand-blue)', borderBottom: '1px solid var(--border)', fontWeight: 700
                                 }}>
                                     itappens.ai GEO
@@ -133,16 +131,16 @@ export default function ProofSection() {
                     transition={{ delay: 0.4 }}
                     style={{
                         marginTop: '56px', padding: '40px', borderRadius: '24px', border: '1px solid var(--border)',
-                        background: 'rgba(57, 181, 73, 0.05)', display: 'flex', alignItems: 'flex-start', gap: '24px'
+                        background: 'rgba(0, 255, 143, 0.05)', display: 'flex', alignItems: 'flex-start', gap: '24px'
                     }}
                 >
-                    <div style={{ fontSize: '32px', flexShrink: 0 }}>🇮🇳</div>
+                    <div style={{ fontSize: '32px', flexShrink: 0 }}>🌍</div>
                     <div>
                         <div className="overline" style={{ fontSize: '12px', marginBottom: '12px', color: 'var(--brand-green)', backgroundColor: 'rgba(57, 181, 73, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
                             The Window Is Open
                         </div>
                         <p style={{ fontSize: '16px', color: 'var(--text-dim)', lineHeight: 1.8, opacity: 0.9 }}>
-                            With fewer than 200 Indian brands optimised for AI citations today, the arbitrage window is wide open. Brands that establish AI entity authority now will be treated as legacy experts by AI models for years. The window closes as GEO adoption accelerates.
+                            With fewer than 1,000 B2B SaaS brands globally optimised for AI citations today, the arbitrage window is wide open. Brands that establish AI entity authority now will be treated as legacy experts by AI models for years. The window closes as GEO adoption accelerates.
                         </p>
                     </div>
                 </motion.div>

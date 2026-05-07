@@ -12,12 +12,12 @@ export default function ProblemSection() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <span className="overline" style={{ color: 'var(--brand-red)', backgroundColor: 'rgba(244, 80, 80, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
+                        <span className="overline" style={{ color: 'var(--brand-pink)', backgroundColor: 'rgba(255, 0, 122, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
                             The Information Gap
                         </span>
                         <h2 className="headline-lg" style={{ marginTop: '24px', lineHeight: 1.1 }}>
                             If you aren't a primary source, <br />
-                            <span style={{ color: 'var(--brand-red)' }}>you don't exist.</span>
+                            <span style={{ color: 'var(--brand-pink)' }}>you don't exist.</span>
                         </h2>
                         <p className="text-sub" style={{ marginTop: '32px', fontSize: '17px', lineHeight: 1.7, opacity: 0.8 }}>
                             Traditional SEO is built for a world where humans click links. <br /><br />
@@ -37,7 +37,7 @@ export default function ProblemSection() {
                             {[
                                 { t: 'Hallucination Risk', d: 'Models guess your specs because facts aren\'t seeded.', color: 'var(--brand-yellow)' },
                                 { t: 'Citation Loss', d: 'Competitors are cited because their schema is machine-ready.', color: 'var(--brand-blue)' },
-                                { t: 'Entity Drift', d: 'AI confuses your brand with legacy data or competitors.', color: 'var(--brand-red)' }
+                                { t: 'Entity Drift', d: 'AI confuses your brand with legacy data or competitors.', color: 'var(--brand-pink)' }
                             ].map((item, i) => (
                                 <motion.div 
                                     key={i} 
