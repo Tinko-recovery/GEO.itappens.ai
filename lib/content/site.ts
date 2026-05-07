@@ -32,7 +32,7 @@ export const siteConfig: SiteConfig = {
   phone: "+91 93530 15844",
   city: "Bengaluru",
   country: "India",
-  sameAs: ["https://www.linkedin.com/company/itappens-ai/"],
+  sameAs: ["https://www.linkedin.com/company/itappens-ai/?viewAsMember=true"],
   description:
     "itappens.ai is a dedicated GEO (Generative Engine Optimisation) consultancy helping international B2B SaaS brands and growth-stage startups get cited as the default answer in ChatGPT, Perplexity, and Gemini.",
   founder: "Sadish Sugumaran",
