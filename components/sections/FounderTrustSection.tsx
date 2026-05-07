@@ -42,8 +42,8 @@ export default function FounderTrustSection() {
                             borderRadius: '16px',
                             boxShadow: 'var(--shadow-glow)'
                         }}>
-                            <p style={{ fontSize: '12px', fontWeight: 700, margin: 0 }}>Ex-Kyndryl</p>
-                            <p style={{ fontSize: '10px', color: 'var(--text-dim)', margin: 0 }}>Cloudera Infra Expert</p>
+                            <p style={{ fontSize: '12px', fontWeight: 700, margin: 0 }}>GEO Specialist</p>
+                            <p style={{ fontSize: '10px', color: 'var(--text-dim)', margin: 0 }}>B2B SaaS & Agentic Web</p>
                         </motion.div>
                     </div>
 
@@ -59,8 +59,8 @@ export default function FounderTrustSection() {
                         
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
                             <div>
-                                <h4 style={{ color: '#fff', marginBottom: '8px' }}>Kyndryl Heritage</h4>
-                                <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Leveraging infrastructure expertise to build robust data signals for AI crawlers.</p>
+                                <h4 style={{ color: '#fff', marginBottom: '8px' }}>Technical Foundation</h4>
+                                <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Deep infrastructure knowledge applied to building robust entity signals for AI crawlers.</p>
                             </div>
                             <div>
                                 <h4 style={{ color: '#fff', marginBottom: '8px' }}>Global Focus</h4>

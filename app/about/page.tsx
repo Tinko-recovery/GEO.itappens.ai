@@ -15,7 +15,7 @@ const aboutSchema = schemaGraph(
   personSchema({
     name: "Sadish Sugumaran",
     jobTitle: "Founder & GEO Consultant",
-    description: "IT professional transitioning from Cloudera infrastructure at Kyndryl to full-time GEO consultancy.",
+    description: "Founder of itappens.ai and dedicated GEO consultant, helping global B2B SaaS brands become the primary cited source in ChatGPT, Perplexity, and Gemini.",
     sameAs: ["https://www.linkedin.com/in/sadishsugumaran/"], // Placeholder LinkedIn
   })
 );
@@ -50,16 +50,16 @@ export default function AboutPage() {
 
         <section className="section" style={{ padding: '100px 0', borderTop: '1px solid var(--border)', background: 'var(--surface-alt)' }}>
           <div className="container" style={{ maxWidth: '800px' }}>
-            <h2 className="headline-md" style={{ marginBottom: '40px' }}>Professional Background</h2>
+            <h2 className="headline-md" style={{ marginBottom: '40px' }}>The Approach</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--text-dim)', fontSize: '18px', lineHeight: 1.8 }}>
               <p>
-                Sadish is an IT professional with extensive experience managing high-scale data infrastructure. His background at <strong>Kyndryl</strong>, specifically focusing on <strong>Cloudera infrastructure</strong>, provided the deep technical foundation required to understand how massive datasets are structured and queried.
+                Sadish founded itappens.ai with a single conviction: the next decade of brand discovery will be won not by ranking, but by <strong>being cited</strong>. As generative AI models become the primary interface for research and buying decisions, the brands that engineer their information for machine retrieval will dominate their categories.
               </p>
               <p>
-                Today, he is transitioning full-time into GEO consultancy, helping B2B SaaS brands bridge the gap between traditional search visibility and the new era of Agentic retrieval.
+                His work sits at the intersection of technical infrastructure and content strategy. Every engagement at itappens.ai is built around "Citation Engineering"—a systematic process of structuring brand data so that LLMs like ChatGPT, Perplexity, and Gemini can accurately retrieve, verify, and cite it.
               </p>
               <p>
-                At itappens.ai, Sadish leads the technical strategy for "Citation Engineering"—ensuring that brand entities are not just indexed, but correctly understood and cited by LLMs like ChatGPT, Perplexity, and Gemini.
+                itappens.ai serves B2B SaaS founders and growth teams across the US, UK, Australia, and India who need to move beyond traditional SEO and establish durable AI visibility before their category becomes saturated.
               </p>
             </div>
 

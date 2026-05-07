@@ -42,7 +42,6 @@ export const siteConfig: SiteConfig = {
     "Answer Engine Optimization (AEO)",
     "B2B SaaS Growth Strategy",
     "Large Language Model Citation Dynamics",
-    "Cloudera Infrastructure",
     "Semantic Data Engineering",
     "Technical SEO for Agentic Search",
   ],
