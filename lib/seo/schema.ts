@@ -20,6 +20,9 @@ type ArticleInput = {
 };
 
 type HowToInput = {
+  name: string;
+  description: string;
+  path: string;
   steps: HowToStep[];
 };
 
