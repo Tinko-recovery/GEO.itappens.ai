@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 
 export default function BrandLogo() {
     const colors = {
-        blue: '#3ABEF9',
-        yellow: '#F9D949',
-        red: '#F45050',
-        green: '#39B549'
+        blue: '#00a4bd',
+        yellow: '#ff9e48',
+        red: '#ff486d',
+        green: '#0E6B73'
     };
 
     const logoText = "itappens.ai";
