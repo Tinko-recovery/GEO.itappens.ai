@@ -1,82 +1,33 @@
 'use client';
 
-import { motion } from 'framer-motion';
-
-export default function BrandLogo() {
-    const colors = {
-        blue: '#00a4bd',
-        yellow: '#ff9e48',
-        red: '#ff486d',
-        green: '#0E6B73'
-    };
-
-    const logoText = "itappens.ai";
-
-    const getLetterColor = (char: string, index: number) => {
-        const colorSequence = [colors.blue, colors.yellow, colors.red, colors.green];
-        return colorSequence[index % colorSequence.length];
-    };
-
+export default function BrandLogo({ color = "white" }: { color?: string }) {
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <motion.svg 
-                width="36" 
-                height="36" 
-                viewBox="0 0 64 64" 
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Corporate Spark Icon */}
+            <svg 
+                width="28" 
+                height="28" 
+                viewBox="0 0 32 32" 
                 fill="none" 
                 xmlns="http://www.w3.org/2000/svg"
-                animate={{ 
-                    rotate: [0, 5, -5, 0],
-                    scale: [1, 1.05, 1]
-                }}
-                transition={{ 
-                    duration: 4, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
-                }}
             >
-                <circle cx="32" cy="14" r="6" fill={colors.blue}/>
-                <circle cx="47" cy="42" r="6" fill={colors.red}/>
-                <circle cx="17" cy="42" r="6" fill={colors.green}/>
-                <circle cx="32" cy="32" r="4" fill="white" fillOpacity="0.2"/>
-                <motion.path 
-                    d="M32 14 L47 42 L17 42 Z" 
-                    stroke="white" 
-                    strokeOpacity="0.1" 
-                    strokeWidth="1"
-                    animate={{ opacity: [0.1, 0.3, 0.1] }}
-                    transition={{ duration: 3, repeat: Infinity }}
+                <path 
+                    d="M16 2L19.5 12.5L30 16L19.5 19.5L16 30L12.5 19.5L2 16L12.5 12.5L16 2Z" 
+                    fill="var(--cyan, #00C2FF)" 
                 />
-            </motion.svg>
+                <circle cx="16" cy="16" r="4" fill="white" fillOpacity="0.3" />
+            </svg>
             
             <div style={{ 
                 fontFamily: 'var(--font-display)', 
-                fontWeight: 900, 
-                fontSize: '24px', 
-                color: 'var(--text)',
-                letterSpacing: '-0.04em',
+                fontWeight: 800, 
+                fontSize: '22px', 
+                color: color,
+                letterSpacing: '-0.03em',
                 display: 'flex',
-                alignItems: 'baseline'
+                alignItems: 'center'
             }}>
-                {logoText.split('').map((char, index) => (
-                    <motion.span
-                        key={index}
-                        initial={{ y: 0 }}
-                        animate={{ 
-                            y: [0, -3, 0],
-                            color: [getLetterColor(char, index), getLetterColor(char, index + 1), getLetterColor(char, index)]
-                        }}
-                        transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            delay: index * 0.1,
-                            ease: "easeInOut"
-                        }}
-                        style={{ color: getLetterColor(char, index), display: 'inline-block' }}
-                    >
-                        {char}
-                    </motion.span>
-                ))}
+                itappens.ai
             </div>
         </div>
     );

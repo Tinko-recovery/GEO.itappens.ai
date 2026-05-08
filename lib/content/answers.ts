@@ -607,7 +607,7 @@ export const answerPages: AnswerPage[] = [
         heading: "The ROI of GEO for SaaS: Conversion over Clicks",
         paragraphs: [
           "Traffic from AI search is pre-filtered. When a user asks an AI for a solution and the AI recommends your brand, the intent is significantly higher than a generic search click. itappens.ai clients often see citation-driven traffic convert at 4-5x traditional rates because the AI has already 'vouched' for the brand.",
-          "As a GEO consultant, I work with B2B founders to identify the 'Citation Value' of their existing assets. We take your whitepapers, case studies, and documentation and turn them into machine-extractable nodes that AI models can use to back up their answers.",
+          "As a GEO consultancy, itappens.ai works with B2B founders to identify the 'Citation Value' of their existing assets. We take your whitepapers, case studies, and documentation and turn them into machine-extractable nodes that AI models can use to back up their answers.",
         ],
       },
       {

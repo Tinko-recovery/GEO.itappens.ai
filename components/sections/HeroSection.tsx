@@ -1,126 +1,128 @@
 'use client';
 import { motion } from 'framer-motion';
 
+const platforms = ["ChatGPT", "Perplexity", "Gemini", "Claude", "SearchGPT", "Grok"];
+
 export default function HeroSection() {
     return (
         <section id="hero" style={{
             minHeight: '100vh',
-            padding: '180px 0 120px',
+            padding: '180px 0 100px',
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: 'var(--bg)',
+            backgroundColor: 'var(--navy)',
             overflow: 'hidden',
             position: 'relative',
         }}>
-            {/* Ultra-Premium Agentic Background */}
+            {/* Corporate Background Pattern */}
             <div style={{
                 position: 'absolute',
                 top: 0, left: 0, right: 0, bottom: 0,
                 background: `
-                    radial-gradient(circle at 15% 15%, rgba(0, 245, 255, 0.08) 0%, transparent 40%),
-                    radial-gradient(circle at 85% 85%, rgba(255, 0, 122, 0.08) 0%, transparent 40%),
-                    radial-gradient(circle at 50% 50%, rgba(10, 10, 20, 1) 0%, transparent 100%)
+                    radial-gradient(circle at 10% 20%, rgba(27, 79, 222, 0.1) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(0, 194, 255, 0.05) 0%, transparent 40%)
                 `,
                 zIndex: 0
             }} />
             
-            {/* Moving Grid Pattern */}
-            <div style={{
-                position: 'absolute',
-                top: 0, left: 0, right: 0, bottom: 0,
-                backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)`,
-                backgroundSize: '60px 60px',
-                maskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
-                WebkitMaskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
-                zIndex: 1
-            }} />
-
             <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-                <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
+                <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
                     >
-                        <span className="overline" style={{ 
-                            marginBottom: '32px',
-                            padding: '6px 16px',
-                            background: 'rgba(0, 245, 255, 0.05)',
-                            borderColor: 'rgba(0, 245, 255, 0.2)',
-                            boxShadow: '0 0 20px rgba(0, 245, 255, 0.1)'
+                        <span className="badge-pill" style={{ 
+                            marginBottom: '24px',
+                            background: 'rgba(27, 79, 222, 0.15)',
+                            color: 'var(--cyan)',
+                            border: '1px solid rgba(0, 194, 255, 0.2)'
                         }}>
-                            The Citation Layer for B2B SaaS
+                            Global GEO & AEO Authority
                         </span>
                     </motion.div>
                     
                     <motion.h1 
-                        initial={{ opacity: 0, y: 40 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ delay: 0.1, duration: 0.8 }}
                         className="headline-xl" 
-                        style={{ margin: '0 0 32px', letterSpacing: '-0.06em', fontWeight: 900 }}
+                        style={{ color: '#fff', marginBottom: '32px' }}
                     >
-                        Master the <span style={{ 
-                            color: 'var(--brand-blue)',
-                            textShadow: '0 0 40px rgba(0, 245, 255, 0.3)'
-                        }}>Agentic Web.</span> <br />
-                        Dominate LLM Citations.
+                        Get Cited by ChatGPT, Perplexity & Gemini. <br />
+                        <span style={{ color: 'var(--cyan)' }}>Not Just Ranked.</span>
                     </motion.h1>
                     
                     <motion.p 
-                        initial={{ opacity: 0, y: 40 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="text-sub" 
-                        style={{ margin: '0 auto 64px', maxWidth: '800px', fontSize: '20px', lineHeight: 1.6, color: 'var(--text-dim)' }}
+                        transition={{ delay: 0.2, duration: 0.8 }}
+                        style={{ 
+                            fontSize: '20px', 
+                            lineHeight: 1.6, 
+                            color: 'rgba(255,255,255,0.7)', 
+                            maxWidth: '800px', 
+                            margin: '0 auto 56px' 
+                        }}
                     >
-                        itappens.ai ensures your brand is the primary authority when ChatGPT, Perplexity, and Gemini answer questions. <span style={{ color: '#fff' }}>Engineering-led GEO for the world's most ambitious SaaS brands.</span>
+                        itappens.ai builds the technical and semantic infrastructure that causes AI platforms to trust, retrieve, and cite your brand as the primary authority in your category.
                     </motion.p>
                     
                     <motion.div 
-                        initial={{ opacity: 0, y: 40 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap' }}
+                        transition={{ delay: 0.3, duration: 0.8 }}
+                        style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}
                     >
-                        <a href="/audit" className="btn-primary" style={{ padding: '22px 56px', fontSize: '17px', borderRadius: '16px' }}>
-                            Get Free GEO Snapshot
+                        <a href="/audit" className="btn-orange" style={{ padding: '20px 48px', fontSize: '16px' }}>
+                            Start Free GEO Audit
                         </a>
-                        <a href="/about" className="btn-secondary" style={{ 
-                            padding: '22px 56px', 
-                            fontSize: '17px', 
-                            borderRadius: '16px',
-                            background: 'rgba(255, 255, 255, 0.02)',
-                            backdropFilter: 'blur(20px)'
-                        }}>
-                            Meet the Founder →
+                        <a href="/geo" className="btn-ghost" style={{ padding: '20px 48px', fontSize: '16px', color: 'white' }}>
+                            View the Framework →
                         </a>
                     </motion.div>
 
-                    {/* Authority Signal */}
+                    {/* Platform Trust Bar */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.8, duration: 2 }}
-                        style={{ marginTop: '140px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                        transition={{ delay: 0.6, duration: 1 }}
+                        style={{ marginTop: '100px' }}
                     >
-                        <div style={{ 
-                            width: '1px', height: '80px', 
-                            background: 'linear-gradient(to bottom, var(--brand-blue), transparent)',
-                            marginBottom: '32px'
-                        }} />
                         <p style={{ 
-                            fontFamily: 'var(--font-mono)', 
                             fontSize: '12px', 
-                            color: 'var(--text-muted)', 
-                            letterSpacing: '0.2em',
-                            textTransform: 'uppercase'
+                            fontWeight: 700, 
+                            color: 'rgba(255,255,255,0.4)', 
+                            textTransform: 'uppercase', 
+                            letterSpacing: '0.15em',
+                            marginBottom: '32px'
                         }}>
-                            Currently Onboarding Global B2B SaaS Founders
+                            Optimizing Citations Across
                         </p>
+                        <div style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center', 
+                            gap: '48px', 
+                            flexWrap: 'wrap',
+                            opacity: 0.6
+                        }}>
+                            {platforms.map(p => (
+                                <span key={p} style={{ 
+                                    color: 'white', 
+                                    fontSize: '18px', 
+                                    fontWeight: 700, 
+                                    fontFamily: 'var(--font-display)',
+                                    letterSpacing: '-0.02em'
+                                }}>
+                                    {p}
+                                </span>
+                            ))}
+                        </div>
                     </motion.div>
                 </div>
             </div>
         </section>
     );
 }
+

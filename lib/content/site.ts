@@ -8,8 +8,6 @@ export interface SiteConfig {
   country: string;
   sameAs: string[];
   description: string;
-  founder: string;
-  founderEmail: string;
   knowsAbout: string[];
 }
 
@@ -35,8 +33,6 @@ export const siteConfig: SiteConfig = {
   sameAs: ["https://www.linkedin.com/company/itappens-ai/?viewAsMember=true"],
   description:
     "itappens.ai is a dedicated GEO (Generative Engine Optimisation) consultancy helping international B2B SaaS brands and growth-stage startups get cited as the default answer in ChatGPT, Perplexity, and Gemini.",
-  founder: "Sadish Sugumaran",
-  founderEmail: "founder@tinko.in",
   knowsAbout: [
     "Generative Engine Optimization (GEO)",
     "Answer Engine Optimization (AEO)",
@@ -44,6 +40,7 @@ export const siteConfig: SiteConfig = {
     "Large Language Model Citation Dynamics",
     "Semantic Data Engineering",
     "Technical SEO for Agentic Search",
+    "Technical SEO for AI Engines",
   ],
 };
 

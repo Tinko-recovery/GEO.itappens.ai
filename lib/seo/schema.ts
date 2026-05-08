@@ -26,13 +26,6 @@ type HowToInput = {
   steps: HowToStep[];
 };
 
-type PersonInput = {
-  name: string;
-  jobTitle: string;
-  description: string;
-  sameAs: string[];
-};
-
 export function organizationSchema(): Schema {
   return {
     "@type": "Organization",
@@ -47,33 +40,12 @@ export function organizationSchema(): Schema {
     sameAs: siteConfig.sameAs,
     areaServed: "Worldwide",
     foundingDate: "2025",
-    founder: {
-      "@type": "Person",
-      "@id": `${siteConfig.url}/#person`,
-      name: siteConfig.founder,
-      email: siteConfig.founderEmail,
-    },
     knowsAbout: siteConfig.knowsAbout,
     address: {
       "@type": "PostalAddress",
       addressLocality: siteConfig.city,
       addressRegion: "Karnataka",
       addressCountry: "IN",
-    },
-  };
-}
-
-export function personSchema(input: PersonInput): Schema {
-  return {
-    "@type": "Person",
-    "@id": `${siteConfig.url}/#person`,
-    name: input.name,
-    jobTitle: input.jobTitle,
-    description: input.description,
-    sameAs: input.sameAs,
-    knowsAbout: siteConfig.knowsAbout,
-    worksFor: {
-      "@id": `${siteConfig.url}/#organization`,
     },
   };
 }

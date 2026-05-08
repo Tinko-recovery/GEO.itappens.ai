@@ -5,9 +5,9 @@ import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import HeroSection from "@/components/sections/HeroSection";
 import ProblemSection from "@/components/sections/ProblemSection";
+import SolutionSection from "@/components/sections/SolutionSection";
 import ProofSection from "@/components/sections/ProofSection";
-import GEOExplanation from "@/components/sections/GEOExplanation";
-import FounderTrustSection from "@/components/sections/FounderTrustSection"; // Company Credibility Section
+import PricingSection from "@/components/sections/PricingSection";
 import AuditForm from "@/components/AuditForm";
 import { homepageFaqs } from "@/lib/content/site";
 import { buildMetadata } from "@/lib/seo/metadata";
@@ -38,74 +38,64 @@ export default function HomePage() {
   return (
     <div className="page-shell">
       <JsonLd data={homepageSchema} />
-      <Suspense fallback={<div className="h-20 bg-surface animate-pulse" />}>
+      <Suspense fallback={<div className="h-20 bg-slate-900 animate-pulse" />}>
         <NavBar />
       </Suspense>
       
       <main>
         <HeroSection />
         <ProblemSection />
-        <FounderTrustSection />
+        <SolutionSection />
         <ProofSection />
-        <GEOExplanation />
+        <PricingSection />
 
         {/* Integrated Audit Section */}
-        <section id="pricing" style={{ padding: '140px 0', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
-          <div className="container grid-2col" style={{ gap: '100px', alignItems: 'center' }}>
+        <section id="audit" className="dark-section" style={{ padding: '120px 0' }}>
+          <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'center' }}>
             <div>
-              <span className="overline" style={{ color: 'var(--brand-blue)', backgroundColor: 'rgba(58, 190, 249, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
-                Free AI Audit
+              <span className="badge-pill" style={{ marginBottom: '24px', background: 'rgba(255,255,255,0.1)', color: 'var(--cyan)' }}>
+                Free Intelligence Audit
               </span>
-              <h2 className="headline-lg" style={{ marginTop: '24px', lineHeight: 1.1 }}>
+              <h2 className="headline-lg">
                 See where your brand stands <br />
-                <span style={{ 
-                  background: 'linear-gradient(to right, var(--brand-blue), var(--brand-green))',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}>across AI engines today.</span>
+                <span style={{ color: 'var(--cyan)' }}>across AI engines today.</span>
               </h2>
-              <p className="text-sub" style={{ marginTop: '32px', fontSize: '17px', opacity: 0.8 }}>
-                The snapshot captures your current answer-engine visibility, highlights missing technical signals, and identifies the first query cluster to ship.
+              <p className="text-large" style={{ color: 'rgba(255,255,255,0.7)', marginTop: '24px' }}>
+                Our proprietary snapshot captures your current answer-engine visibility, highlights entity drift, and identifies the exact query clusters you need to own.
               </p>
-              <ul className="check-list" style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <ul style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '16px', listStyle: 'none', padding: 0 }}>
                 {[
-                  "Baseline prompts across the major answer engines",
-                  "Canonical and schema gap review",
-                  "Priority recommendations for the first 90 days"
+                  "Baseline prompts across ChatGPT & Perplexity",
+                  "Entity schema and canonical gap report",
+                  "Priority roadmap for the first 90 days"
                 ].map((item, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-dim)', fontSize: '15px' }}>
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--brand-blue)' }} />
+                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '15px' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="card-glass" style={{ padding: '48px', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'linear-gradient(to right, var(--brand-blue), var(--brand-green), var(--brand-yellow), var(--brand-red))' }} />
+            <div className="card-corporate" style={{ padding: '48px', color: 'var(--slate-dark)' }}>
               <AuditForm />
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
-        <section className="section" style={{ padding: '140px 0', background: 'var(--surface-alt)', borderTop: '1px solid var(--border)' }}>
+        <section style={{ padding: '120px 0', backgroundColor: '#fff' }}>
           <div className="container" style={{ maxWidth: '800px' }}>
             <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-              <span className="overline" style={{ color: 'var(--brand-yellow)', backgroundColor: 'rgba(249, 217, 73, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
-                FAQ
-              </span>
-              <h2 className="headline-lg" style={{ marginTop: '24px', lineHeight: 1.1 }}>
-                Questions that buyers and <br />
-                <span style={{ color: 'var(--brand-yellow)' }}>AI systems both need resolved.</span>
-              </h2>
+              <span className="badge-pill" style={{ marginBottom: '24px' }}>Expertise</span>
+              <h2 className="headline-lg">Frequently Asked Questions</h2>
             </div>
-            <ul className="faq-list" style={{ listStyle: 'none' }}>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
               {homepageFaqs.map((item) => (
                 <li key={item.question} style={{ padding: '32px 0', borderBottom: '1px solid var(--border)' }}>
-                  <h3 className="faq-question" style={{ fontSize: '19px', fontWeight: 700, marginBottom: '16px', color: 'var(--text)' }}>{item.question}</h3>
-                  <div className="faq-answer">
-                    <p style={{ color: 'var(--text-dim)', fontSize: '16px', lineHeight: 1.7, opacity: 0.8 }}>{item.answer}</p>
-                  </div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '16px' }}>{item.question}</h3>
+                  <p style={{ color: 'var(--slate)', fontSize: '16px', lineHeight: 1.7 }}>{item.answer}</p>
                 </li>
               ))}
             </ul>
@@ -113,10 +103,11 @@ export default function HomePage() {
         </section>
       </main>
 
-      <Suspense fallback={<div className="h-40 bg-surface" />}>
+      <Suspense fallback={<div className="h-40 bg-slate-900" />}>
         <SiteFooter />
       </Suspense>
     </div>
   );
 }
+
 

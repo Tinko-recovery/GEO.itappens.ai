@@ -1,62 +1,51 @@
 'use client';
 import { motion } from 'framer-motion';
 
+const problems = [
+    {
+        title: "Citation Blindness",
+        description: "Your brand is mentioned, but not cited. AI engines synthesize your knowledge without giving you credit, killing your downstream conversion.",
+        icon: "🚫"
+    },
+    {
+        title: "Entity Confusion",
+        description: "AI crawlers see conflicting data across your site and socials. They default to the most 'consistent' answer, even if it's incorrect or outdated.",
+        icon: "🕵️"
+    },
+    {
+        title: "Competitor Capture",
+        description: "Your competitors are already optimizing for LLM retrieval. If they own the citation layer, they own your market's trust by default.",
+        icon: "📉"
+    }
+];
+
 export default function ProblemSection() {
     return (
-        <section id="problem" style={{ padding: '140px 0', background: 'var(--bg)', position: 'relative', borderTop: '1px solid var(--border)' }}>
+        <section id="solutions" style={{ padding: '120px 0', backgroundColor: '#fff' }}>
             <div className="container">
-                <div className="grid-2col" style={{ gap: '100px', alignItems: 'center' }}>
-                    <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                        <span className="overline" style={{ color: 'var(--brand-pink)', backgroundColor: 'rgba(255, 0, 122, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
-                            The Information Gap
-                        </span>
-                        <h2 className="headline-lg" style={{ marginTop: '24px', lineHeight: 1.1 }}>
-                            If you aren't a primary source, <br />
-                            <span style={{ color: 'var(--brand-pink)' }}>you don't exist.</span>
-                        </h2>
-                        <p className="text-sub" style={{ marginTop: '32px', fontSize: '17px', lineHeight: 1.7, opacity: 0.8 }}>
-                            Traditional SEO is built for a world where humans click links. <br /><br />
-                            <strong>The 'Blind Spot':</strong> AI models like Perplexity don't search; they synthesize. They ignore rank in favor of entity-authority. If your brand data isn't structured for their reasoning engines, you are invisible to the next generation of buyers.
-                        </p>
-                    </motion.div>
+                <div style={{ textAlign: 'center', marginBottom: '80px', maxWidth: '800px', margin: '0 auto 80px' }}>
+                    <span className="badge-pill" style={{ marginBottom: '24px' }}>The Core Challenge</span>
+                    <h2 className="headline-lg">Traditional SEO is no longer enough.</h2>
+                    <p className="text-large">
+                        Google is becoming an answer engine. ChatGPT and Perplexity are becoming the first touchpoint. If your brand isn't structured for <strong>Agentic Retrieval</strong>, you're invisible.
+                    </p>
+                </div>
 
-                    <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        className="card-glass"
-                        style={{ padding: '56px' }}
-                    >
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
-                            {[
-                                { t: 'Hallucination Risk', d: 'Models guess your specs because facts aren\'t seeded.', color: 'var(--brand-yellow)' },
-                                { t: 'Citation Loss', d: 'Competitors are cited because their schema is machine-ready.', color: 'var(--brand-blue)' },
-                                { t: 'Entity Drift', d: 'AI confuses your brand with legacy data or competitors.', color: 'var(--brand-pink)' }
-                            ].map((item, i) => (
-                                <motion.div 
-                                    key={i} 
-                                    style={{ display: 'flex', gap: '24px' }}
-                                    whileHover={{ x: 10 }}
-                                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                                >
-                                    <div style={{ 
-                                        width: '4px', height: 'auto', borderRadius: '4px', 
-                                        background: item.color, flexShrink: 0
-                                    }} />
-                                    <div>
-                                        <h4 style={{ fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '8px' }}>{item.t}</h4>
-                                        <p style={{ fontSize: '15px', color: 'var(--text-dim)', lineHeight: 1.6 }}>{item.d}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
+                <div className="bento-grid">
+                    {problems.map((p, i) => (
+                        <motion.div 
+                            key={i} 
+                            className="card-corporate"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1 }}
+                        >
+                            <div style={{ fontSize: '40px', marginBottom: '24px' }}>{p.icon}</div>
+                            <h3 style={{ fontSize: '22px', marginBottom: '16px' }}>{p.title}</h3>
+                            <p style={{ color: 'var(--slate)', lineHeight: 1.7 }}>{p.description}</p>
+                        </motion.div>
+                    ))}
                 </div>
             </div>
         </section>
