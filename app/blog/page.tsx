@@ -86,7 +86,7 @@ export default function BlogPage() {
     <div className="page-shell">
       <NavBar />
       <main>
-        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--bg)' }}>
+        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--navy)', color: 'white' }}>
           <div className="container">
             <div style={{ maxWidth: '800px' }}>
               <span className="overline">GEO Blog</span>
@@ -94,7 +94,7 @@ export default function BlogPage() {
                 AI Search Visibility. <br />
                 <span style={{ color: 'var(--accent)' }}>Written for Indian Brands.</span>
               </h1>
-              <p className="text-sub" style={{ marginBottom: '40px' }}>
+              <p className="text-sub" style={{ marginBottom: '40px', color: 'rgba(255,255,255,0.7)' }}>
                 In-depth articles on Generative Engine Optimization, LLM citation strategy, and entity architecture for the AI-first internet.
               </p>
             </div>

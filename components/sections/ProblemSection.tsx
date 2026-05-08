@@ -21,7 +21,7 @@ const problems = [
 
 export default function ProblemSection() {
     return (
-        <section id="solutions" style={{ padding: '120px 0', backgroundColor: '#fff' }}>
+        <section id="problem" style={{ padding: '120px 0', backgroundColor: '#fff' }}>
             <div className="container">
                 <div style={{ textAlign: 'center', marginBottom: '80px', maxWidth: '800px', margin: '0 auto 80px' }}>
                     <span className="badge-pill" style={{ marginBottom: '24px' }}>The Core Challenge</span>

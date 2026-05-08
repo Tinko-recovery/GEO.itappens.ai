@@ -38,7 +38,7 @@ export default function GeoPage() {
       <JsonLd data={geoSchema} />
       <NavBar />
       <main>
-        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--bg)' }}>
+        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--navy)', color: 'white' }}>
           <div className="container">
             <div style={{ maxWidth: '800px' }}>
               <span className="overline">/geo system</span>
@@ -46,7 +46,7 @@ export default function GeoPage() {
                 The four-pillar GEO system <br />
                 <span style={{ color: 'var(--accent)' }}>for the AI-First Internet.</span>
               </h1>
-              <p className="text-sub" style={{ marginBottom: '40px' }}>
+              <p className="text-sub" style={{ marginBottom: '40px', color: 'rgba(255,255,255,0.7)' }}>
                 itappens.ai combines Technical Signals, answer-engine content, entity-building, and tracking into one operating
                 model for brands that want to become the default answer across major AI platforms.
               </p>

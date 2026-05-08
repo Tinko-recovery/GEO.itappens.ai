@@ -3,22 +3,19 @@
 import { useEffect, useState } from "react";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import BrandLogo from "./BrandLogo";
-
-const links = [
-  { label: "Solutions", href: "/#solutions", id: "solutions" },
-  { label: "How it Works", href: "/#how-it-works", id: "how-it-works" },
-  { label: "Pricing", href: "/#pricing", id: "pricing" },
-  { label: "About", href: "/about" },
-  { label: "Audit", href: "/audit" },
-  { label: "GEO", href: "/geo" },
-];
+import { primaryNav } from "@/lib/content/site";
 
 export default function NavBar() {
   const { user, isLoading } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  // On non-homepage, we want a dark background by default for visibility
+  const isHome = pathname === "/";
+  const showBg = scrolled || !isHome;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,33 +35,32 @@ export default function NavBar() {
         right: 0,
         zIndex: 1000,
         transition: "all 0.3s ease",
-        backgroundColor: scrolled ? "var(--navy)" : "transparent",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.1)" : "none",
-        padding: "16px 0",
+        backgroundColor: showBg ? "rgba(10, 15, 30, 0.95)" : "transparent",
+        backdropFilter: showBg ? "blur(12px)" : "none",
+        borderBottom: showBg ? "1px solid rgba(255,255,255,0.1)" : "none",
+        padding: showBg ? "12px 0" : "20px 0",
       }}
     >
       <div className="container" style={{ display: "flex", alignItems: "center" }}>
-        <a href="/" style={{ textDecoration: "none" }}>
+        <Link href="/" style={{ textDecoration: "none" }}>
           <BrandLogo color="white" />
-        </a>
+        </Link>
 
-        <div className="desktop-nav" style={{ display: "flex", gap: "32px", marginLeft: "48px" }}>
-          {links.map((link) => (
-            <a
+        <div className="desktop-nav" style={{ display: "flex", gap: "24px", marginLeft: "48px" }}>
+          {primaryNav.map((link) => (
+            <Link
               key={link.href}
               href={link.href}
               style={{
                 fontSize: "14px",
                 fontWeight: 600,
-                color: "rgba(255,255,255,0.8)",
+                color: pathname === link.href ? "var(--cyan)" : "rgba(255,255,255,0.8)",
                 textDecoration: "none",
                 transition: "color 0.2s ease",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "white")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.8)")}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -74,17 +70,17 @@ export default function NavBar() {
           <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             {!isLoading && (
               user ? (
-                <a href="/itcontents" className="btn-blue" style={{ padding: '10px 20px', fontSize: '14px' }}>
+                <Link href="/itcontents" className="btn-blue" style={{ padding: '10px 20px', fontSize: '14px' }}>
                   Dashboard
-                </a>
+                </Link>
               ) : (
                 <>
-                  <a href="/auth/login" style={{ color: 'white', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
+                  <Link href="/auth/login" style={{ color: 'white', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
                     Log In
-                  </a>
-                  <a href="/audit" className="btn-orange" style={{ padding: '10px 24px', fontSize: '14px' }}>
+                  </Link>
+                  <Link href="/audit" className="btn-orange" style={{ padding: '10px 24px', fontSize: '14px' }}>
                     Start Free Audit
-                  </a>
+                  </Link>
                 </>
               )
             )}
@@ -119,20 +115,20 @@ export default function NavBar() {
           gap: "20px",
           zIndex: 999
         }}>
-          {links.map((link) => (
-            <a 
+          {primaryNav.map((link) => (
+            <Link 
               key={link.href} 
               href={link.href} 
               onClick={() => setMobileMenuOpen(false)} 
               style={{ color: "white", textDecoration: "none", fontSize: "16px", fontWeight: 600 }}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
           <div style={{ paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <a href="/audit" className="btn-orange" style={{ justifyContent: 'center' }}>
+            <Link href="/audit" className="btn-orange" style={{ justifyContent: 'center' }} onClick={() => setMobileMenuOpen(false)}>
               Start Free Audit
-            </a>
+            </Link>
           </div>
         </div>
       )}

@@ -28,21 +28,21 @@ export default function AuditPage() {
       <NavBar />
       <main>
         {/* Header Hero Section */}
-        <header className="section" style={{ padding: '120px 0 80px', backgroundColor: 'var(--bg)', position: 'relative' }}>
+        <header className="section" style={{ padding: '160px 0 80px', backgroundColor: 'var(--navy)', color: 'white', position: 'relative' }}>
           <div className="container grid-2col" style={{ gap: '80px', alignItems: 'flex-start' }}>
             <div style={{ display: 'flex', flexDirection: 'column', paddingTop: '40px' }}>
-              <span className="overline" style={{ color: 'var(--brand-blue)', backgroundColor: 'rgba(58, 190, 249, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block', width: 'fit-content' }}>
+              <span className="overline" style={{ color: 'var(--cyan)', backgroundColor: 'rgba(0, 194, 255, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block', width: 'fit-content' }}>
                 Diagnostic Engine
               </span>
-              <h1 className="headline-xl" style={{ margin: '32px 0', letterSpacing: '-0.04em', lineHeight: 1.05 }}>
+              <h1 className="headline-xl" style={{ margin: '32px 0', letterSpacing: '-0.04em', lineHeight: 1.05, color: 'white' }}>
                 Benchmark your <br />
                 <span style={{ 
-                  background: 'linear-gradient(to right, var(--brand-blue), var(--brand-green))',
+                  background: 'linear-gradient(to right, var(--cyan), var(--blue))',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}>AI Visibility Index.</span>
               </h1>
-              <p className="text-sub" style={{ marginBottom: '40px', fontSize: '18px', opacity: 0.8, maxWidth: '540px' }}>
+              <p className="text-sub" style={{ marginBottom: '40px', fontSize: '18px', opacity: 0.8, maxWidth: '540px', color: 'rgba(255,255,255,0.7)' }}>
                 See exactly how ChatGPT, Perplexity, and SearchGPT perceive your brand. Our audit engine identifies technical gaps, entity drift, and citation opportunities.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -53,9 +53,9 @@ export default function AuditPage() {
                     gap: '12px', 
                     fontSize: '14px',
                     fontWeight: 500,
-                    color: 'var(--text-dim)'
+                    color: 'rgba(255,255,255,0.7)'
                   }}>
-                    <CheckCircle2 className="h-5 w-5" style={{ color: 'var(--brand-green)', flexShrink: 0 }} />
+                    <CheckCircle2 className="h-5 w-5" style={{ color: 'var(--cyan)', flexShrink: 0 }} />
                     <span>{item}</span>
                   </div>
                 ))}

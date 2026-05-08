@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { primaryNav, siteConfig } from "@/lib/content/site";
 import BrandLogo from "./BrandLogo";
 
@@ -6,9 +7,9 @@ export default function SiteFooter() {
     <footer style={{ backgroundColor: "var(--navy)", color: "white", padding: "100px 0 60px" }}>
       <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "64px" }}>
         <div style={{ gridColumn: "span 2" }}>
-          <a href="/" style={{ textDecoration: "none", display: "inline-block", marginBottom: 32 }}>
+          <Link href="/" style={{ textDecoration: "none", display: "inline-block", marginBottom: 32 }}>
             <BrandLogo color="white" />
-          </a>
+          </Link>
           <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.6)", maxWidth: "400px" }}>
             The Global Authority in Generative Engine Optimization. We help B2B SaaS brands become the primary cited authority in the AI era.
           </p>
@@ -19,9 +20,9 @@ export default function SiteFooter() {
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 14 }}>
             {primaryNav.map((item) => (
               <li key={item.href}>
-                <a href={item.href} style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 15 }}>
+                <Link href={item.href} style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 15 }}>
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -49,8 +50,8 @@ export default function SiteFooter() {
           &copy; {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved.
         </p>
         <div style={{ display: "flex", gap: 32 }}>
-          <a href="/privacy" style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>Privacy Policy</a>
-          <a href="/terms" style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>Terms of Service</a>
+          <Link href="/privacy" style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>Privacy Policy</Link>
+          <Link href="/terms" style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>Terms of Service</Link>
         </div>
       </div>
     </footer>

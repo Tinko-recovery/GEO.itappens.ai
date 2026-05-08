@@ -96,9 +96,9 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
         name: values.name,
         email: values.email,
         company: values.company,
-        website: values.website,
+        siteUrl: values.website,
         industry: values.industry,
-        targetQueries: [values.query1, values.query2, values.query3].filter(Boolean),
+        targetKeywords: [values.query1, values.query2, values.query3].filter(Boolean),
         captchaToken: captcha.token,
         captchaAnswer: values.captchaAnswer,
       };
