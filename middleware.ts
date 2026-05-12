@@ -51,8 +51,10 @@ export async function middleware(request: NextRequest) {
   }
 
   // 3. Auth0 v4 Middleware
-  const publicRoutes = ["/", "/onboard", "/docs", "/geo", "/how-it-works", "/privacy"];
-  if (publicRoutes.includes(pathname)) {
+  const protectedPrefixes = ["/dashboard", "/client"];
+  const isProtected = protectedPrefixes.some(prefix => pathname === prefix || pathname.startsWith(`${prefix}/`));
+
+  if (!isProtected) {
     return NextResponse.next();
   }
 
