@@ -205,19 +205,28 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
   }
 
   return (
-    <div className="card-glass" style={{ padding: '0', overflow: 'hidden', border: '1px solid var(--border)', width: '100%' }}>
+    <div className="card-glass" style={{ 
+      padding: '0', 
+      overflow: 'hidden', 
+      border: '1px solid rgba(255,255,255,0.15)', 
+      borderRadius: '24px',
+      backgroundColor: '#ffffff', 
+      color: '#0F172A',
+      width: '100%',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+    }}>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div style={{ padding: '32px 40px', borderBottom: '1px solid var(--border)', background: 'rgba(255, 255, 255, 0.01)' }}>
-          <TabsList className="grid w-full grid-cols-2 mb-6" style={{ backgroundColor: 'var(--surface)', borderRadius: '12px', padding: '4px' }}>
-            <TabsTrigger value="free" style={{ borderRadius: '8px', fontSize: '13px', fontWeight: 600 }}>Quick Free Snapshot</TabsTrigger>
-            <TabsTrigger value="paid" style={{ borderRadius: '8px', fontSize: '13px', fontWeight: 600 }}>Deep Paid Audit</TabsTrigger>
+        <div style={{ padding: '32px 40px', borderBottom: '1px solid #E2E8F0', backgroundColor: '#F8FAFF' }}>
+          <TabsList className="grid w-full grid-cols-2 mb-6" style={{ backgroundColor: '#E2E8F0', borderRadius: '12px', padding: '4px' }}>
+            <TabsTrigger value="free" style={{ borderRadius: '8px', fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>Quick Free Snapshot</TabsTrigger>
+            <TabsTrigger value="paid" style={{ borderRadius: '8px', fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>Deep Paid Audit</TabsTrigger>
           </TabsList>
           
           <Badge variant="accent" className="mb-4">Diagnostic Intake</Badge>
-          <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text)', margin: '0 0 8px 0' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0F172A', margin: '0 0 8px 0' }}>
             {activeTab === 'free' ? 'GEO Score Snapshot.' : 'Full Entity Audit.'}
           </h2>
-          <p style={{ color: 'var(--text-dim)', fontSize: '14px', opacity: 0.7 }}>
+          <p style={{ color: '#475569', fontSize: '14px', opacity: 0.9 }}>
             {activeTab === 'free' ? 'Get your baseline visibility score in 5 mins.' : 'Deep technical and competitive landscape.'}
           </p>
         </div>
@@ -226,48 +235,48 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
           <form className="grid gap-4" onSubmit={form.handleSubmit((v) => startTransition(() => void submit(activeTab as any, v)))}>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Your Name</Label>
-                <Input id="name" placeholder="John Doe" {...form.register("name")} style={{ backgroundColor: 'var(--surface)', borderRadius: '10px' }} />
+                <Label htmlFor="name" style={{ color: '#0F172A', fontWeight: 600 }}>Your Name</Label>
+                <Input id="name" placeholder="John Doe" {...form.register("name")} style={{ backgroundColor: '#F8FAFF', color: '#0F172A', borderColor: '#E2E8F0', borderRadius: '10px' }} />
                 {form.formState.errors.name && <p className="text-xs text-red-500">{form.formState.errors.name.message}</p>}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email">Business Email</Label>
-                <Input id="email" type="email" placeholder="john@company.com" {...form.register("email")} style={{ backgroundColor: 'var(--surface)', borderRadius: '10px' }} />
+                <Label htmlFor="email" style={{ color: '#0F172A', fontWeight: 600 }}>Business Email</Label>
+                <Input id="email" type="email" placeholder="john@company.com" {...form.register("email")} style={{ backgroundColor: '#F8FAFF', color: '#0F172A', borderColor: '#E2E8F0', borderRadius: '10px' }} />
                 {form.formState.errors.email && <p className="text-xs text-red-500">{form.formState.errors.email.message}</p>}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="company">Company</Label>
-                <Input id="company" placeholder="Acme Inc" {...form.register("company")} style={{ backgroundColor: 'var(--surface)', borderRadius: '10px' }} />
+                <Label htmlFor="company" style={{ color: '#0F172A', fontWeight: 600 }}>Company</Label>
+                <Input id="company" placeholder="Acme Inc" {...form.register("company")} style={{ backgroundColor: '#F8FAFF', color: '#0F172A', borderColor: '#E2E8F0', borderRadius: '10px' }} />
                 {form.formState.errors.company && <p className="text-xs text-red-500">{form.formState.errors.company.message}</p>}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="website">Website URL</Label>
-                <Input id="website" placeholder="https://acme.inc" {...form.register("website")} style={{ backgroundColor: 'var(--surface)', borderRadius: '10px' }} />
+                <Label htmlFor="website" style={{ color: '#0F172A', fontWeight: 600 }}>Website URL</Label>
+                <Input id="website" placeholder="https://acme.inc" {...form.register("website")} style={{ backgroundColor: '#F8FAFF', color: '#0F172A', borderColor: '#E2E8F0', borderRadius: '10px' }} />
                 {form.formState.errors.website && <p className="text-xs text-red-500">{form.formState.errors.website.message}</p>}
               </div>
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="industry">Industry</Label>
-              <Input id="industry" placeholder="SaaS, Hospitality, Fintech..." {...form.register("industry")} style={{ backgroundColor: 'var(--surface)', borderRadius: '10px' }} />
+              <Label htmlFor="industry" style={{ color: '#0F172A', fontWeight: 600 }}>Industry</Label>
+              <Input id="industry" placeholder="SaaS, Hospitality, Fintech..." {...form.register("industry")} style={{ backgroundColor: '#F8FAFF', color: '#0F172A', borderColor: '#E2E8F0', borderRadius: '10px' }} />
               {form.formState.errors.industry && <p className="text-xs text-red-500">{form.formState.errors.industry.message}</p>}
             </div>
 
             <div className="grid gap-2">
-              <Label>Target Audit Questions (Choose Top 3)</Label>
+              <Label style={{ color: '#0F172A', fontWeight: 600 }}>Target Audit Questions (Choose Top 3)</Label>
               <div className="flex flex-col gap-3">
                 <select 
                   {...form.register("query1")} 
                   style={{ 
-                    backgroundColor: 'var(--surface)', 
+                    backgroundColor: '#F8FAFF', 
                     borderRadius: '10px', 
                     padding: '12px', 
                     fontSize: '14px', 
-                    color: 'var(--text)', 
-                    border: '1px solid var(--border)',
+                    color: '#0F172A', 
+                    border: '1px solid #E2E8F0',
                     width: '100%',
                     cursor: 'pointer'
                   }}
@@ -279,12 +288,12 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
                 <select 
                   {...form.register("query2")} 
                   style={{ 
-                    backgroundColor: 'var(--surface)', 
+                    backgroundColor: '#F8FAFF', 
                     borderRadius: '10px', 
                     padding: '12px', 
                     fontSize: '14px', 
-                    color: 'var(--text)', 
-                    border: '1px solid var(--border)',
+                    color: '#0F172A', 
+                    border: '1px solid #E2E8F0',
                     width: '100%',
                     cursor: 'pointer'
                   }}
@@ -296,12 +305,12 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
                 <select 
                   {...form.register("query3")} 
                   style={{ 
-                    backgroundColor: 'var(--surface)', 
+                    backgroundColor: '#F8FAFF', 
                     borderRadius: '10px', 
                     padding: '12px', 
                     fontSize: '14px', 
-                    color: 'var(--text)', 
-                    border: '1px solid var(--border)',
+                    color: '#0F172A', 
+                    border: '1px solid #E2E8F0',
                     width: '100%',
                     cursor: 'pointer'
                   }}
@@ -313,14 +322,14 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
               {form.formState.errors.query1 && <p className="text-xs text-red-500">{form.formState.errors.query1.message}</p>}
             </div>
 
-            <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid var(--border)', backgroundColor: 'rgba(255,255,255,0.02)', marginTop: '8px' }}>
+            <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0', backgroundColor: '#F8FAFF', marginTop: '8px' }}>
               <div className="flex items-center gap-3 mb-2">
-                <ShieldEllipsis className="h-4 w-4 text-blue-400" />
-                <span className="text-xs font-bold uppercase tracking-wider opacity-60">Security Check</span>
+                <ShieldEllipsis className="h-4 w-4 text-blue-600" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Security Check</span>
               </div>
               <div className="flex items-center justify-between gap-4">
-                <span className="text-sm font-medium">{captcha?.question || "Loading..."}</span>
-                <Input placeholder="Solve" {...form.register("captchaAnswer")} style={{ width: '80px', backgroundColor: 'var(--surface)', borderRadius: '8px' }} />
+                <span className="text-sm font-medium" style={{ color: '#0F172A' }}>{captcha?.question || "Loading..."}</span>
+                <Input placeholder="Solve" {...form.register("captchaAnswer")} style={{ width: '80px', backgroundColor: '#ffffff', color: '#0F172A', borderColor: '#E2E8F0', borderRadius: '8px' }} />
               </div>
               {form.formState.errors.captchaAnswer && <p className="text-xs text-red-500 mt-1">{form.formState.errors.captchaAnswer.message}</p>}
             </div>
