@@ -164,16 +164,23 @@ h1, h2, h3, h4 {
   gap: 24px;
 }
 
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
 /* ─── TYPOGRAPHY UTILS ──────────────────────────────── */
 
 .headline-xl {
-  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
   line-height: 1.1;
   margin-bottom: 24px;
 }
 
 .headline-lg {
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
   line-height: 1.2;
   margin-bottom: 20px;
 }
@@ -185,11 +192,30 @@ h1, h2, h3, h4 {
 
 /* Responsive Overrides */
 @media (max-width: 768px) {
-  section {
+  section, header.section {
     padding: 64px 0 !important;
   }
   .container {
     padding: 0 20px;
+  }
+  .desktop-nav {
+    display: none !important;
+  }
+  .grid-2col {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  .bento-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .card-corporate, .card-bento, .card-glass {
+    padding: 24px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hamburger-btn {
+    display: none !important;
   }
 }
 
