@@ -1,26 +1,49 @@
 import { env } from "@/lib/env";
 import { buildAbsoluteUrl, formatInr } from "@/lib/utils";
+import nodemailer from "nodemailer";
+
+function makeTransporter() {
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) return null;
+    return nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_APP_PASSWORD,
+        },
+    });
+}
 
 async function sendEmail(payload: {
   to: string | string[];
   subject: string;
   html: string;
 }) {
-  if (!env.RESEND_API_KEY) return;
+  if (env.RESEND_API_KEY) {
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: env.MAIL_FROM,
+        to: payload.to,
+        subject: payload.subject,
+        html: payload.html,
+      }),
+    });
+    return;
+  }
 
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: env.MAIL_FROM,
+  const transporter = makeTransporter();
+  if (transporter) {
+    await transporter.sendMail({
+      from: `"itappens.ai" <${process.env.GMAIL_USER}>`,
       to: payload.to,
       subject: payload.subject,
       html: payload.html,
-    }),
-  });
+    });
+  }
 }
 
 type ReceiptEmailInput = {
@@ -37,7 +60,7 @@ export async function sendInternalLeadAlert(input: {
   targetKeywords: string[];
 }) {
   await sendEmail({
-    to: env.NOTIFY_TO_EMAIL,
+    to: "sadish.sugumaran@itappens.ai",
     subject: `New ${input.planLabel} audit lead for ${input.siteUrl}`,
     html: `
       <div style="font-family:Inter,system-ui,sans-serif;max-width:640px">
@@ -98,6 +121,27 @@ export async function sendAuditReadyEmail(input: {
         <a href="${buildAbsoluteUrl(`/api/audit/download/${input.shareToken}`)}" style="display:inline-block;background:#eef2ff;color:#312e81;padding:12px 22px;border-radius:999px;text-decoration:none;font-weight:600">
           Download PDF
         </a>
+      </div>
+    `,
+  });
+}
+
+export async function sendOTPEmail(input: { email: string; otp: string }) {
+  await sendEmail({
+    to: input.email,
+    subject: `Your itappens.ai Verification Code: ${input.otp}`,
+    html: `
+      <div style="font-family:Inter,system-ui,sans-serif;max-width:640px;color:#0f172a">
+        <div style="padding:24px 0 16px;">
+          <span style="font-size:20px;font-weight:800;letter-spacing:-0.03em;">
+            it<span style="color:#6366f1;">appens</span>.ai
+          </span>
+        </div>
+        <p style="font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#4f46e5;margin-bottom:8px">Security Verification</p>
+        <h1 style="font-size:28px;line-height:1.1;margin:0 0 18px">Your access code is <strong>${input.otp}</strong></h1>
+        <p style="color:#475569;line-height:1.7;margin:0 0 24px">
+          Enter this code to begin your free GEO audit. This code expires in 10 minutes.
+        </p>
       </div>
     `,
   });
