@@ -51,14 +51,22 @@ export async function middleware(request: NextRequest) {
   }
 
   // 3. Auth0 v4 Middleware
+  const authRes = await auth0.middleware(request);
+
   const protectedPrefixes = ["/dashboard", "/client"];
   const isProtected = protectedPrefixes.some(prefix => pathname === prefix || pathname.startsWith(`${prefix}/`));
 
-  if (!isProtected) {
-    return NextResponse.next();
+  if (isProtected) {
+    // In v4, you must pass the request to getSession when used in middleware
+    const session = await auth0.getSession(request);
+    if (!session) {
+      const loginUrl = new URL("/auth/login", request.url);
+      loginUrl.searchParams.set("returnTo", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
-  return await auth0.middleware(request);
+  return authRes;
 }
 
 export const config = {
