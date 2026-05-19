@@ -190,7 +190,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       if (response.ok && data.shareToken) {
         setSuccess(true);
         setTimeout(() => {
-          window.location.href = \`/audit/report/\${data.shareToken}\`;
+          window.location.href = `/audit/report/${data.shareToken}`;
         }, 3000);
         return;
       }
@@ -253,7 +253,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
           });
           const verified = await verifyResponse.json();
           if (verifyResponse.ok) {
-            router.push(\`/audit/success?token=\${verified.shareToken}\`);
+            router.push(`/audit/success?token=${verified.shareToken}`);
           } else {
             setMessage(verified.error || "Payment verification failed.");
           }
@@ -432,7 +432,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
               {(isPending || otpPending) ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
               {
                 activeTab === 'paid' 
-                ? \`Unlock \${selectedPlan.toUpperCase()} Audit\` 
+                ? `Unlock ${selectedPlan.toUpperCase()} Audit` 
                 : otpMode 
                   ? isPending 
                     ? loadingMessages[loadingMsgIdx]
