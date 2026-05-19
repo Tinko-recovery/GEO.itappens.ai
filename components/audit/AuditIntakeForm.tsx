@@ -74,10 +74,11 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
 
   // Loading animation state
   const [loadingMsgIdx, setLoadingMsgIdx] = useState(0);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
     let interval: any;
-    if (isPending && activeTab === "free" && otpMode) {
+    if (isAnalyzing) {
       interval = setInterval(() => {
         setLoadingMsgIdx((prev) => (prev + 1) % loadingMessages.length);
       }, 3000);
@@ -85,7 +86,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       setLoadingMsgIdx(0);
     }
     return () => clearInterval(interval);
-  }, [isPending, activeTab, otpMode]);
+  }, [isAnalyzing]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -168,6 +169,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       }
       
       // OTP verified, now execute audit
+      setIsAnalyzing(true);
       const payload = {
         name: values.name,
         email: values.email,
@@ -179,30 +181,38 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
         captchaAnswer: values.captchaAnswer,
       };
 
-      const response = await fetch("/api/audit/free", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      try {
+        const response = await fetch("/api/audit/free", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok && data.shareToken) {
+        if (response.ok && data.shareToken) {
+          setIsAnalyzing(false);
+          setSuccess(true);
+          setTimeout(() => {
+            window.location.href = `/audit/report/${data.shareToken}`;
+          }, 3000);
+          return;
+        }
+
+        if (!response.ok || !data.success) {
+          setIsAnalyzing(false);
+          setMessage(data?.message || "Error submitting audit. Please try again.");
+          form.setValue("captchaAnswer", "");
+          void loadCaptcha();
+          return;
+        }
+
+        setIsAnalyzing(false);
         setSuccess(true);
-        setTimeout(() => {
-          window.location.href = `/audit/report/${data.shareToken}`;
-        }, 3000);
-        return;
+      } catch (err) {
+        setIsAnalyzing(false);
+        setMessage("Network error. Please try again.");
       }
-
-      if (!response.ok || !data.success) {
-        setMessage(data?.message || "Error submitting audit. Please try again.");
-        form.setValue("captchaAnswer", "");
-        void loadCaptcha();
-        return;
-      }
-
-      setSuccess(true);
       return;
     }
 
@@ -263,6 +273,18 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       });
       razorpay.open();
     }
+  }
+
+  if (isAnalyzing) {
+    return (
+      <div className="card-glass" style={{ padding: '60px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
+        <div style={{ backgroundColor: 'rgba(79, 70, 229, 0.1)', color: '#4f46e5', padding: '24px', borderRadius: '50%' }}>
+          <Loader2 className="h-16 w-16 animate-spin" />
+        </div>
+        <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0F172A', transition: 'opacity 0.5s ease' }}>{loadingMessages[loadingMsgIdx]}</h2>
+        <p style={{ color: '#64748b', lineHeight: 1.6, fontSize: '15px' }}>Please do not close this window.<br/>Your GEO audit is being generated in real-time.</p>
+      </div>
+    );
   }
 
   if (success) {
