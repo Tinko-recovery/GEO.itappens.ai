@@ -68,21 +68,6 @@ export default function AuditPage() {
           </div>
         </header>
 
-        {/* Pricing Plans Section - FULL WIDTH GRID */}
-        <section id="pricing-plans" className="section" style={{ padding: '100px 0', backgroundColor: 'var(--surface-alt)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-              <span className="overline" style={{ color: 'var(--brand-green)', backgroundColor: 'rgba(57, 181, 73, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
-                Report Tiers
-              </span>
-              <h2 className="headline-lg" style={{ marginTop: '24px' }}>Choose your <span style={{ color: 'var(--brand-green)' }}>Audit Tier.</span></h2>
-              <p className="text-sub" style={{ maxWidth: '600px', margin: '20px auto 0', opacity: 0.7 }}>
-                Select a one-time paid audit tier. Your selection below will update the checkout action in the intake form above.
-              </p>
-            </div>
-            <PricingGrid selectedPlan={selectedPlan} onSelect={setSelectedPlan} />
-          </div>
-        </section>
 
         {/* Bento Trust Section */}
         <section className="section" style={{ padding: '100px 0', background: 'var(--bg)' }}>
@@ -140,8 +125,8 @@ export default function AuditPage() {
               <p style={{ maxWidth: '640px', opacity: 0.9, fontSize: '18px', lineHeight: 1.7 }}>
                 Once you have your audit, book a strategy call with our engineering team to map out the 90-day technical signals and entity roadmap for AI dominance.
               </p>
-              <a href="https://calendly.com/itappens/strategy-call" target="_blank" rel="noreferrer" className="btn-primary" style={{ padding: '18px 40px', fontSize: '16px', borderRadius: '12px', marginTop: '16px' }}>
-                Book strategy call
+              <a href="#" className="btn-primary" style={{ padding: '18px 40px', fontSize: '16px', borderRadius: '12px', marginTop: '16px' }}>
+                Contact Us
                 <ArrowRight className="h-5 w-5" style={{ marginLeft: '12px' }} />
               </a>
             </div>

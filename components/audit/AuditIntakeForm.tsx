@@ -41,9 +41,10 @@ const formSchema = z.object({
   company: z.string().min(2, "Company name is required."),
   website: z.string().min(4, "Enter a valid website URL."),
   industry: z.string().min(2, "Industry is required."),
-  query1: z.string().min(2, "Please select at least one audit question."),
+  query1: z.string().optional(),
   query2: z.string().optional(),
   query3: z.string().optional(),
+  message: z.string().optional(),
   captchaAnswer: z.string().min(1, "Solve the captcha."),
 });
 
@@ -78,7 +79,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
 
   useEffect(() => {
     let interval: any;
-    if (isAnalyzing) {
+    if (isAnalyzing && activeTab === "free") {
       interval = setInterval(() => {
         setLoadingMsgIdx((prev) => (prev + 1) % loadingMessages.length);
       }, 3000);
@@ -86,7 +87,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       setLoadingMsgIdx(0);
     }
     return () => clearInterval(interval);
-  }, [isAnalyzing]);
+  }, [isAnalyzing, activeTab]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -99,6 +100,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       query1: "",
       query2: "",
       query3: "",
+      message: "",
       captchaAnswer: "",
     },
   });
@@ -140,7 +142,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
     }
   }
 
-  async function submit(mode: "free" | "paid", values: FormValues) {
+  async function submit(mode: string, values: FormValues) {
     if (!captcha) {
       setMessage("Captcha failed to load. Refresh and try again.");
       return;
@@ -148,14 +150,56 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
 
     setMessage(null);
 
-    // If it's free and we haven't requested OTP yet, request it.
-    if (mode === "free" && !otpMode) {
-      await handleSendOTP(values);
+    // CONTACT US FLOW
+    if (mode === "contact") {
+      const payload = {
+        name: values.name,
+        email: values.email,
+        company: values.company,
+        siteUrl: values.website,
+        industry: values.industry,
+        message: values.message,
+        captchaToken: captcha.token,
+        captchaAnswer: values.captchaAnswer,
+      };
+
+      setIsAnalyzing(true);
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+           setIsAnalyzing(false);
+           setMessage(data?.error || "Error sending message. Please try again.");
+           form.setValue("captchaAnswer", "");
+           void loadCaptcha();
+           return;
+        }
+        setIsAnalyzing(false);
+        setSuccess(true);
+      } catch (err) {
+        setIsAnalyzing(false);
+        setMessage("Network error. Please try again.");
+      }
       return;
     }
 
-    // If it's free and we are in OTP mode, verify OTP first.
-    if (mode === "free" && otpMode) {
+    // FREE AUDIT FLOW
+    if (mode === "free") {
+      if (!values.query1) {
+        setMessage("Please select at least one audit question.");
+        return;
+      }
+
+      if (!otpMode) {
+        await handleSendOTP(values);
+        return;
+      }
+
+      // If we are in OTP mode, verify OTP first.
       const verifyRes = await fetch("/api/audit/otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -215,67 +259,9 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       }
       return;
     }
-
-    // PAID FLOW 
-    const payload = {
-      siteUrl: values.website,
-      email: values.email,
-      targetKeywords: [values.query1, values.query2, values.query3].filter(Boolean),
-      captchaToken: captcha.token,
-      captchaAnswer: values.captchaAnswer,
-      plan: selectedPlan,
-    };
-
-    const response = await fetch("/api/audit/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    let data: any = null;
-    try {
-      data = await response.json();
-    } catch (e) {}
-
-    if (!response.ok) {
-      setMessage(data?.error || "Payment session failed.");
-      return;
-    }
-
-    if (data.provider === "razorpay" && data.order) {
-      const RazorpayCtor = (window as any).Razorpay;
-      const razorpay = new RazorpayCtor({
-        key: data.keyId,
-        amount: data.order.amount,
-        currency: data.order.currency,
-        name: "itappens.ai",
-        order_id: data.order.id,
-        handler: async (payment: any) => {
-          const verifyResponse = await fetch("/api/payments/razorpay/confirm", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              auditId: data.auditId,
-              orderId: payment.razorpay_order_id,
-              paymentId: payment.razorpay_payment_id,
-              signature: payment.razorpay_signature,
-            }),
-          });
-          const verified = await verifyResponse.json();
-          if (verifyResponse.ok) {
-            router.push(`/audit/success?token=${verified.shareToken}`);
-          } else {
-            setMessage(verified.error || "Payment verification failed.");
-          }
-        },
-        prefill: { email: values.email },
-        theme: { color: "#4f46e5" },
-      });
-      razorpay.open();
-    }
   }
 
-  if (isAnalyzing) {
+  if (isAnalyzing && activeTab === 'free') {
     return (
       <div className="card-glass" style={{ padding: '60px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
         <div style={{ backgroundColor: 'rgba(79, 70, 229, 0.1)', color: '#4f46e5', padding: '24px', borderRadius: '50%' }}>
@@ -286,6 +272,17 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       </div>
     );
   }
+  
+  if (isAnalyzing && activeTab === 'contact') {
+    return (
+      <div className="card-glass" style={{ padding: '60px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
+        <div style={{ backgroundColor: 'rgba(79, 70, 229, 0.1)', color: '#4f46e5', padding: '24px', borderRadius: '50%' }}>
+          <Loader2 className="h-16 w-16 animate-spin" />
+        </div>
+        <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0F172A', transition: 'opacity 0.5s ease' }}>Sending Message...</h2>
+      </div>
+    );
+  }
 
   if (success) {
     return (
@@ -293,9 +290,17 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
         <div style={{ backgroundColor: 'rgba(57, 181, 73, 0.1)', color: 'var(--brand-green)', padding: '20px', borderRadius: '50%' }}>
           <CheckCircle2 className="h-12 w-12" />
         </div>
-        <h2 style={{ fontSize: '24px', fontWeight: 800 }}>Audit in Progress.</h2>
-        <p style={{ color: 'var(--text-dim)', lineHeight: 1.6 }}>Your GEO audit is running. Check your inbox in 5 minutes.</p>
-        <Button variant="secondary" onClick={() => { setSuccess(false); setOtpMode(false); }}>Run another</Button>
+        <h2 style={{ fontSize: '24px', fontWeight: 800 }}>
+          {activeTab === 'contact' ? 'Message Sent.' : 'Audit in Progress.'}
+        </h2>
+        <p style={{ color: 'var(--text-dim)', lineHeight: 1.6 }}>
+          {activeTab === 'contact' 
+            ? 'Thank you for reaching out. We will get back to you shortly.' 
+            : 'Your GEO audit is running. Check your inbox in 5 minutes.'}
+        </p>
+        <Button variant="secondary" onClick={() => { setSuccess(false); setOtpMode(false); form.reset(); void loadCaptcha(); }}>
+          {activeTab === 'contact' ? 'Send another message' : 'Run another'}
+        </Button>
       </div>
     );
   }
@@ -315,20 +320,20 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
         <div style={{ padding: '32px 40px', borderBottom: '1px solid #E2E8F0', backgroundColor: '#F8FAFF' }}>
           <TabsList className="grid w-full grid-cols-2 mb-6" style={{ backgroundColor: '#E2E8F0', borderRadius: '12px', padding: '4px' }}>
             <TabsTrigger value="free" style={{ borderRadius: '8px', fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>Quick Free Snapshot</TabsTrigger>
-            <TabsTrigger value="paid" style={{ borderRadius: '8px', fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>Deep Paid Audit</TabsTrigger>
+            <TabsTrigger value="contact" style={{ borderRadius: '8px', fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>Contact Us</TabsTrigger>
           </TabsList>
           
           <Badge variant="accent" className="mb-4">Diagnostic Intake</Badge>
           <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0F172A', margin: '0 0 8px 0' }}>
-            {activeTab === 'free' ? 'GEO Score Snapshot.' : 'Full Entity Audit.'}
+            {activeTab === 'free' ? 'GEO Score Snapshot.' : 'Get in touch.'}
           </h2>
           <p style={{ color: '#475569', fontSize: '14px', opacity: 0.9 }}>
-            {activeTab === 'free' ? 'Get your baseline visibility score in 5 mins.' : 'Deep technical and competitive landscape.'}
+            {activeTab === 'free' ? 'Get your baseline visibility score in 5 mins.' : 'Tell us about your needs and we will get back to you.'}
           </p>
         </div>
         
         <CardContent style={{ padding: '40px' }}>
-          <form className="grid gap-4" onSubmit={form.handleSubmit((v) => startTransition(() => void submit(activeTab as any, v)))}>
+          <form className="grid gap-4" onSubmit={form.handleSubmit((v) => startTransition(() => void submit(activeTab, v)))}>
             
             {/* Standard Form Inputs (Hidden if in OTP mode for Free) */}
             <div style={{ display: otpMode && activeTab === 'free' ? 'none' : 'block' }}>
@@ -365,60 +370,83 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
               </div>
 
               <div className="grid gap-2 mb-4">
-                <Label style={{ color: '#0F172A', fontWeight: 600 }}>Target Audit Questions (Choose Top 3)</Label>
-                <div className="flex flex-col gap-3">
-                  <select 
-                    {...form.register("query1")} 
-                    style={{ 
-                      backgroundColor: '#F8FAFF', 
-                      borderRadius: '10px', 
-                      padding: '12px', 
-                      fontSize: '14px', 
-                      color: '#0F172A', 
-                      border: '1px solid #E2E8F0',
-                      width: '100%',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <option value="" disabled>Question 1 (Required) — Pick what to audit...</option>
-                    {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
-                  </select>
+                {activeTab === 'free' ? (
+                  <>
+                    <Label style={{ color: '#0F172A', fontWeight: 600 }}>Target Audit Questions (Choose Top 3)</Label>
+                    <div className="flex flex-col gap-3">
+                      <select 
+                        {...form.register("query1")} 
+                        style={{ 
+                          backgroundColor: '#F8FAFF', 
+                          borderRadius: '10px', 
+                          padding: '12px', 
+                          fontSize: '14px', 
+                          color: '#0F172A', 
+                          border: '1px solid #E2E8F0',
+                          width: '100%',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="" disabled>Question 1 (Required) — Pick what to audit...</option>
+                        {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
+                      </select>
 
-                  <select 
-                    {...form.register("query2")} 
-                    style={{ 
-                      backgroundColor: '#F8FAFF', 
-                      borderRadius: '10px', 
-                      padding: '12px', 
-                      fontSize: '14px', 
-                      color: '#0F172A', 
-                      border: '1px solid #E2E8F0',
-                      width: '100%',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <option value="">Question 2 (Optional) — Pick another...</option>
-                    {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
-                  </select>
+                      <select 
+                        {...form.register("query2")} 
+                        style={{ 
+                          backgroundColor: '#F8FAFF', 
+                          borderRadius: '10px', 
+                          padding: '12px', 
+                          fontSize: '14px', 
+                          color: '#0F172A', 
+                          border: '1px solid #E2E8F0',
+                          width: '100%',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="">Question 2 (Optional) — Pick another...</option>
+                        {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
+                      </select>
 
-                  <select 
-                    {...form.register("query3")} 
-                    style={{ 
-                      backgroundColor: '#F8FAFF', 
-                      borderRadius: '10px', 
-                      padding: '12px', 
-                      fontSize: '14px', 
-                      color: '#0F172A', 
-                      border: '1px solid #E2E8F0',
-                      width: '100%',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <option value="">Question 3 (Optional) — Pick another...</option>
-                    {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
-                  </select>
-                </div>
-                {form.formState.errors.query1 && <p className="text-xs text-red-500">{form.formState.errors.query1.message}</p>}
+                      <select 
+                        {...form.register("query3")} 
+                        style={{ 
+                          backgroundColor: '#F8FAFF', 
+                          borderRadius: '10px', 
+                          padding: '12px', 
+                          fontSize: '14px', 
+                          color: '#0F172A', 
+                          border: '1px solid #E2E8F0',
+                          width: '100%',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="">Question 3 (Optional) — Pick another...</option>
+                        {queryOptions.map(q => <option key={q} value={q}>{q}</option>)}
+                      </select>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Label htmlFor="message" style={{ color: '#0F172A', fontWeight: 600 }}>Message / Queries</Label>
+                    <textarea 
+                      id="message" 
+                      placeholder="How can we help you?" 
+                      {...form.register("message")} 
+                      style={{ 
+                        backgroundColor: '#F8FAFF', 
+                        color: '#0F172A', 
+                        borderColor: '#E2E8F0', 
+                        borderRadius: '10px', 
+                        padding: '12px', 
+                        minHeight: '100px', 
+                        border: '1px solid #E2E8F0', 
+                        width: '100%',
+                        resize: 'vertical'
+                      }} 
+                    />
+                  </>
+                )}
               </div>
 
               <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0', backgroundColor: '#F8FAFF', marginTop: '8px' }}>
@@ -450,15 +478,13 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
               </div>
             )}
 
-            <Button type="submit" disabled={isPending || otpPending} variant="accent" className="w-full mt-4" style={{ borderRadius: '12px', padding: '16px', fontWeight: 600 }}>
-              {(isPending || otpPending) ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            <Button type="submit" disabled={isPending || otpPending || isAnalyzing} variant="accent" className="w-full mt-4" style={{ borderRadius: '12px', padding: '16px', fontWeight: 600 }}>
+              {(isPending || otpPending || isAnalyzing) ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
               {
-                activeTab === 'paid' 
-                ? `Unlock ${selectedPlan.toUpperCase()} Audit` 
+                activeTab === 'contact' 
+                ? 'Send Message' 
                 : otpMode 
-                  ? isPending 
-                    ? loadingMessages[loadingMsgIdx]
-                    : 'Verify & Run Audit'
+                  ? 'Verify & Run Audit'
                   : 'Run Free Analysis'
               }
             </Button>

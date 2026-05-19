@@ -146,3 +146,30 @@ export async function sendOTPEmail(input: { email: string; otp: string }) {
     `,
   });
 }
+
+export async function sendContactAlert(input: {
+  name: string;
+  email: string;
+  company: string;
+  siteUrl: string;
+  industry: string;
+  message?: string;
+}) {
+  await sendEmail({
+    to: "sadish.sugumaran@itappens.ai",
+    subject: `New Contact Request from ${input.name} (${input.company})`,
+    html: `
+      <div style="font-family:Inter,system-ui,sans-serif;max-width:640px">
+        <h2 style="margin-bottom:16px">New Contact Request</h2>
+        <p><strong>Name:</strong> ${input.name}</p>
+        <p><strong>Email:</strong> ${input.email}</p>
+        <p><strong>Company:</strong> ${input.company}</p>
+        <p><strong>Website:</strong> ${input.siteUrl}</p>
+        <p><strong>Industry:</strong> ${input.industry}</p>
+        <p><strong>Message:</strong></p>
+        <blockquote style="border-left: 4px solid #e2e8f0; padding-left: 16px; color: #475569; white-space: pre-wrap;">${input.message || "No message provided."}</blockquote>
+      </div>
+    `,
+  });
+}
+

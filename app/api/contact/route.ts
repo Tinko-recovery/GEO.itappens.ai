@@ -1,99 +1,60 @@
-import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { verifyCaptcha } from "@/lib/captcha";
+import { sendContactAlert } from "@/lib/email";
+import { assertRateLimit } from "@/lib/rate-limit";
+import { sha256 } from "@/lib/utils";
 
-function makeTransporter() {
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) return null;
-    return nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_APP_PASSWORD,
-        },
-    });
-}
+const requestSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  company: z.string().min(2),
+  siteUrl: z.string().min(4),
+  industry: z.string().min(2),
+  message: z.string().optional(),
+  captchaToken: z.string(),
+  captchaAnswer: z.string(),
+});
+
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-    let body: any = {};
+  try {
+    const rawBody = await request.json();
+    const parsed = requestSchema.safeParse(rawBody);
 
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid request payload." }, { status: 400 });
+    }
+
+    if (!verifyCaptcha(parsed.data.captchaToken, parsed.data.captchaAnswer)) {
+      return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
+    }
+
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const ipHash = await sha256(ip);
+    
     try {
-        body = await request.json();
+      const limit = await assertRateLimit(`contact:${ipHash}`, 5, 60 * 60 * 1000);
+      if (!limit.ok) {
+        return NextResponse.json({ error: "Too many messages from this IP. Try again later." }, { status: 429 });
+      }
     } catch {
-        return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+      // gracefully bypass if redis connection fails
     }
 
-    const { name, email, website, visibility } = body;
-
-    if (!email || !website) {
-        return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-
-    // Always log — visible in Render logs even without email configured
-    console.log('[audit-request]', JSON.stringify({ name, email, website, visibility, ts: new Date().toISOString() }));
-
-    // Try to send email but never let it break the response
-    try {
-        const transporter = makeTransporter();
-        if (transporter) {
-            // Internal notification
-            await transporter.sendMail({
-                from: `"itappens.ai" <${process.env.GMAIL_USER}>`,
-                to: 'hello@itappens.ai',
-                replyTo: email,
-                subject: `New GEO Audit Request → ${website}`,
-                html: `
-                    <h2>New GEO Audit Request</h2>
-                    <p><strong>Name:</strong> ${name || 'Not provided'}</p>
-                    <p><strong>Email:</strong> ${email}</p>
-                    <p><strong>Website:</strong> <a href="${website}">${website}</a></p>
-                    <p><strong>Current AI Visibility:</strong> ${visibility || 'Not specified'}</p>
-                    <p><strong>Submitted:</strong> ${new Date().toISOString()}</p>
-                `,
-            });
-            console.log('[audit-request] email sent to hello@itappens.ai');
-
-            // Thank-you to customer
-            const firstName = name ? name.split(' ')[0] : 'there';
-            await transporter.sendMail({
-                from: `"itappens.ai" <${process.env.GMAIL_USER}>`,
-                to: email,
-                subject: `We've received your AI Audit request — itappens.ai`,
-                html: `
-                    <div style="font-family:Inter,sans-serif;max-width:560px;margin:0 auto;color:#0f172a;">
-                      <div style="padding:32px 0 16px;">
-                        <span style="font-size:20px;font-weight:800;letter-spacing:-0.03em;">
-                          it<span style="color:#6366f1;">appens</span>.ai
-                        </span>
-                      </div>
-                      <h2 style="font-size:22px;font-weight:700;margin:0 0 16px;letter-spacing:-0.03em;">
-                        Got it, ${firstName}. Your audit is queued.
-                      </h2>
-                      <p style="color:#475569;line-height:1.75;margin:0 0 16px;">
-                        We've received your Free AI Audit request for <strong>${website}</strong>.
-                        We'll run 50+ targeted prompts across ChatGPT, Perplexity, Gemini, and Claude
-                        to map exactly where your brand stands — and where your competitors are taking your spot.
-                      </p>
-                      <p style="color:#475569;line-height:1.75;margin:0 0 32px;">
-                        Expect to hear from us within <strong>24 hours</strong>. No sales call. Just the data.
-                      </p>
-                      <a href="https://www.itappens.ai" style="display:inline-block;background:#6366f1;color:#fff;padding:12px 24px;border-radius:6px;font-weight:600;font-size:14px;text-decoration:none;">
-                        Learn more about GEO →
-                      </a>
-                      <hr style="border:none;border-top:1px solid #e2e8f0;margin:40px 0 24px;" />
-                      <p style="font-size:12px;color:#94a3b8;line-height:1.6;">
-                        itappens.ai · The Citation Layer for the AI Web<br/>
-                        Reply to this email anytime — it goes straight to the principal.
-                      </p>
-                    </div>
-                `,
-            });
-            console.log(`[audit-request] thank-you sent to ${email}`);
-        } else {
-            console.warn('[audit-request] GMAIL_USER / GMAIL_APP_PASSWORD not set — email skipped');
-        }
-    } catch (emailErr: any) {
-        // Log the failure but still tell the user it worked
-        console.error('[audit-request] email send failed:', emailErr.message);
-    }
+    await sendContactAlert({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      company: parsed.data.company,
+      siteUrl: parsed.data.siteUrl,
+      industry: parsed.data.industry,
+      message: parsed.data.message,
+    });
 
     return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Contact API error:", error);
+    return NextResponse.json({ error: "Internal server error." }, { status: 500 });
+  }
 }
