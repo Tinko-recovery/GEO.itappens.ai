@@ -75,7 +75,7 @@ export default function NavBar() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/auth/login" style={{ color: 'white', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
+                  <Link href="/auth/login" prefetch={false} style={{ color: 'white', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
                     Log In
                   </Link>
                   <Link href="/audit" className="btn-orange" style={{ padding: '10px 24px', fontSize: '14px' }}>
