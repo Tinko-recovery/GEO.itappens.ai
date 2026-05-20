@@ -99,13 +99,42 @@ export default function SolutionSection() {
                             display: 'inline-block',
                             width: '100%',
                             maxWidth: '1000px',
-                            margin: '0 auto'
+                            margin: '0 auto',
+                            position: 'relative'
                         }}>
-                            <img 
-                                src="/mindmap.png" 
-                                alt="AI Search Optimization Strategy Map" 
-                                style={{ width: '100%', height: 'auto', borderRadius: '8px' }} 
-                            />
+                            {/* Obfuscation Container */}
+                            <div style={{ 
+                                position: 'relative',
+                                maxHeight: '400px', 
+                                overflow: 'hidden',
+                                borderRadius: '8px'
+                            }}>
+                                <img 
+                                    src="/mindmap.png" 
+                                    alt="AI Search Optimization Strategy Map" 
+                                    style={{ width: '100%', height: 'auto', display: 'block' }} 
+                                />
+                                
+                                {/* Fade to white / blur overlay */}
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: 0, left: 0, right: 0,
+                                    height: '250px',
+                                    background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 60%, rgba(255,255,255,1) 100%)',
+                                    backdropFilter: 'blur(4px)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-end',
+                                    paddingBottom: '40px',
+                                    zIndex: 10
+                                }}>
+                                    <h4 style={{ color: 'var(--slate-dark)', fontSize: '20px', marginBottom: '16px', fontWeight: 700 }}>Want to see the exact execution plan?</h4>
+                                    <a href="/audit" className="btn-blue" style={{ padding: '16px 32px', fontSize: '16px', boxShadow: '0 10px 25px rgba(27, 79, 222, 0.3)' }}>
+                                        Unlock the Full Roadmap
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
