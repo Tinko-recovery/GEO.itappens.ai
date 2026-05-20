@@ -91,6 +91,33 @@ h1, h2, h3, h4 {
   transform: translateY(-4px);
 }
 
+.card-glass-dark {
+  background: rgba(10, 15, 30, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 194, 255, 0.15);
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 194, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glass-dark::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.5;
+}
+
+.card-glass-dark:hover {
+  box-shadow: 0 8px 32px rgba(0, 194, 255, 0.1), inset 0 0 20px rgba(0, 194, 255, 0.1);
+  border-color: rgba(0, 194, 255, 0.3);
+  transform: translateY(-2px);
+}
+
 .btn-blue {
   padding: 12px 24px;
   background: var(--blue);

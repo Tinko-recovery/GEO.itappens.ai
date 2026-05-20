@@ -37,7 +37,7 @@ export default function SolutionSection() {
                     <h2 className="headline-lg">A Systematic Framework for <br /> <span style={{ color: 'var(--blue)' }}>AI Retrieval Domination.</span></h2>
                 </div>
 
-                <div className="bento-grid">
+                <div className="bento-grid" style={{ marginBottom: '80px' }}>
                     {pillars.map((p, i) => (
                         <motion.div
                             key={i}
@@ -59,6 +59,56 @@ export default function SolutionSection() {
                         </motion.div>
                     ))}
                 </div>
+
+                {/* Mind Map Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    style={{ 
+                        background: 'var(--navy)', 
+                        borderRadius: '24px', 
+                        padding: '48px', 
+                        position: 'relative',
+                        overflow: 'hidden',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                    }}
+                >
+                    {/* Glowing effect inside the dark container */}
+                    <div style={{
+                        position: 'absolute',
+                        top: '0%', left: '50%', transform: 'translate(-50%, -50%)',
+                        width: '60%', height: '40%',
+                        background: 'var(--cyan)',
+                        filter: 'blur(100px)',
+                        opacity: 0.1,
+                        zIndex: 0
+                    }} />
+
+                    <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+                        <h3 style={{ color: '#fff', fontSize: '28px', marginBottom: '16px' }}>The Complete Strategy Map</h3>
+                        <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
+                            A top-down view of our entire optimization architecture—from foundational entity definitions to off-site citation building.
+                        </p>
+                        
+                        <div style={{ 
+                            background: '#fff', 
+                            padding: '16px', 
+                            borderRadius: '16px',
+                            display: 'inline-block',
+                            width: '100%',
+                            maxWidth: '1000px',
+                            margin: '0 auto'
+                        }}>
+                            <img 
+                                src="/mindmap.png" 
+                                alt="AI Search Optimization Strategy Map" 
+                                style={{ width: '100%', height: 'auto', borderRadius: '8px' }} 
+                            />
+                        </div>
+                    </div>
+                </motion.div>
             </div>
         </section>
     );
