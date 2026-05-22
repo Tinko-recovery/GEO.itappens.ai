@@ -50,17 +50,17 @@ export default function HomePage() {
         <PricingSection />
 
         {/* Integrated Audit Section */}
-        <section id="audit" className="dark-section" style={{ padding: '120px 0' }}>
-          <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'center' }}>
+        <section id="audit" className="section dark-section">
+          <div className="container grid-2col">
             <div>
-              <span className="badge-pill" style={{ marginBottom: '24px', background: 'rgba(255,255,255,0.1)', color: 'var(--cyan)' }}>
+              <span className="badge-pill" style={{ marginBottom: '24px' }}>
                 Free Intelligence Audit
               </span>
               <h2 className="headline-lg">
                 See where your brand stands <br />
                 <span style={{ color: 'var(--cyan)' }}>across AI engines today.</span>
               </h2>
-              <p className="text-large" style={{ color: 'rgba(255,255,255,0.7)', marginTop: '24px' }}>
+              <p className="text-sub" style={{ marginTop: '24px' }}>
                 Our proprietary snapshot captures your current answer-engine visibility, highlights entity drift, and identifies the exact query clusters you need to own.
               </p>
               <ul style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '16px', listStyle: 'none', padding: 0 }}>
@@ -78,23 +78,23 @@ export default function HomePage() {
                 ))}
               </ul>
             </div>
-            <div className="card-corporate" style={{ padding: '48px', color: 'var(--slate-dark)' }}>
+            <div className="card-bento" style={{ color: 'var(--slate-dark)' }}>
               <AuditForm />
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
-        <section style={{ padding: '120px 0', backgroundColor: '#fff' }}>
-          <div className="container" style={{ maxWidth: '800px' }}>
+        <section className="section" style={{ backgroundColor: '#fff' }}>
+          <div className="container-narrow">
             <div style={{ textAlign: 'center', marginBottom: '80px' }}>
               <span className="badge-pill" style={{ marginBottom: '24px' }}>Expertise</span>
               <h2 className="headline-lg">Frequently Asked Questions</h2>
             </div>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {homepageFaqs.map((item) => (
-                <li key={item.question} style={{ padding: '32px 0', borderBottom: '1px solid var(--border)' }}>
-                  <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '16px' }}>{item.question}</h3>
+                <li key={item.question} style={{ padding: '32px 0', borderBottom: '1px solid var(--border-light)' }}>
+                  <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '16px', color: 'var(--navy)' }}>{item.question}</h3>
                   <p style={{ color: 'var(--slate)', fontSize: '16px', lineHeight: 1.7 }}>{item.answer}</p>
                 </li>
               ))}

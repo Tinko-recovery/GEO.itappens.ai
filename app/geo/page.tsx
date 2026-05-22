@@ -38,15 +38,15 @@ export default function GeoPage() {
       <JsonLd data={geoSchema} />
       <NavBar />
       <main>
-        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--navy)', color: 'white' }}>
+        <header className="section dark-section">
           <div className="container">
             <div style={{ maxWidth: '800px' }}>
               <span className="overline">/geo system</span>
-              <h1 className="headline-xl" style={{ margin: '24px 0', letterSpacing: '-0.04em' }}>
+              <h1 className="headline-xl">
                 The four-pillar GEO system <br />
-                <span style={{ color: 'var(--accent)' }}>for the AI-First Internet.</span>
+                <span style={{ color: 'var(--cyan)' }}>for the AI-First Internet.</span>
               </h1>
-              <p className="text-sub" style={{ marginBottom: '40px', color: 'rgba(255,255,255,0.7)' }}>
+              <p className="text-sub" style={{ marginBottom: '40px' }}>
                 itappens.ai combines Technical Signals, answer-engine content, entity-building, and tracking into one operating
                 model for brands that want to become the default answer across major AI platforms.
               </p>
@@ -62,33 +62,25 @@ export default function GeoPage() {
           </div>
         </header>
 
-        <section className="section" style={{ padding: '120px 0', borderTop: '1px solid var(--border)' }}>
+        <section className="section" style={{ borderTop: '1px solid var(--border-light)' }}>
           <div className="container">
             <div style={{ textAlign: 'center', marginBottom: '64px' }}>
               <span className="overline">Commercial Posture</span>
-              <h2 className="headline-lg" style={{ marginTop: '16px' }}>
-                Outcome-based <span style={{ color: 'var(--accent)' }}>investment tiers.</span>
+              <h2 className="headline-lg">
+                Outcome-based <span style={{ color: 'var(--blue)' }}>investment tiers.</span>
               </h2>
             </div>
-            <div className="grid-pricing" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
               {geoPackages.map((item) => (
-                <article key={item.name} className="card-bento" style={{ 
-                  padding: '48px', 
-                  backgroundColor: 'var(--surface)', 
-                  border: '1px solid var(--border)',
-                  borderRadius: '24px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '24px'
-                }}>
+                <article key={item.name} className="card-bento" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                   <div>
-                    <span className="overline" style={{ fontSize: '12px', color: 'var(--accent)' }}>{item.price}</span>
-                    <h3 className="headline-md" style={{ marginTop: '8px' }}>{item.name}</h3>
+                    <span className="overline">{item.price}</span>
+                    <h3 className="headline-md">{item.name}</h3>
                   </div>
-                  <p style={{ color: 'var(--text-dim)', fontSize: '15px', lineHeight: 1.6 }}>{item.description}</p>
-                  <ul className="check-list" style={{ marginTop: 'auto' }}>
+                  <p className="text-sub" style={{ fontSize: '15px' }}>{item.description}</p>
+                  <ul style={{ marginTop: 'auto', listStyle: 'none', padding: 0 }}>
                     {item.features.map((feature) => (
-                      <li key={feature} style={{ padding: '8px 0', fontSize: '14px', color: 'var(--text)' }}>{feature}</li>
+                      <li key={feature} style={{ padding: '8px 0', fontSize: '14px', color: 'var(--navy)' }}>• {feature}</li>
                     ))}
                   </ul>
                 </article>
@@ -99,31 +91,31 @@ export default function GeoPage() {
 
         <GEOExplanation />
 
-        <section className="section" style={{ padding: '120px 0', backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border)' }}>
+        <section className="section" style={{ backgroundColor: '#fff', borderTop: '1px solid var(--border-light)' }}>
           <div className="container grid-2col">
             <div>
               <span className="overline">Expected Outcome</span>
-              <h2 className="headline-lg" style={{ marginTop: '16px' }}>
+              <h2 className="headline-lg">
                 Higher citation share on <br />
-                <span style={{ color: 'var(--accent)' }}>target high-intent prompts.</span>
+                <span style={{ color: 'var(--blue)' }}>target high-intent prompts.</span>
               </h2>
               <p className="text-sub" style={{ marginTop: '24px' }}>
                 The 90-day operating target is to move toward 70%+ citation share on selected query sets by aligning the
                 technical layer, the answer layer, and the tracking loop.
               </p>
-              <ul className="check-list" style={{ marginTop: '32px' }}>
-                <li>Define the query set before publishing</li>
-                <li>Match each page to a clear entity role</li>
-                <li>Weekly tracking drives immediate iteration</li>
+              <ul style={{ marginTop: '32px', listStyle: 'none', padding: 0 }}>
+                <li style={{ padding: '8px 0', fontSize: '15px' }}>✓ Define the query set before publishing</li>
+                <li style={{ padding: '8px 0', fontSize: '15px' }}>✓ Match each page to a clear entity role</li>
+                <li style={{ padding: '8px 0', fontSize: '15px' }}>✓ Weekly tracking drives immediate iteration</li>
               </ul>
             </div>
-            <div className="card-bento" style={{ padding: '48px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '24px' }}>
+            <div className="card-bento">
               <span className="overline">The First 7 Days</span>
-              <ol className="steps-list" style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                {howItWorksSteps.slice(0, 3).map((step) => (
+              <ol style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '32px', listStyle: 'none', padding: 0 }}>
+                {howItWorksSteps.slice(0, 3).map((step, index) => (
                   <li key={step.name}>
-                    <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>{step.name}</h3>
-                    <p style={{ color: 'var(--text-dim)', fontSize: '15px', lineHeight: 1.6 }}>{step.text}</p>
+                    <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--navy)' }}>{index + 1}. {step.name}</h3>
+                    <p style={{ color: 'var(--slate)', fontSize: '15px', lineHeight: 1.6 }}>{step.text}</p>
                   </li>
                 ))}
               </ol>
@@ -131,21 +123,21 @@ export default function GeoPage() {
           </div>
         </section>
 
-        <section className="section" style={{ padding: '120px 0', borderTop: '1px solid var(--border)' }}>
+        <section className="section" style={{ borderTop: '1px solid var(--border-light)' }}>
           <div className="container-narrow">
             <div style={{ textAlign: 'center', marginBottom: '64px' }}>
               <span className="overline">FAQ</span>
-              <h2 className="headline-lg" style={{ marginTop: '16px' }}>
+              <h2 className="headline-lg">
                 The questions that shape <br />
-                <span style={{ color: 'var(--accent)' }}>scope and delivery.</span>
+                <span style={{ color: 'var(--blue)' }}>scope and delivery.</span>
               </h2>
             </div>
-            <ul className="faq-list">
+            <ul style={{ listStyle: 'none', padding: 0 }}>
               {geoFaqs.map((faq) => (
-                <li key={faq.question} style={{ padding: '24px 0', borderBottom: '1px solid var(--border)' }}>
-                  <h3 className="faq-question" style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>{faq.question}</h3>
+                <li key={faq.question} style={{ padding: '24px 0', borderBottom: '1px solid var(--border-light)' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: 'var(--navy)' }}>{faq.question}</h3>
                   <div className="faq-answer">
-                    <p style={{ color: 'var(--text-dim)', fontSize: '16px', lineHeight: 1.6 }}>{faq.answer}</p>
+                    <p style={{ color: 'var(--slate)', fontSize: '16px', lineHeight: 1.6 }}>{faq.answer}</p>
                   </div>
                 </li>
               ))}
