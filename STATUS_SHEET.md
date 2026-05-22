@@ -14,6 +14,7 @@ To attract real founders, we must prove that **itappens.ai** does the "Dirty Wor
 | **Customer Brain** | 🟢 Operational | itappens.ai remembers your brand, past mistakes, and tech stack. |
 | **Economy Mode** | 🟢 Operational | Switched to Haiku. 12 specialists cost pennies per sprint. |
 | **Mission Portal** | 🟢 Operational | A premium, dark-mode cockpit to submit and track missions. |
+| **AEO/GEO Optimization** | 🟢 Operational | JSON-LD schema, llms.txt, and semantic blogging implemented for AI indexing. |
 
 ---
 
