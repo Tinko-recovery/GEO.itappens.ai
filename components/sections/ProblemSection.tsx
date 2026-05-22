@@ -1,6 +1,5 @@
 'use client';
 import { motion } from 'framer-motion';
-import VideoPlayer from '@/components/VideoPlayer';
 
 const problems = [
     {
@@ -58,7 +57,7 @@ export default function ProblemSection() {
                         </div>
                     </div>
 
-                    {/* Right Column: The Explainer Video */}
+                    {/* Right Column: The AEO Poster */}
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -66,10 +65,19 @@ export default function ProblemSection() {
                         transition={{ duration: 0.6 }}
                         style={{ position: 'sticky', top: '120px' }}
                     >
-                        <VideoPlayer 
-                            videoSrc="/videos/explainer.mp4"
-                            thumbnailSrc="/poster.png"
-                        />
+                        <div style={{ 
+                            borderRadius: '16px', 
+                            overflow: 'hidden', 
+                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
+                            border: '1px solid var(--border)',
+                            background: '#fff'
+                        }}>
+                            <img 
+                                src="/poster.png" 
+                                alt="The New Rules of AI Search Optimization (AEO)" 
+                                style={{ width: '100%', height: 'auto', display: 'block' }} 
+                            />
+                        </div>
                     </motion.div>
                 </div>
             </div>
