@@ -11,6 +11,7 @@ export default function NavBar() {
   const { user, isLoading } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeHash, setActiveHash] = useState("");
   const pathname = usePathname();
 
   // On non-homepage, we want a dark background by default for visibility
@@ -23,8 +24,49 @@ export default function NavBar() {
     };
     window.addEventListener("scroll", handleScroll);
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Track hash changes for active nav links
+    setActiveHash(window.location.hash);
+    const handleHashChange = () => setActiveHash(window.location.hash);
+    window.addEventListener("hashchange", handleHashChange);
+    
+    // Check if sections are in view for scrollspy
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveHash(`#${entry.target.id}`);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const solutionsSection = document.getElementById('solutions');
+    const pricingSection = document.getElementById('pricing');
+    const heroSection = document.getElementById('hero');
+
+    if (solutionsSection) observer.observe(solutionsSection);
+    if (pricingSection) observer.observe(pricingSection);
+    if (heroSection) observer.observe(heroSection); // hero can reset hash to empty
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("hashchange", handleHashChange);
+      observer.disconnect();
+    };
   }, []);
+
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/" && (!activeHash || activeHash === "#hero");
+    }
+    if (href.startsWith("/#")) {
+      const hash = href.replace("/", "");
+      return pathname === "/" && activeHash === hash;
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <nav
@@ -42,7 +84,7 @@ export default function NavBar() {
       }}
     >
       <div className="container" style={{ display: "flex", alignItems: "center" }}>
-        <Link href="/" style={{ textDecoration: "none" }}>
+        <Link href="/" style={{ textDecoration: "none" }} onClick={() => setActiveHash("")}>
           <BrandLogo color="white" />
         </Link>
 
@@ -51,10 +93,17 @@ export default function NavBar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => {
+                if (link.href.startsWith("/#")) {
+                  setActiveHash(link.href.replace("/", ""));
+                } else if (link.href === "/") {
+                  setActiveHash("");
+                }
+              }}
               style={{
                 fontSize: "14px",
                 fontWeight: 600,
-                color: pathname === link.href ? "var(--cyan)" : "rgba(255,255,255,0.8)",
+                color: isActive(link.href) ? "var(--cyan)" : "rgba(255,255,255,0.8)",
                 textDecoration: "none",
                 transition: "color 0.2s ease",
               }}

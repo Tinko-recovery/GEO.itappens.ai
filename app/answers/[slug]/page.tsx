@@ -55,6 +55,10 @@ export default async function AnswerDetailPage({ params }: { params: Promise<{ s
     faqSchema(page.faq, `/answers/${page.slug}`),
   );
 
+  const currentIndex = answerPages.findIndex(p => p.slug === slug);
+  const nextPost = currentIndex < answerPages.length - 1 ? answerPages[currentIndex + 1] : null;
+  const prevPost = currentIndex > 0 ? answerPages[currentIndex - 1] : null;
+
   return (
     <div className="page-shell">
       <JsonLd data={pageSchema} />
@@ -145,6 +149,27 @@ export default async function AnswerDetailPage({ params }: { params: Promise<{ s
               </a>
             </div>
           </div>
+        </section>
+
+        {/* Pagination Navigation */}
+        <section style={{ padding: '60px 0 120px', backgroundColor: 'var(--light-bg)' }}>
+            <div className="container">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', borderTop: '1px solid var(--border-light)', paddingTop: '40px' }}>
+                    {prevPost ? (
+                        <a href={`/answers/${prevPost.slug}`} className="card-bento" style={{ display: 'flex', flexDirection: 'column', gap: '8px', textDecoration: 'none' }}>
+                            <span style={{ fontSize: '13px', color: 'var(--slate)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Previous Answer</span>
+                            <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--navy)', lineHeight: 1.4 }}>{prevPost.query}</span>
+                        </a>
+                    ) : <div />}
+                    
+                    {nextPost ? (
+                        <a href={`/answers/${nextPost.slug}`} className="card-bento" style={{ display: 'flex', flexDirection: 'column', gap: '8px', textDecoration: 'none', textAlign: 'right' }}>
+                            <span style={{ fontSize: '13px', color: 'var(--slate)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Next Answer</span>
+                            <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--navy)', lineHeight: 1.4 }}>{nextPost.query}</span>
+                        </a>
+                    ) : <div />}
+                </div>
+            </div>
         </section>
       </main>
       <SiteFooter />
