@@ -66,6 +66,20 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // 4. Secure Lead Generation Engine Access
+  if (pathname.startsWith("/nimda")) {
+    const session = await auth0.getSession(request);
+    if (!session) {
+      const loginUrl = new URL("/auth/login", request.url);
+      loginUrl.searchParams.set("returnTo", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    
+    if (session.user.email !== "sadish.sugumaran@itappens.ai") {
+      return new NextResponse("Forbidden - This area is restricted to authorized personnel.", { status: 403 });
+    }
+  }
+
   return authRes;
 }
 
