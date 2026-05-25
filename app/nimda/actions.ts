@@ -39,25 +39,20 @@ export async function searchApolloLeads(params: SearchParams): Promise<{ leads: 
     };
 
     if (params.person_titles) {
-      payload.person_titles = params.person_titles.split(",").map(t => t.trim());
+      const titles = params.person_titles.split(",").map(t => t.trim()).filter(Boolean);
+      if (titles.length > 0) payload.person_titles = titles;
     }
     if (params.organisation_keywords) {
-      payload.organization_num_employees_ranges = []; // just mapping to generic
-      // The API often uses `q_organization_keyword_tags` or similar, but let's pass it directly as requested:
-      // Note: Apollo API exact fields: 
-      // person_titles[], q_organization_domains (string), q_organization_keyword_tags[]
-      // We'll map them reasonably to the API documentation standard.
-    }
-    // Proper mapping for Apollo v1 API
-    if (params.organisation_keywords) {
-      // Apollo accepts q_organization_keyword_tags
-      payload.q_organization_keyword_tags = params.organisation_keywords.split(",").map(t => t.trim());
+      const keywords = params.organisation_keywords.split(",").map(t => t.trim()).filter(Boolean);
+      if (keywords.length > 0) payload.q_organization_keyword_tags = keywords;
     }
     if (params.q_organization_domains) {
-      payload.q_organization_domains = params.q_organization_domains;
+      // Apollo expects domains as a newline separated string
+      payload.q_organization_domains = params.q_organization_domains.split(",").map(d => d.trim()).join("\n");
     }
     if (params.organisation_localities) {
-      payload.person_locations = params.organisation_localities.split(",").map(t => t.trim());
+      const locations = params.organisation_localities.split(",").map(t => t.trim()).filter(Boolean);
+      if (locations.length > 0) payload.person_locations = locations;
     }
 
     // 3. Call Apollo API
