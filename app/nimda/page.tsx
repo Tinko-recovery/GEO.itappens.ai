@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { searchApolloLeads, unlockApolloLead, SearchParams, Lead } from "./actions";
+import { searchApolloLeads, unlockApolloLead, deployToSequence, generateIcebreaker, SearchParams, Lead } from "./actions";
 
 export default function LeadGenDashboard() {
   const [params, setParams] = useState<SearchParams>({
@@ -15,6 +15,75 @@ export default function LeadGenDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState<Record<string, boolean>>({});
+  
+  // Phase 2: Deployment State
+  const [sequenceId, setSequenceId] = useState("");
+  const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
+  const [deploying, setDeploying] = useState(false);
+  const [deployStatus, setDeployStatus] = useState<string | null>(null);
+
+  const toggleLeadSelection = (id: string) => {
+    const newSet = new Set(selectedLeads);
+    if (newSet.has(id)) newSet.delete(id);
+    else newSet.add(id);
+    setSelectedLeads(newSet);
+  };
+
+  const toggleAllLeads = () => {
+    if (selectedLeads.size === leads.length) {
+      setSelectedLeads(new Set());
+    } else {
+      setSelectedLeads(new Set(leads.map(l => l.id)));
+    }
+  };
+
+  const handleDeploy = async () => {
+    if (selectedLeads.size === 0) return alert("Select at least one lead.");
+    if (!sequenceId.trim()) return alert("Please enter an Apollo Sequence ID.");
+
+    setDeploying(true);
+    setDeployStatus("Initializing Deployment...");
+
+    try {
+      const ids = Array.from(selectedLeads);
+      
+      // Step 1: Bulk Unlock (if not already unlocked)
+      setDeployStatus("Unlocking Leads...");
+      for (const id of ids) {
+        const lead = leads.find(l => l.id === id);
+        if (lead && !lead.email) {
+          await unlockApolloLead(id);
+        }
+      }
+
+      // Step 2: Generate Icebreakers (Preview for now, until custom fields mapped)
+      setDeployStatus("Running AI AEO Scans...");
+      for (const id of ids) {
+        const lead = leads.find(l => l.id === id);
+        if (lead && lead.company) {
+          // Just triggering it to prove the concept works. 
+          // In production, we'd PUT /v1/contacts/{id} here.
+          await generateIcebreaker(lead.company, lead.title);
+        }
+      }
+
+      // Step 3: Enroll in Sequence
+      setDeployStatus("Enrolling in Apollo Sequence...");
+      const result = await deployToSequence(ids, sequenceId);
+      
+      if (result.success) {
+        alert(`Successfully added ${result.added} leads to sequence!`);
+        setSelectedLeads(new Set());
+      } else {
+        alert(result.error);
+      }
+    } catch (e: any) {
+      alert("Deployment failed: " + e.message);
+    } finally {
+      setDeploying(false);
+      setDeployStatus(null);
+    }
+  };
 
   const handleUnlock = async (id: string) => {
     setUnlocking(prev => ({ ...prev, [id]: true }));
@@ -163,18 +232,56 @@ export default function LeadGenDashboard() {
         {/* Results Table */}
         {leads.length > 0 && (
           <div className="bg-[#0B1221] border border-cyan-900/50 rounded-xl shadow-2xl overflow-hidden">
-            <div className="p-6 border-b border-cyan-900/50 flex justify-between items-center bg-[#070D18]">
-              <h2 className="text-lg font-semibold text-cyan-100">
+            <div className="p-6 border-b border-cyan-900/50 flex justify-between items-center bg-[#070D18] flex-wrap gap-4">
+              <h2 className="text-lg font-semibold text-cyan-100 flex items-center">
                 Acquired Leads ({leads.length})
+                {selectedLeads.size > 0 && <span className="ml-3 px-2 py-0.5 text-xs bg-cyan-900/50 text-cyan-300 rounded border border-cyan-700/50">{selectedLeads.size} Selected</span>}
               </h2>
-              <button className="text-xs px-4 py-2 border border-cyan-700/50 rounded-md hover:bg-cyan-900/30 text-cyan-300 transition-colors">
-                Export Data
-              </button>
+              
+              <div className="flex items-center space-x-3">
+                <input 
+                  type="text" 
+                  placeholder="Apollo Sequence ID"
+                  className="bg-[#050B14] border border-cyan-800/60 rounded px-3 py-1.5 text-xs text-cyan-100 placeholder:text-cyan-800/50 focus:outline-none focus:border-cyan-400 w-48"
+                  value={sequenceId}
+                  onChange={(e) => setSequenceId(e.target.value)}
+                />
+                
+                <button 
+                  onClick={handleDeploy}
+                  disabled={deploying || selectedLeads.size === 0}
+                  className="text-xs px-4 py-2 bg-purple-600/80 hover:bg-purple-500 disabled:opacity-50 border border-purple-500/50 rounded-md text-white font-bold transition-all shadow-[0_0_10px_rgba(147,51,234,0.3)] flex items-center"
+                >
+                  {deploying ? (
+                    <span className="flex items-center">
+                      <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {deployStatus}
+                    </span>
+                  ) : (
+                    "Deploy to Sequence"
+                  )}
+                </button>
+
+                <button className="text-xs px-4 py-2 border border-cyan-700/50 rounded-md hover:bg-cyan-900/30 text-cyan-300 transition-colors">
+                  Export Data
+                </button>
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#050B14] border-b border-cyan-900/50 text-xs uppercase tracking-wider text-cyan-400/70">
+                    <th className="px-6 py-4 font-medium w-12">
+                      <input 
+                        type="checkbox" 
+                        className="rounded border-cyan-700 bg-transparent text-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
+                        checked={selectedLeads.size === leads.length && leads.length > 0}
+                        onChange={toggleAllLeads}
+                      />
+                    </th>
                     <th className="px-6 py-4 font-medium">Contact</th>
                     <th className="px-6 py-4 font-medium">Title</th>
                     <th className="px-6 py-4 font-medium">Company</th>
@@ -184,7 +291,15 @@ export default function LeadGenDashboard() {
                 </thead>
                 <tbody className="divide-y divide-cyan-900/20">
                   {leads.map((lead, idx) => (
-                    <tr key={lead.id || idx} className="hover:bg-cyan-900/10 transition-colors group">
+                    <tr key={lead.id || idx} className={`hover:bg-cyan-900/10 transition-colors group ${selectedLeads.has(lead.id) ? 'bg-cyan-900/5' : ''}`}>
+                      <td className="px-6 py-4">
+                        <input 
+                          type="checkbox" 
+                          className="rounded border-cyan-700 bg-transparent text-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
+                          checked={selectedLeads.has(lead.id)}
+                          onChange={() => toggleLeadSelection(lead.id)}
+                        />
+                      </td>
                       <td className="px-6 py-4">
                         <div className="font-medium text-cyan-50">{lead.name}</div>
                       </td>

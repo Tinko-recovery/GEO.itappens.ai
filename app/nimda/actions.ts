@@ -165,3 +165,81 @@ export async function unlockApolloLead(id: string): Promise<{ lead: Lead | null,
     return { lead: null, error: error.message || "An unexpected error occurred during the unlock." };
   }
 }
+
+export async function deployToSequence(leadIds: string[], sequenceId: string): Promise<{ success: boolean, error?: string, added: number }> {
+  // 1. Verify User Session for Security
+  const session = await auth0.getSession();
+  if (!session || session.user.email !== "sadish.sugumaran@itappens.ai") {
+    return { success: false, error: "Unauthorized. This action is restricted.", added: 0 };
+  }
+
+  const apolloKey = process.env.APOLLO_API_KEY;
+  if (!apolloKey) {
+    return { success: false, error: "APOLLO_API_KEY is not configured.", added: 0 };
+  }
+
+  try {
+    const res = await fetch(`https://api.apollo.io/v1/emailer_campaigns/${sequenceId}/add_contact_ids`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache",
+        "X-Api-Key": apolloKey
+      },
+      body: JSON.stringify({
+        contact_ids: leadIds,
+        emailer_campaign_id: sequenceId
+      })
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorDetails = errorText;
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.error) errorDetails = parsed.error;
+      } catch (e) {}
+      return { success: false, error: `Deployment Failed (${res.status}): ${errorDetails}`, added: 0 };
+    }
+
+    const data = await res.json();
+    return { success: true, added: data.contacts?.length || leadIds.length };
+  } catch (error: any) {
+    console.error("Failed to deploy to Apollo sequence:", error);
+    return { success: false, error: error.message || "An unexpected error occurred during deployment.", added: 0 };
+  }
+}
+
+export async function generateIcebreaker(domain: string, title: string): Promise<string> {
+  const geminiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
+  if (!geminiKey) return "I ran an AEO scan on your domain and noticed a gap in Perplexity citations.";
+
+  try {
+    const prompt = `
+Role: B2B Cold Outreach Specialist.
+Task: Write a 1-sentence personalized icebreaker for a ${title} at a company with domain ${domain}.
+Context: We sell Answer Engine Optimization (AEO) services (getting cited in ChatGPT/Perplexity).
+Guidelines: 
+- Be highly casual and technical.
+- Do NOT use greetings (no 'Hi', no 'Hope you are well').
+- Start directly with the hook.
+- Max 1 sentence.
+Example: "I noticed ${domain} is currently losing citation share in Perplexity to your direct competitors."
+`;
+
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7 }
+      })
+    });
+
+    if (!res.ok) return "I ran an AEO scan on your domain and noticed a gap in Perplexity citations.";
+    const data = await res.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "I ran an AEO scan on your domain and noticed a gap in Perplexity citations.";
+  } catch (e) {
+    return "I ran an AEO scan on your domain and noticed a gap in Perplexity citations.";
+  }
+}
