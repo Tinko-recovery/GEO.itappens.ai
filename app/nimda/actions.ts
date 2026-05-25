@@ -43,8 +43,7 @@ export async function searchApolloLeads(params: SearchParams): Promise<{ leads: 
       if (titles.length > 0) payload.person_titles = titles;
     }
     if (params.organisation_keywords) {
-      const keywords = params.organisation_keywords.split(",").map(t => t.trim()).filter(Boolean);
-      if (keywords.length > 0) payload.q_organization_keyword_tags = keywords;
+      payload.q_keywords = params.organisation_keywords.replace(/,/g, " ").trim();
     }
     if (params.q_organization_domains) {
       // Apollo expects domains as a newline separated string
