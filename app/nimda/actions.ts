@@ -17,6 +17,7 @@ export type SearchParams = {
   organisation_keywords?: string;
   organisation_localities?: string;
   q_organization_domains?: string;
+  intent_topic_ids?: string;
   page?: number;
 };
 
@@ -53,6 +54,10 @@ export async function searchApolloLeads(params: SearchParams): Promise<{ leads: 
     if (params.organisation_localities) {
       const locations = params.organisation_localities.split(",").map(t => t.trim()).filter(Boolean);
       if (locations.length > 0) payload.person_locations = locations;
+    }
+    if (params.intent_topic_ids) {
+      const intentIds = params.intent_topic_ids.split(",").map(t => t.trim()).filter(Boolean);
+      if (intentIds.length > 0) payload.intent_topic_ids = intentIds;
     }
 
     // 3. Call Apollo API

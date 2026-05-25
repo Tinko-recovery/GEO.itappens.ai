@@ -81,7 +81,7 @@ export default function LeadGenDashboard() {
             Target Query Parameters
           </h2>
           
-          <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <div className="space-y-2">
               <label className="text-xs font-medium text-cyan-300/80 uppercase tracking-wider">Job Titles (comma-separated)</label>
               <input 
@@ -126,7 +126,18 @@ export default function LeadGenDashboard() {
               />
             </div>
 
-            <div className="col-span-1 md:col-span-2 lg:col-span-4 flex items-center justify-between pt-4 border-t border-cyan-900/30">
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-cyan-300/80 uppercase tracking-wider">Intent Topic IDs</label>
+              <input 
+                type="text" 
+                placeholder="e.g. 5f9b3..., 6a2c1..."
+                className="w-full bg-[#050B14] border border-cyan-800/60 rounded-lg px-4 py-2.5 text-sm text-cyan-100 placeholder:text-cyan-800/50 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 transition-all"
+                value={params.intent_topic_ids || ""}
+                onChange={(e) => setParams({...params, intent_topic_ids: e.target.value})}
+              />
+            </div>
+
+            <div className="col-span-1 md:col-span-2 lg:col-span-5 flex items-center justify-between pt-4 border-t border-cyan-900/30">
               <div className="text-sm text-red-400 font-medium">{error}</div>
               <button 
                 type="submit"
