@@ -19,10 +19,14 @@ export async function middleware(request: NextRequest) {
   }
 
   // 2. Hostname redirection
-  if (host === "itappens.ai") {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const actualHost = forwardedHost || host;
+  
+  if (actualHost === "itappens.ai" || actualHost.startsWith("itappens.ai:")) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.hostname = "www.itappens.ai";
     redirectUrl.protocol = "https:";
+    redirectUrl.port = "";
     return NextResponse.redirect(redirectUrl, 308);
   }
 
