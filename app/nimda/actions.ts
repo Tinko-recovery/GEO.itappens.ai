@@ -34,7 +34,6 @@ export async function searchApolloLeads(params: SearchParams): Promise<{ leads: 
   try {
     // 2. Prepare Payload
     const payload: Record<string, any> = {
-      api_key: apolloKey,
       page: params.page || 1,
     };
 
@@ -59,7 +58,8 @@ export async function searchApolloLeads(params: SearchParams): Promise<{ leads: 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Cache-Control": "no-cache"
+        "Cache-Control": "no-cache",
+        "X-Api-Key": apolloKey
       },
       body: JSON.stringify(payload)
     });
