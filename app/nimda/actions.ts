@@ -67,7 +67,14 @@ export async function searchApolloLeads(params: SearchParams): Promise<{ leads: 
     if (!res.ok) {
       const errorText = await res.text();
       console.error("Apollo API Error:", res.status, errorText);
-      return { leads: [], error: `Apollo API returned ${res.status}: ${res.statusText}` };
+      
+      let errorDetails = errorText;
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.error) errorDetails = parsed.error;
+      } catch (e) {}
+      
+      return { leads: [], error: `Apollo API returned ${res.status}: ${errorDetails}` };
     }
 
     const data = await res.json();
