@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { searchApolloLeads, SearchParams, Lead } from "./actions";
+import { searchApolloLeads, unlockApolloLead, SearchParams, Lead } from "./actions";
 
 export default function LeadGenDashboard() {
   const [params, setParams] = useState<SearchParams>({
@@ -14,6 +14,27 @@ export default function LeadGenDashboard() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [unlocking, setUnlocking] = useState<Record<string, boolean>>({});
+
+  const handleUnlock = async (id: string) => {
+    setUnlocking(prev => ({ ...prev, [id]: true }));
+    try {
+      const result = await unlockApolloLead(id);
+      if (!result) {
+        alert("Version mismatch. Please hard refresh.");
+        return;
+      }
+      if (result.error) {
+        alert(result.error);
+      } else if (result.lead) {
+        setLeads(prevLeads => prevLeads.map(l => l.id === id ? result.lead! : l));
+      }
+    } catch (err: any) {
+      alert(err.message || "Unlock failed");
+    } finally {
+      setUnlocking(prev => ({ ...prev, [id]: false }));
+    }
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,7 +167,7 @@ export default function LeadGenDashboard() {
                     <th className="px-6 py-4 font-medium">Contact</th>
                     <th className="px-6 py-4 font-medium">Title</th>
                     <th className="px-6 py-4 font-medium">Company</th>
-                    <th className="px-6 py-4 font-medium">Email</th>
+                    <th className="px-6 py-4 font-medium">Contact Info</th>
                     <th className="px-6 py-4 font-medium text-right">Intel</th>
                   </tr>
                 </thead>
@@ -160,11 +181,34 @@ export default function LeadGenDashboard() {
                       <td className="px-6 py-4 text-sm text-cyan-200/80">{lead.company}</td>
                       <td className="px-6 py-4">
                         {lead.email ? (
-                          <span className="text-sm font-mono text-emerald-400 bg-emerald-950/30 px-2 py-1 rounded border border-emerald-800/50">
-                            {lead.email}
-                          </span>
+                          <div className="flex flex-col gap-2">
+                            <span className="text-sm font-mono text-emerald-400 bg-emerald-950/30 px-2 py-1 rounded border border-emerald-800/50 w-max">
+                              {lead.email}
+                            </span>
+                            {lead.phone && (
+                              <span className="text-xs font-mono text-blue-400 bg-blue-950/30 px-2 py-1 rounded border border-blue-800/50 w-max">
+                                📞 {lead.phone}
+                              </span>
+                            )}
+                          </div>
                         ) : (
-                          <span className="text-sm text-cyan-700 font-mono italic">unavailable</span>
+                          <button
+                            onClick={() => handleUnlock(lead.id)}
+                            disabled={unlocking[lead.id]}
+                            className="text-xs font-semibold px-3 py-1.5 bg-cyan-900/40 hover:bg-cyan-800/60 border border-cyan-700/50 text-cyan-200 rounded transition-all flex items-center disabled:opacity-50"
+                          >
+                            {unlocking[lead.id] ? (
+                              <span className="flex items-center">
+                                <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-cyan-200" fill="none" viewBox="0 0 24 24">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Unlocking...
+                              </span>
+                            ) : (
+                              "Unlock (1 Credit)"
+                            )}
+                          </button>
                         )}
                       </td>
                       <td className="px-6 py-4 text-right">
