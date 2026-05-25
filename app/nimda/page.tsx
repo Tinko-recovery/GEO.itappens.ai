@@ -22,6 +22,9 @@ export default function LeadGenDashboard() {
     
     try {
       const result = await searchApolloLeads(params);
+      if (!result) {
+        throw new Error("Version Mismatch: Please hard-refresh your browser (Ctrl+Shift+R or Cmd+Shift+R) to load the newly deployed code.");
+      }
       if (result.error) {
         setError(result.error);
       } else {
