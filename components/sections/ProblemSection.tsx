@@ -3,19 +3,19 @@ import { motion } from 'framer-motion';
 
 const problems = [
     {
-        title: "Citation Blindness",
-        description: "Your brand is mentioned, but not cited. AI engines synthesize your knowledge without giving you credit, killing your downstream conversion.",
-        icon: "🚫"
-    },
-    {
-        title: "Entity Confusion",
-        description: "AI crawlers see conflicting data across your site and socials. They default to the most 'consistent' answer, even if it's incorrect or outdated.",
+        title: "Invisible to AI Engines",
+        description: "ChatGPT and Perplexity synthesize your market, but your brand isn't cited. Without semantic infrastructure, your authority is lost to the LLM.",
         icon: "🕵️"
     },
     {
-        title: "Competitor Capture",
-        description: "Your competitors are already optimizing for LLM retrieval. If they own the citation layer, they own your market's trust by default.",
-        icon: "📉"
+        title: "Fragmented Tooling",
+        description: "You're paying for separate tools for lead gen, content creation, and SEO. Data is siloed, and execution is slow and expensive.",
+        icon: "🧩"
+    },
+    {
+        title: "Manual Growth Workflows",
+        description: "Your team is wasting hours on manual research, outbound emails, and content formatting instead of closing deals. You need autonomous agents.",
+        icon: "⏳"
     }
 ];
 
@@ -30,17 +30,17 @@ export default function ProblemSection() {
                     
                     {/* Left Column: The Problem Text */}
                     <div>
-                        <span className="badge-pill" style={{ marginBottom: '24px' }}>The Core Challenge</span>
-                        <h2 className="headline-lg">Traditional SEO is no longer enough.</h2>
-                        <p className="text-large" style={{ marginBottom: '48px' }}>
-                            Google is becoming an answer engine. ChatGPT and Perplexity are becoming the first touchpoint. If your brand isn't structured for <strong>Agentic Retrieval</strong>, you're invisible.
+                        <span className="badge-pill" style={{ marginBottom: '24px' }}>The Growth Bottleneck</span>
+                        <h2 className="headline-lg">Fragmented tools are killing your scale.</h2>
+                        <p className="text-large" style={{ marginBottom: '48px', fontSize: '18px', lineHeight: 1.6 }}>
+                            Scaling a B2B SaaS is harder than ever. You have one agency for SEO, another software for outbound, and manual workflows holding your team back. It's time to unify your growth engine.
                         </p>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                             {problems.map((p, i) => (
                                 <motion.div 
                                     key={i} 
-                                    className="card-corporate"
+                                    className="card-bento"
                                     initial={{ opacity: 0, x: -20 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
@@ -49,7 +49,7 @@ export default function ProblemSection() {
                                 >
                                     <div style={{ fontSize: '32px' }}>{p.icon}</div>
                                     <div>
-                                        <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>{p.title}</h3>
+                                        <h3 style={{ fontSize: '18px', marginBottom: '8px', color: 'var(--navy)' }}>{p.title}</h3>
                                         <p style={{ color: 'var(--slate)', lineHeight: 1.6, fontSize: '15px' }}>{p.description}</p>
                                     </div>
                                 </motion.div>

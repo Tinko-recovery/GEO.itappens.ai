@@ -4,27 +4,27 @@ import { motion } from 'framer-motion';
 const pillars = [
     {
         num: '01',
-        title: 'Technical Signals',
-        body: 'We normalize your entity schema, llms.txt, and crawl assets. This ensures AI systems extract a consistent machine-readable profile of your brand.',
-        tag: 'Infrastructure'
+        title: 'Answer Engine Optimization (AEO)',
+        body: 'Dominate ChatGPT, Perplexity, and Gemini. We build the technical infrastructure and semantic relevance required to make your brand the primary retrieved entity.',
+        tag: 'Visibility'
     },
     {
         num: '02',
-        title: 'Content Layer',
-        body: 'We publish answer-first content clusters engineered for high-intent queries that buyers actually ask inside generative platforms.',
-        tag: 'Authority'
+        title: 'AI Automation Services',
+        body: 'Replace manual workflows with autonomous agents. From customer support to data extraction, we build custom AI systems that run 24/7.',
+        tag: 'Efficiency'
     },
     {
         num: '03',
-        title: 'Entity & Citation',
-        body: 'We reinforce your identity and claims across the web, ensuring third-party references corroborate your core service definitions.',
-        tag: 'Corroboration'
+        title: 'Content Creation at Scale',
+        body: 'Programmatic, high-quality content generation that matches buyer intent. We build topical authority hubs designed specifically for LLM ingestion.',
+        tag: 'Authority'
     },
     {
         num: '04',
-        title: 'Tracking & Iteration',
-        body: 'Weekly citation movement reports across all major engines. We use gap analysis to decide the next content and technical push.',
-        tag: 'Precision'
+        title: 'Outbound Lead Generation',
+        body: 'Audit-driven outreach. Our lead generation engine identifies high-intent targets, runs automated audits, and deploys hyper-personalized sequences.',
+        tag: 'Growth'
     }
 ];
 
@@ -33,11 +33,11 @@ export default function SolutionSection() {
         <section id="solutions" style={{ padding: '120px 0', backgroundColor: 'var(--light-bg)' }}>
             <div className="container">
                 <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-                    <span className="badge-pill" style={{ marginBottom: '24px' }}>The Methodology</span>
-                    <h2 className="headline-lg">A Systematic Framework for <br /> <span style={{ color: 'var(--blue)' }}>AI Retrieval Domination.</span></h2>
+                    <span className="badge-pill" style={{ marginBottom: '24px' }}>4 Pillars of Growth</span>
+                    <h2 className="headline-lg">Everything you need to <br /> <span style={{ color: 'var(--blue)' }}>Scale with AI.</span></h2>
                 </div>
 
-                <div className="bento-grid" style={{ marginBottom: '80px' }}>
+                <div className="grid-2col" style={{ marginBottom: '80px' }}>
                     {pillars.map((p, i) => (
                         <motion.div
                             key={i}
@@ -45,14 +45,14 @@ export default function SolutionSection() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: i * 0.1 }}
-                            className="card-corporate"
-                            style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+                            className="card-bento"
+                            style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}
                         >
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <span style={{ fontSize: '32px', fontWeight: 800, color: 'var(--blue)', opacity: 0.2 }}>{p.num}</span>
                                 <span className="badge-pill">{p.tag}</span>
                             </div>
-                            <h3 style={{ fontSize: '22px', fontWeight: 700 }}>{p.title}</h3>
+                            <h3 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--navy)' }}>{p.title}</h3>
                             <p style={{ color: 'var(--slate)', lineHeight: 1.7 }}>
                                 {p.body}
                             </p>

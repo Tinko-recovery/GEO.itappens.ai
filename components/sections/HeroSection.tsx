@@ -41,7 +41,7 @@ export default function HeroSection() {
                                 color: 'var(--cyan)',
                                 border: '1px solid rgba(0, 194, 255, 0.3)'
                             }}>
-                                Global GEO & AEO Authority
+                                The All-in-One AI Growth Engine
                             </span>
                         </motion.div>
                         
@@ -52,8 +52,8 @@ export default function HeroSection() {
                             className="headline-xl" 
                             style={{ color: '#fff', marginBottom: '32px' }}
                         >
-                            Get Cited by ChatGPT, Perplexity & Gemini. <br />
-                            <span style={{ color: 'var(--cyan)' }}>Not Just Ranked.</span>
+                            Dominate Answer Engines & <br />
+                            <span style={{ color: 'var(--cyan)' }}>Automate Your Growth.</span>
                         </motion.h1>
                         
                         <motion.p 
@@ -68,7 +68,7 @@ export default function HeroSection() {
                                 maxWidth: '600px'
                             }}
                         >
-                            itappens.ai builds the technical and semantic infrastructure that causes AI platforms to trust, retrieve, and cite your brand as the primary authority in your category.
+                            itappens.ai unifies AEO, AI Automation, Content Creation, and Lead Generation into a single, powerful SaaS infrastructure for B2B brands. The last team you'll ever hire.
                         </motion.p>
                         
                         <motion.div 
@@ -77,11 +77,11 @@ export default function HeroSection() {
                             transition={{ delay: 0.3, duration: 0.8 }}
                             style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}
                         >
-                            <a href="/audit" className="btn-orange" style={{ padding: '20px 48px', fontSize: '16px' }}>
-                                Start Free GEO Audit
+                            <a href="/auth/login" className="btn-primary" style={{ padding: '20px 48px', fontSize: '16px' }}>
+                                Start Building for Free
                             </a>
-                            <a href="/geo" className="btn-ghost" style={{ padding: '20px 48px', fontSize: '16px', color: 'white', borderColor: 'rgba(255,255,255,0.2)' }}>
-                                View the Framework →
+                            <a href="/geo" className="btn-secondary" style={{ padding: '20px 48px', fontSize: '16px' }}>
+                                View Platform Features →
                             </a>
                         </motion.div>
                     </div>

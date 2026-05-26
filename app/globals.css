@@ -8,7 +8,7 @@
     --foreground: 222 47% 11%; /* #0F172A */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
-    --primary: 221 83% 53%; /* #1D4ED8 Vibrant Blue */
+    --primary: 226 78% 49%; /* #1B4FDE Stitch Primary */
     --primary-foreground: 0 0% 100%;
     --secondary: 222 47% 11%; /* #0F172A Deep Navy */
     --secondary-foreground: 0 0% 100%;
@@ -16,8 +16,8 @@
     --accent-foreground: 222 47% 11%;
     --border: 214 32% 91%; /* #E2E8F0 */
     --input: 214 32% 91%;
-    --ring: 221 83% 53%;
-    --radius: 0.75rem; /* Standardizing rounded corners */
+    --ring: 226 78% 49%;
+    --radius: 0.5rem; /* Stitch Roundness: 8px */
   }
 
   .dark {
@@ -30,19 +30,20 @@
 }
 
 :root {
-  /* Corporate Palette */
+  /* Corporate Palette (Stitch System) */
   --navy: #0F172A;
   --navy-dark: #020617;
-  --blue: #2563EB;
-  --blue-hover: #1D4ED8;
-  --cyan: #06B6D4;
-  --slate: #475569;
-  --slate-dark: #1E293B;
-  --light-bg: #F8FAFC;
-  --border-light: #E2E8F0;
+  --blue: #1B4FDE;
+  --blue-hover: #0038B4;
+  --cyan: #00C2FF;
+  --orange: #FF6B2B;
+  --slate: #434655;
+  --slate-dark: #131b2e;
+  --light-bg: #faf8ff;
+  --border-light: #c4c5d7;
 
   /* Typography */
-  --font-display: 'Outfit', 'Inter', system-ui, sans-serif;
+  --font-display: 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
@@ -71,7 +72,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .section {
-  padding: 80px 0;
+  padding: 40px 0;
+  overflow-x: hidden;
 }
 @media (min-width: 768px) {
   .section {
@@ -102,7 +104,8 @@ h1, h2, h3, h4, h5, h6 {
 .grid-2col {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 40px;
+  gap: 32px;
+  width: 100%;
 }
 @media (min-width: 768px) {
   .grid-2col {
@@ -201,19 +204,19 @@ h1, h2, h3, h4, h5, h6 {
 
 /* TYPOGRAPHY */
 .headline-xl {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(2rem, 6vw, 3.5rem);
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.03em;
 }
 .headline-lg {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
   line-height: 1.15;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 .headline-md {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
   line-height: 1.2;
   font-weight: 700;
 }
