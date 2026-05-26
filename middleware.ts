@@ -79,7 +79,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
     
-    if (session.user.email !== "sadish.sugumaran@itappens.ai") {
+    const userEmail = session.user.email?.toLowerCase() || "";
+    if (userEmail !== "sadish.sugumaran@itappens.ai") {
       return new NextResponse("Forbidden - This area is restricted to authorized personnel.", { status: 403 });
     }
   }
