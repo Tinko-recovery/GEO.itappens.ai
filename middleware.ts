@@ -57,7 +57,7 @@ export async function middleware(request: NextRequest) {
   // 3. Auth0 v4 Middleware
   const authRes = await auth0.middleware(request);
 
-  const protectedPrefixes = ["/dashboard", "/client", "/leadgen"];
+  const protectedPrefixes = ["/dashboard", "/client"];
   const isProtected = protectedPrefixes.some(prefix => pathname === prefix || pathname.startsWith(`${prefix}/`));
 
   if (isProtected) {
