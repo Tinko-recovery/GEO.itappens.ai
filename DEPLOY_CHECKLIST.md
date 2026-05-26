@@ -18,7 +18,7 @@ Your code is now containerized and version-controlled. Follow these steps to tak
 ---
 
 ## ☁️ Step 2: Deploy Backend to Render.com
-1.  Log into [Render.com](https://render.com).
+1.  Log into [Render.com](https://render.com) (Login: **founder@tinko.in**).
 2.  **New +** -> **Web Service**.
 3.  Connect your GitHub repository.
 4.  **Runtime**: `Python 3`.
