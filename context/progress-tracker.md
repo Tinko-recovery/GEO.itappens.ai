@@ -7,7 +7,7 @@ Update this file after every meaningful implementation change.
 - [x] Phase 2: Spec-Driven Deconstruction & Build
 
 ## Current Goal
-- Unit 04: The Keyword Planner UI
+- Unit 05: Smart Scheduling Engine & Queue UI
 
 ## Completed
 - Defined 6 master Context files.
@@ -15,14 +15,15 @@ Update this file after every meaningful implementation change.
 - Created Spec `01-landing-page.md`.
 - Built Unit 01: High-converting Marketing Landing Page at `/aeo`.
 - Built Unit 02: Expanded Prisma Schema (`AeoArticle` enhancements).
-- **Built Unit 03:** AI Keyword Planner API (`/api/aeo/planner`).
+- Built Unit 03: AI Keyword Planner API (`/api/aeo/planner`).
+- **Built Unit 04:** Keyword Planner UI with glassmorphic Tabs and bulk queuing.
 
 ## In Progress
-- Unit 04: Keyword Planner UI
+- Unit 05: Smart Scheduling Engine
 
 ## Next Up
-- Create Spec `04-planner-ui.md`.
-- Modify `SocialDashboard.tsx` to include Planner tab.
+- Create Spec `05-scheduling.md`.
+- Implement background drip-feed logic in `app/api/aeo/worker/route.ts`.
 
 ## Open Questions
 - None currently. Awaiting user green light to generate the Build Plan specs.

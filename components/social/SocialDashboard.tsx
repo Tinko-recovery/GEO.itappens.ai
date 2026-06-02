@@ -1,13 +1,19 @@
 'use client';
 import { useEffect, useState } from "react";
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Bot, ListTodo, Settings, Loader2, Plus, ArrowRight } from 'lucide-react';
+
+type Tab = 'planner' | 'queue' | 'sites';
 
 export default function SocialDashboard() {
+  const [activeTab, setActiveTab] = useState<Tab>('planner');
   const [engineActive, setEngineActive] = useState(false);
   const [checking, setChecking] = useState(true);
 
   const [topic, setTopic] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedTopics, setGeneratedTopics] = useState<any[]>([]);
+  const [isQueueingAll, setIsQueueingAll] = useState(false);
   
   const [articles, setArticles] = useState<any[]>([]);
   const [sites, setSites] = useState<any[]>([]);
@@ -64,202 +70,282 @@ export default function SocialDashboard() {
     }
   };
 
-  const handleGenerate = async () => {
-    if (!topic.trim() || sites.length === 0) {
-      alert("Please enter a topic and ensure you have connected a site.");
+  const handleGeneratePlanner = async () => {
+    if (!topic.trim()) {
+      alert("Please enter a seed keyword.");
       return;
     }
     
     setIsGenerating(true);
+    setGeneratedTopics([]);
     try {
-      const res = await fetch('/api/aeo/articles', {
+      const res = await fetch('/api/aeo/planner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, siteId: sites[0].id })
+        body: JSON.stringify({ seedKeyword: topic })
       });
       
       if (res.ok) {
-        const newArticle = await res.json();
-        setArticles([newArticle, ...articles]);
-        if (credits !== null) setCredits(credits - 1);
-        setTopic("");
+        const data = await res.json();
+        setGeneratedTopics(data.topics);
       } else {
         const err = await res.json();
-        alert(err.error || "Failed to queue article");
+        alert(err.error || "Failed to generate topics");
       }
     } catch (e) {
-      console.error("Error queuing article", e);
+      console.error("Error generating topics", e);
       alert("An error occurred");
     } finally {
       setIsGenerating(false);
     }
   };
 
+  const handleQueueAll = async () => {
+    if (sites.length === 0) {
+      alert("Please connect a WordPress site first.");
+      setActiveTab('sites');
+      return;
+    }
+    if (generatedTopics.length === 0) return;
+
+    setIsQueueingAll(true);
+    const queuedArticles = [];
+    let currentCredits = credits || 0;
+
+    for (const t of generatedTopics) {
+      if (currentCredits <= 0) {
+        alert("Insufficient credits to queue all articles.");
+        break;
+      }
+      try {
+        const res = await fetch('/api/aeo/articles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ topic: t.title, siteId: sites[0].id })
+        });
+        if (res.ok) {
+          const newArt = await res.json();
+          queuedArticles.push(newArt);
+          currentCredits -= 1;
+        }
+      } catch (e) {
+        console.error("Failed to queue topic", t.title);
+      }
+    }
+
+    setArticles([...queuedArticles, ...articles]);
+    setCredits(currentCredits);
+    setGeneratedTopics([]);
+    setTopic("");
+    setIsQueueingAll(false);
+    setActiveTab('queue');
+  };
+
+  const handleQueueSingle = async (topicTitle: string) => {
+    if (sites.length === 0) {
+      alert("Please connect a WordPress site first.");
+      return;
+    }
+    try {
+      const res = await fetch('/api/aeo/articles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: topicTitle, siteId: sites[0].id })
+      });
+      if (res.ok) {
+        const newArt = await res.json();
+        setArticles([newArt, ...articles]);
+        if (credits !== null) setCredits(credits - 1);
+        setGeneratedTopics(prev => prev.filter(t => t.title !== topicTitle));
+      } else {
+        alert("Failed to queue article");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   return (
-    <div className="container" style={{ padding: '40px 24px 160px' }}>
-      
-      {/* Dashboard Top: Status & Pro Banner */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px', marginBottom: '48px' }}>
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="card-bento" 
-          style={{ 
-            background: 'linear-gradient(135deg, var(--accent) 0%, #4338ca 100%)',
-            color: '#fff',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            padding: '40px'
-          }}
-        >
-          <span className="overline" style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '12px' }}>Account Status — AEO PRO</span>
-          <h2 className="headline-sm" style={{ color: '#fff', marginBottom: '16px' }}>Your Content Engine is <span style={{ color: '#818cf8' }}>{checking ? 'Checking...' : engineActive ? 'Active.' : 'Offline.'}</span></h2>
-          <p style={{ opacity: 0.9, fontSize: '15px', maxWidth: '400px', marginBottom: '24px' }}>
-            You have {credits !== null ? credits : '...'} AEO article credits remaining. Credits do not expire.
-          </p>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button className="btn-primary" style={{ backgroundColor: '#fff', color: 'var(--accent)', border: 'none' }}>
-              Buy Credits
-            </button>
-            <button className="btn-secondary" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>
-              Upgrade Plan
-            </button>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="card-bento" 
-          style={{ backgroundColor: 'var(--surface)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
-        >
-          <span className="overline">Content Overview</span>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '16px' }}>
-            <div>
-              <div style={{ fontSize: '24px', fontWeight: 800 }}>{articles.filter(a => a.status === 'PUBLISHED').length}</div>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Articles Published</p>
-            </div>
-            <div>
-              <div style={{ fontSize: '24px', fontWeight: 800 }}>{articles.filter(a => a.status !== 'PUBLISHED').length}</div>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Scheduled / Drafts</p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Grid: Channels & Approval Queue */}
-      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '32px' }}>
+    <div className="min-h-screen bg-slate-950 text-slate-50 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
         
-        {/* Sidebar: Connected Sites */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-           <span className="overline">CONNECTED SITES</span>
-           {sites.map((site) => (
-             <div key={site.id} className="card-bento" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-               <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(59, 130, 246, 0.1)', color: 'var(--brand-blue)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
-                 W
-               </div>
-               <div style={{ overflow: 'hidden' }}>
-                 <div style={{ fontSize: '14px', fontWeight: 700, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{site.url}</div>
-                 <div style={{ fontSize: '12px', color: 'var(--brand-green)' }}>API Connected</div>
-               </div>
-             </div>
-           ))}
-           <button 
-             className="btn-secondary" 
-             style={{ width: '100%', fontSize: '13px', padding: '10px' }}
-             onClick={handleConnectSite}
-           >
-             + Connect New WordPress Site
-           </button>
-           
-           <div style={{ height: '1px', backgroundColor: 'var(--border)', margin: '12px 0' }} />
-
-           <div className="card-bento" style={{ padding: '20px', backgroundColor: 'rgba(99, 102, 241, 0.05)', border: '1px dashed var(--accent)' }}>
-             <span className="overline" style={{ color: 'var(--accent)', fontSize: '10px' }}>PUBLISHING ENGINE</span>
-             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
-                <div style={{ width: '30px', height: '30px', backgroundColor: 'var(--accent)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '13px', fontWeight: 900 }}>AI</div>
-                <div>
-                   <div style={{ fontSize: '12px', fontWeight: 700 }}>Claude 3.5 Sonnet</div>
-                   <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Writing Engine Active</div>
-                </div>
-             </div>
-           </div>
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-tight">itappens <span className="text-indigo-400">AEO</span></h1>
+            <p className="text-slate-400 mt-1 flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className={checking ? "" : engineActive ? "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" : "absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"}></span>
+                <span className={`relative inline-flex rounded-full h-2 w-2 ${checking ? 'bg-slate-500' : engineActive ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
+              </span>
+              {checking ? 'Connecting...' : engineActive ? 'Engine Online' : 'Engine Offline'}
+            </p>
+          </div>
+          <div className="bg-slate-900 border border-slate-800 rounded-xl px-6 py-3 flex items-center gap-4">
+            <div className="text-slate-400 text-sm">Available Credits</div>
+            <div className="text-2xl font-bold text-indigo-400">{credits !== null ? credits : '-'}</div>
+          </div>
         </div>
 
-        {/* Main: Topic Queue & Idea Bucket */}
-        <div>
-           {/* Idea Bucket Input */}
-           <div className="card-bento" style={{ marginBottom: '40px', padding: '32px' }}>
-              <span className="overline">PLAN A TOPIC</span>
-              <h3 className="headline-sm" style={{ marginBottom: '16px' }}>What should we write about?</h3>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <input 
-                  type="text" 
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder="e.g. Best AEO tools for 2026..." 
-                  style={{ 
-                    flex: 1, 
-                    padding: '12px 16px', 
-                    borderRadius: '8px', 
-                    border: '1px solid var(--border)',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '14px'
-                  }}
-                />
+        {/* Navigation Tabs */}
+        <div className="flex gap-2 mb-8 border-b border-slate-800 pb-px">
+          <button 
+            onClick={() => setActiveTab('planner')}
+            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'planner' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          >
+            <Bot className="w-4 h-4" />
+            Keyword Planner
+          </button>
+          <button 
+            onClick={() => setActiveTab('queue')}
+            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'queue' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          >
+            <ListTodo className="w-4 h-4" />
+            Article Queue ({articles.length})
+          </button>
+          <button 
+            onClick={() => setActiveTab('sites')}
+            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'sites' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          >
+            <Settings className="w-4 h-4" />
+            Connected Sites ({sites.length})
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        <AnimatePresence mode="wait">
+          
+          {/* PLANNER TAB */}
+          {activeTab === 'planner' && (
+            <motion.div key="planner" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+              <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+                <h2 className="text-xl font-bold mb-2">Seed Keyword Planner</h2>
+                <p className="text-slate-400 text-sm mb-6">Enter a broad topic to instantly generate a 30-day topical map of AEO queries.</p>
+                
+                <div className="flex gap-4">
+                  <input 
+                    type="text" 
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    placeholder="e.g. Real Estate in Connecticut" 
+                    className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                  />
+                  <button 
+                    onClick={handleGeneratePlanner}
+                    disabled={isGenerating || !engineActive}
+                    className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    {isGenerating ? <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing...</> : <><Bot className="w-5 h-5" /> Generate Map</>}
+                  </button>
+                </div>
+              </div>
+
+              {generatedTopics.length > 0 && (
+                <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-lg font-bold">Generated Topic Map ({generatedTopics.length})</h3>
+                    <button 
+                      onClick={handleQueueAll}
+                      disabled={isQueueingAll}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {isQueueingAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                      Approve & Queue All
+                    </button>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {generatedTopics.map((t, idx) => (
+                      <div key={idx} className="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between group hover:border-indigo-500/50 transition-colors">
+                        <div>
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">Vol: {t.estimatedVolume}</span>
+                            <button onClick={() => handleQueueSingle(t.title)} className="text-slate-500 hover:text-emerald-400 transition-colors" title="Queue this article">
+                              <Plus className="w-5 h-5" />
+                            </button>
+                          </div>
+                          <h4 className="font-bold text-sm text-slate-200 leading-snug mb-2">{t.title}</h4>
+                          <p className="text-xs text-slate-500">Query: {t.targetQuery}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* QUEUE TAB */}
+          {activeTab === 'queue' && (
+            <motion.div key="queue" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+              {articles.length === 0 ? (
+                <div className="text-center py-20 text-slate-500 border border-slate-800 border-dashed rounded-2xl">
+                  No articles in the queue. Use the Planner to generate some!
+                </div>
+              ) : (
+                articles.map((art, idx) => (
+                  <div key={idx} className="bg-slate-900/50 border border-slate-800 rounded-xl p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                    <div>
+                      <h4 className="font-bold text-slate-200 mb-1">{art.topic}</h4>
+                      <div className="flex items-center gap-3 text-xs text-slate-500">
+                        <span>Created: {new Date(art.createdAt).toLocaleDateString()}</span>
+                        {art.scheduledFor && <span>Scheduled: {new Date(art.scheduledFor).toLocaleString()}</span>}
+                      </div>
+                    </div>
+                    <div>
+                      {art.status === 'PUBLISHED' ? (
+                        <span className="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/20">PUBLISHED</span>
+                      ) : art.status === 'PENDING' ? (
+                        <span className="bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full text-xs font-bold border border-amber-500/20">QUEUED</span>
+                      ) : art.status === 'GENERATING' ? (
+                        <span className="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-xs font-bold border border-indigo-500/20 flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin"/> WRITING AI</span>
+                      ) : (
+                        <span className="bg-red-500/10 text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-500/20">{art.status}</span>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </motion.div>
+          )}
+
+          {/* SITES TAB */}
+          {activeTab === 'sites' && (
+            <motion.div key="sites" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">Connected Destinations</h2>
                 <button 
-                  className="btn-primary" 
-                  onClick={handleGenerate}
-                  disabled={isGenerating || !engineActive}
+                  onClick={handleConnectSite}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all"
                 >
-                  {isGenerating ? 'Queuing...' : 'Queue Article'}
+                  + Add WordPress Site
                 </button>
               </div>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '12px' }}>
-                {engineActive ? 'Generating an article consumes **1 Credit** and takes ~3 minutes.' : 'Engine is currently offline.'}
-              </p>
-           </div>
 
-           {/* Content Queue */}
-           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-             <span className="overline">CONTENT PIPELINE</span>
-           </div>
-
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {articles.map((art, idx) => (
-                <div key={idx} className="card-bento" style={{ padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text)', marginBottom: '4px' }}>{art.title}</h4>
-                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Scheduled: {art.scheduledAt}</span>
-                  </div>
-                  <span style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', padding: '4px 12px', borderRadius: '99px', fontSize: '12px', fontWeight: 700 }}>
-                    PENDING GENERATION
-                  </span>
+              {sites.length === 0 ? (
+                <div className="text-center py-20 text-slate-500 border border-slate-800 border-dashed rounded-2xl">
+                  No sites connected. You must connect a WordPress site before queuing articles.
                 </div>
-              ))}
+              ) : (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {sites.map((site) => (
+                    <div key={site.id} className="bg-slate-900/50 border border-slate-800 rounded-xl p-5 flex items-center gap-4">
+                      <div className="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-lg flex items-center justify-center font-bold text-xl border border-indigo-500/20">W</div>
+                      <div className="overflow-hidden">
+                        <div className="font-bold text-slate-200 truncate">{site.url}</div>
+                        <div className="text-xs text-emerald-400 font-medium mt-1 flex items-center gap-1">
+                          <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div> REST API Connected
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
 
-              <div className="card-bento" style={{ padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text)', marginBottom: '4px' }}>How Generative Engine Optimization is Replacing SEO</h4>
-                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Published: Today, 09:00 AM</span>
-                  </div>
-                  <span style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '4px 12px', borderRadius: '99px', fontSize: '12px', fontWeight: 700 }}>
-                    PUBLISHED
-                  </span>
-              </div>
-              
-              <div className="card-bento" style={{ padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text)', marginBottom: '4px' }}>Top 5 LLMs for Content Extraction</h4>
-                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Drafted: Yesterday</span>
-                  </div>
-                  <span style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', padding: '4px 12px', borderRadius: '99px', fontSize: '12px', fontWeight: 700 }}>
-                    READY FOR REVIEW
-                  </span>
-              </div>
-           </div>
-        </div>
+        </AnimatePresence>
+
       </div>
     </div>
   );
