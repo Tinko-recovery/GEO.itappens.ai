@@ -63,8 +63,30 @@ export async function POST(req: Request) {
       return article;
     });
 
-    // Here we would typically trigger the QStash background worker
-    // fetch('https://qstash.upstash.io/v2/publish/...', { ... })
+    // 2. Trigger Background Worker
+    // If QStash is configured, dispatch the job
+    if (process.env.QSTASH_TOKEN) {
+      console.log('[AEO API] Dispatching to QStash...');
+      const qstashUrl = `https://qstash.upstash.io/v2/publish/${process.env.APP_URL || 'https://itappens.ai'}/api/aeo/worker`;
+      fetch(qstashUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.QSTASH_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ articleId: result.id })
+      }).catch(e => console.error("QStash dispatch failed", e));
+    } else {
+      // Fallback for local development
+      console.log('[AEO API] No QStash Token. Triggering local worker...');
+      const host = req.headers.get('host') || 'localhost:3000';
+      const protocol = host.includes('localhost') ? 'http' : 'https';
+      fetch(`${protocol}://${host}/api/aeo/worker`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ articleId: result.id })
+      }).catch(e => console.error("Local worker trigger failed", e));
+    }
 
     return NextResponse.json(result, { status: 201 });
   } catch (error: any) {
