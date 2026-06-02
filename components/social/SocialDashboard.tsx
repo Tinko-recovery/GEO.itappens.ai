@@ -8,30 +8,91 @@ export default function SocialDashboard() {
 
   const [topic, setTopic] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  
   const [articles, setArticles] = useState<any[]>([]);
-  const [sites, setSites] = useState<any[]>([{ url: "https://yourbrand.com", status: "connected" }]);
+  const [sites, setSites] = useState<any[]>([]);
+  const [credits, setCredits] = useState<number | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const [sitesRes, articlesRes, creditsRes] = await Promise.all([
+        fetch('/api/aeo/sites'),
+        fetch('/api/aeo/articles'),
+        fetch('/api/aeo/credits')
+      ]);
+
+      if (sitesRes.ok) setSites(await sitesRes.json());
+      if (articlesRes.ok) setArticles(await articlesRes.json());
+      if (creditsRes.ok) {
+        const cData = await creditsRes.json();
+        setCredits(cData.balance);
+      }
+      setEngineActive(true);
+    } catch (e) {
+      console.error("Failed to load dashboard data", e);
+    } finally {
+      setChecking(false);
+    }
+  };
 
   useEffect(() => {
-    // Simulate checking connection
-    setTimeout(() => {
-      setEngineActive(true);
-      setChecking(false);
-    }, 1000);
+    fetchData();
   }, []);
 
+  const handleConnectSite = async () => {
+    const url = prompt("Enter WordPress Site URL:");
+    if (!url) return;
+    const appUser = prompt("Enter WordPress Application Username:");
+    if (!appUser) return;
+    const appToken = prompt("Enter WordPress Application Password (we encrypt this):");
+    if (!appToken) return;
+
+    try {
+      const res = await fetch('/api/aeo/sites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, appUser, appToken })
+      });
+      if (res.ok) {
+        const newSite = await res.json();
+        setSites([newSite, ...sites]);
+      } else {
+        alert("Failed to connect site.");
+      }
+    } catch (e) {
+      alert("Error connecting site.");
+    }
+  };
+
   const handleGenerate = async () => {
-    if (!topic.trim()) return;
+    if (!topic.trim() || sites.length === 0) {
+      alert("Please enter a topic and ensure you have connected a site.");
+      return;
+    }
+    
     setIsGenerating(true);
-    // Simulate generation queue
-    setTimeout(() => {
-      const newArticles = [
-        { title: `Complete Guide to ${topic}`, status: "pending", scheduledAt: "Today, 14:00" },
-        ...articles
-      ];
-      setArticles(newArticles);
+    try {
+      const res = await fetch('/api/aeo/articles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic, siteId: sites[0].id })
+      });
+      
+      if (res.ok) {
+        const newArticle = await res.json();
+        setArticles([newArticle, ...articles]);
+        if (credits !== null) setCredits(credits - 1);
+        setTopic("");
+      } else {
+        const err = await res.json();
+        alert(err.error || "Failed to queue article");
+      }
+    } catch (e) {
+      console.error("Error queuing article", e);
+      alert("An error occurred");
+    } finally {
       setIsGenerating(false);
-      setTopic("");
-    }, 1500);
+    }
   };
 
   return (
@@ -55,7 +116,7 @@ export default function SocialDashboard() {
           <span className="overline" style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '12px' }}>Account Status — AEO PRO</span>
           <h2 className="headline-sm" style={{ color: '#fff', marginBottom: '16px' }}>Your Content Engine is <span style={{ color: '#818cf8' }}>{checking ? 'Checking...' : engineActive ? 'Active.' : 'Offline.'}</span></h2>
           <p style={{ opacity: 0.9, fontSize: '15px', maxWidth: '400px', marginBottom: '24px' }}>
-            You have 142 AEO article credits remaining. Credits do not expire.
+            You have {credits !== null ? credits : '...'} AEO article credits remaining. Credits do not expire.
           </p>
           <div style={{ display: 'flex', gap: '12px' }}>
             <button className="btn-primary" style={{ backgroundColor: '#fff', color: 'var(--accent)', border: 'none' }}>
@@ -76,11 +137,11 @@ export default function SocialDashboard() {
           <span className="overline">Content Overview</span>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '16px' }}>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: 800 }}>8</div>
+              <div style={{ fontSize: '24px', fontWeight: 800 }}>{articles.filter(a => a.status === 'PUBLISHED').length}</div>
               <p style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Articles Published</p>
             </div>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: 800 }}>12</div>
+              <div style={{ fontSize: '24px', fontWeight: 800 }}>{articles.filter(a => a.status !== 'PUBLISHED').length}</div>
               <p style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>Scheduled / Drafts</p>
             </div>
           </div>
@@ -93,13 +154,13 @@ export default function SocialDashboard() {
         {/* Sidebar: Connected Sites */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
            <span className="overline">CONNECTED SITES</span>
-           {sites.map((site, i) => (
-             <div key={i} className="card-bento" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+           {sites.map((site) => (
+             <div key={site.id} className="card-bento" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(59, 130, 246, 0.1)', color: 'var(--brand-blue)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
                  W
                </div>
-               <div>
-                 <div style={{ fontSize: '14px', fontWeight: 700 }}>{site.url}</div>
+               <div style={{ overflow: 'hidden' }}>
+                 <div style={{ fontSize: '14px', fontWeight: 700, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{site.url}</div>
                  <div style={{ fontSize: '12px', color: 'var(--brand-green)' }}>API Connected</div>
                </div>
              </div>
@@ -107,14 +168,7 @@ export default function SocialDashboard() {
            <button 
              className="btn-secondary" 
              style={{ width: '100%', fontSize: '13px', padding: '10px' }}
-             onClick={() => {
-               const newUrl = prompt("Enter WordPress Site URL:");
-               const appUser = prompt("Enter WordPress Application Username:");
-               const appToken = prompt("Enter WordPress Application Password (we encrypt this):");
-               if (newUrl && appToken) {
-                 setSites([...sites, { url: newUrl.replace(/^https?:\/\//, ''), status: 'connected' }]);
-               }
-             }}
+             onClick={handleConnectSite}
            >
              + Connect New WordPress Site
            </button>
