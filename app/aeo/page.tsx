@@ -231,12 +231,12 @@ export default function AeoLandingPage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm">
               <div className="text-amber-400 mb-4 text-xl">★★★★★</div>
-              <p className="text-slate-300 leading-relaxed mb-6">"Our spine clinic now gets 2-3 new patient inquiries every week purely from organic search. The AEO engine transformed our online presence completely while costing us pennies compared to our old agency."</p>
+              <p className="text-slate-300 leading-relaxed mb-6">"Our business hotel now gets 2-3 new guest inquiries every week purely from organic search. The AEO engine transformed our online presence completely while costing us pennies compared to our old marketing."</p>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 bg-indigo-900 rounded-full flex items-center justify-center text-indigo-300 font-bold">NK</div>
                 <div>
                   <div className="font-bold text-white">NewKRINN's Verdict</div>
-                  <div className="text-sm text-slate-400">SEO Agency</div>
+                  <div className="text-sm text-slate-400">Business Hotel</div>
                 </div>
               </div>
             </div>
