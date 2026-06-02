@@ -334,7 +334,7 @@ export default function SocialDashboard() {
                       </AreaChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-full flex items-center justify-center text-slate-9000"><Loader2 className="w-6 h-6 animate-spin"/></div>
+                    <div className="h-full flex items-center justify-center text-slate-500"><Loader2 className="w-6 h-6 animate-spin"/></div>
                   )}
                 </div>
               </div>
@@ -386,12 +386,12 @@ export default function SocialDashboard() {
                         <div>
                           <div className="flex justify-between items-start mb-2">
                             <span className="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">Vol: {t.estimatedVolume}</span>
-                            <button onClick={() => handleQueueSingle(t.title)} className="text-slate-9000 hover:text-emerald-400 transition-colors" title="Queue this article">
+                            <button onClick={() => handleQueueSingle(t.title)} className="text-slate-500 hover:text-emerald-400 transition-colors" title="Queue this article">
                               <Plus className="w-5 h-5" />
                             </button>
                           </div>
                           <h4 className="font-bold text-sm text-slate-200 leading-snug mb-2">{t.title}</h4>
-                          <p className="text-xs text-slate-9000">Query: {t.targetQuery}</p>
+                          <p className="text-xs text-slate-500">Query: {t.targetQuery}</p>
                         </div>
                       </div>
                     ))}
@@ -405,7 +405,7 @@ export default function SocialDashboard() {
           {activeTab === 'queue' && (
             <motion.div key="queue" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
               {articles.length === 0 ? (
-                <div className="text-center py-20 text-slate-9000 border border-slate-200 border-dashed rounded-2xl">
+                <div className="text-center py-20 text-slate-500 border border-slate-200 border-dashed rounded-2xl">
                   No articles in the queue. Use the Planner to generate some!
                 </div>
               ) : (
@@ -413,7 +413,7 @@ export default function SocialDashboard() {
                   <div key={idx} className="bg-white shadow-sm border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div>
                       <h4 className="font-bold text-slate-200 mb-1">{art.topic}</h4>
-                      <div className="flex items-center gap-3 text-xs text-slate-9000">
+                      <div className="flex items-center gap-3 text-xs text-slate-500">
                         <span>Created: {new Date(art.createdAt).toLocaleDateString()}</span>
                         {art.scheduledFor && <span>Scheduled: {new Date(art.scheduledFor).toLocaleString()}</span>}
                       </div>
@@ -449,7 +449,7 @@ export default function SocialDashboard() {
               </div>
 
               {sites.length === 0 ? (
-                <div className="text-center py-20 text-slate-9000 border border-slate-200 border-dashed rounded-2xl">
+                <div className="text-center py-20 text-slate-500 border border-slate-200 border-dashed rounded-2xl">
                   No sites connected. You must connect a WordPress site before queuing articles.
                 </div>
               ) : (
