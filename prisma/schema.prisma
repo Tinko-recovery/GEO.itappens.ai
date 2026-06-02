@@ -162,3 +162,38 @@ model EmailOTP {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ==========================================
+// AEO Content Engine (Blogauto.ai equivalent)
+// ==========================================
+
+model UserCredits {
+  id        String   @id @default(cuid())
+  email     String   @unique // We use Auth0 email as primary identifier
+  balance   Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+model WordPressSite {
+  id         String   @id @default(cuid())
+  email      String
+  url        String
+  appUser    String
+  appToken   String   // Encrypted or secure storage
+  createdAt  DateTime @default(now())
+  articles   AeoArticle[]
+}
+
+model AeoArticle {
+  id          String   @id @default(cuid())
+  siteId      String
+  email       String
+  topic       String
+  targetQuery String
+  status      String   @default("PENDING") // PENDING, GENERATING, PUBLISHED, FAILED
+  wpPostId    Int?
+  scheduledFor DateTime?
+  createdAt   DateTime @default(now())
+
+  site        WordPressSite @relation(fields: [siteId], references: [id])
+}

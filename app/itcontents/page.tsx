@@ -30,7 +30,7 @@ function itcontents() {
                         letterSpacing: '-0.05em',
                         zIndex: 0
                     }}>
-                        CONTENT
+                        AEO ENGINE
                     </div>
 
                     <div className="container" style={{ position: 'relative', zIndex: 1 }}>
@@ -41,7 +41,7 @@ function itcontents() {
                             style={{ marginBottom: '32px' }}
                         >
                             <span className="overline" style={{ color: 'var(--brand-blue)', backgroundColor: 'rgba(58, 190, 249, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block' }}>
-                              itcontents — Agentic Social Media
+                              itcontents — AEO Content Engine
                             </span>
                         </motion.div>
 
@@ -52,12 +52,12 @@ function itcontents() {
                             className="headline-xl"
                             style={{ maxWidth: '950px', marginBottom: '48px', lineHeight: 1.05 }}
                         >
-                            Your social media on <br />
+                            AI Blog Automation <br />
                             <span style={{ 
                                 background: 'linear-gradient(to right, var(--brand-blue), var(--brand-green))',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent'
-                            }}>Autopilot.</span>
+                            }}>On Autopilot.</span>
                         </motion.h1>
 
                         <motion.div
@@ -67,15 +67,14 @@ function itcontents() {
                             style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '80px', alignItems: 'end' }}
                         >
                             <p className="text-sub" style={{ margin: 0, maxWidth: '600px', fontSize: '18px', opacity: 0.8 }}>
-                                Stop spending hours on content creation. itcontents uses an agentic engine to research trends, 
-                                write human-first copy, and generate premium video assets—all approved by you via the Hub below.
+                                Stop spending hours on content creation. AEO Content Engine writes, illustrates, and auto-publishes deep-dive SEO articles to your WordPress on a schedule.
                             </p>
                             <div className="card-glass" style={{ padding: '32px', borderRadius: '16px' }}>
                                 <a href="#dashboard" className="btn-primary" style={{ display: 'block', textAlign: 'center', padding: '16px', borderRadius: '10px' }}>
                                     Launch Automation Hub ↓
                                 </a>
                                 <p style={{ fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center', marginTop: '16px', fontFamily: 'var(--font-mono)', opacity: 0.6 }}>
-                                    Paid Subscription Required for Generation
+                                    Paid Subscription Required for Full Pipeline
                                 </p>
                             </div>
                         </motion.div>
@@ -87,11 +86,11 @@ function itcontents() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '64px', borderBottom: '1px solid var(--border)', paddingBottom: '32px' }}>
                             <div>
                                 <span className="overline" style={{ color: 'var(--brand-green)', marginBottom: '12px', display: 'block' }}>AUTOMATION HUB</span>
-                                <h2 className="headline-sm" style={{ fontSize: '28px', color: 'var(--text)' }}>Management Dashboard</h2>
+                                <h2 className="headline-sm" style={{ fontSize: '28px', color: 'var(--text)' }}>AEO Content Dashboard</h2>
                             </div>
                             <div style={{ textAlign: 'right', backgroundColor: 'rgba(255, 255, 255, 0.02)', padding: '16px 24px', borderRadius: '12px', border: '1px solid var(--border)' }}>
                                 <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Current Plan</p>
-                                <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--brand-blue)' }}>itcontents PRO</span>
+                                <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--brand-blue)' }}>AEO Pro</span>
                             </div>
                         </div>
                     </div>
@@ -106,13 +105,13 @@ function itcontents() {
                     <div className="container">
                         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
                              <span className="overline" style={{ color: 'var(--brand-green)', backgroundColor: 'rgba(57, 181, 73, 0.08)', padding: '4px 10px', borderRadius: '6px', display: 'inline-block', marginBottom: '24px' }}>The Workflow</span>
-                             <h2 className="headline-lg">Zero Context Switching.</h2>
+                             <h2 className="headline-lg">From Idea to Published.</h2>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
                             {[
-                                { step: '01', title: 'Data Feed', desc: 'Connect your inventory or topic list. One row is all it takes to trigger a complete narrative.', color: 'var(--brand-blue)' },
-                                { step: '02', title: 'AI Orchestration', desc: 'Our engine researches high-signal trends and generates premium video & text assets.', color: 'var(--brand-green)' },
-                                { step: '03', title: 'Interactive Hub', desc: 'Approve or edit drafts via this dashboard or your Telegram. Zero context switching.', color: 'var(--brand-yellow)' }
+                                { step: '01', title: 'Connect WP', desc: 'Securely link your WordPress site. Add your brand guidelines for the AI to follow.', color: 'var(--brand-blue)' },
+                                { step: '02', title: 'Plan Topics', desc: 'Auto-generate AEO keywords or feed your own ideas. Set your weekly publishing schedule.', color: 'var(--brand-green)' },
+                                { step: '03', title: 'AI Autoblogging', desc: 'Our engine researches, writes 2000+ words, adds images, and auto-publishes while you sleep.', color: 'var(--brand-yellow)' }
                             ].map((item) => (
                                 <div key={item.step} className="card-glass" style={{ padding: '48px', position: 'relative' }}>
                                     <div style={{ 
