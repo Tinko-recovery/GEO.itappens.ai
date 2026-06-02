@@ -3,12 +3,12 @@ import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
-import HeroSection from "@/components/sections/HeroSection";
+import SearchHeroSection from "@/components/sections/SearchHeroSection";
 import ProblemSection from "@/components/sections/ProblemSection";
 import SolutionSection from "@/components/sections/SolutionSection";
 import ProofSection from "@/components/sections/ProofSection";
 import PricingSection from "@/components/sections/PricingSection";
-import AuditForm from "@/components/AuditForm";
+import GEOExplanation from "@/components/sections/GEOExplanation";
 import { homepageFaqs } from "@/lib/content/site";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { faqSchema, organizationSchema, schemaGraph, serviceSchema } from "@/lib/seo/schema";
@@ -43,46 +43,11 @@ export default function HomePage() {
       </Suspense>
       
       <main>
-        <HeroSection />
+        <SearchHeroSection />
         <ProblemSection />
         <SolutionSection />
         <ProofSection />
         <PricingSection />
-
-        {/* Integrated Audit Section */}
-        <section id="audit" className="section dark-section">
-          <div className="container grid-2col">
-            <div>
-              <span className="badge-pill" style={{ marginBottom: '24px' }}>
-                Free Intelligence Audit
-              </span>
-              <h2 className="headline-lg">
-                See where your brand stands <br />
-                <span style={{ color: 'var(--cyan)' }}>across AI engines today.</span>
-              </h2>
-              <p className="text-sub" style={{ marginTop: '24px' }}>
-                Our proprietary snapshot captures your current answer-engine visibility, highlights entity drift, and identifies the exact query clusters you need to own.
-              </p>
-              <ul style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '16px', listStyle: 'none', padding: 0 }}>
-                {[
-                  "Baseline prompts across ChatGPT & Perplexity",
-                  "Entity schema and canonical gap report",
-                  "Priority roadmap for the first 90 days"
-                ].map((item, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '15px' }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="card-bento" style={{ color: 'var(--slate-dark)' }}>
-              <AuditForm />
-            </div>
-          </div>
-        </section>
 
         {/* FAQ Section */}
         <section className="section" style={{ backgroundColor: '#fff' }}>

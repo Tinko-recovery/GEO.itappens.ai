@@ -1,272 +1,106 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import AuditWidget from '@/components/dashboard/widgets/AuditWidget';
+import ComparisonChart from '@/components/dashboard/widgets/ComparisonChart';
+import SemanticAnchorGenerator from '@/components/dashboard/widgets/SemanticAnchorGenerator';
+import LLMProofWidget from '@/components/dashboard/widgets/LLMProofWidget';
 
-type Audit = {
-  id: string;
-  email: string;
-  siteUrl: string;
-  plan: string;
-  status: string;
-  paymentStatus: string;
-  createdAt: string;
-};
+export default function DashboardPage() {
+  const searchParams = useSearchParams();
+  const domain = searchParams.get('domain') || 'yourbrand.com';
+  
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-type ClientProfile = {
-  id: string;
-  businessName: string;
-  websiteUrl: string;
-  email: string;
-  status: string;
-  createdAt: string;
-};
-
-export default function MissionCockpit() {
-  const [activeTab, setActiveTab] = useState<"missions" | "clients">("missions");
-  const [audits, setAudits] = useState<Audit[]>([]);
-  const [clients, setClients] = useState<ClientProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [triggeringId, setTriggeringId] = useState<string | null>(null);
-
-  const [logs, setLogs] = useState<string[]>([
-    "[SYSTEM] Zenith CEO Agent Online.",
-    "[SYSTEM] Mission Portal Connected to Supabase.",
-    "[SYSTEM] Awaiting incoming missions..."
-  ]);
-
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      // Fetch Audits
-      const auditRes = await fetch("/api/dashboard/leads");
-      if (auditRes.ok) {
-        const auditData = await auditRes.json();
-        setAudits(auditData.audits);
-      }
-
-      // Fetch Clients
-      const clientRes = await fetch("/api/dashboard/clients");
-      if (clientRes.ok) {
-        const clientData = await clientRes.json();
-        setClients(clientData.clients);
-      }
-
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
-  };
-
-  const handleApprove = async (audit: Audit) => {
-    setTriggeringId(audit.id);
-    addLog(`[ACTION] Manual override authorized. Sending ${audit.siteUrl} to Zenith.`);
+  // Mock form submission to our new Universal Lead API
+  const handleUnlock = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
     
     try {
-      const res = await fetch("/api/dashboard/trigger", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ auditId: audit.id })
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Dashboard Visitor',
+          email: email,
+          company: domain,
+          source: 'gated_dashboard',
+        })
       });
       
-      if (res.ok) {
-        addLog(`[QUEUE] Success! Upstash worker triggered for ${audit.siteUrl}.`);
-        fetchData();
-      } else {
-        addLog(`[ERROR] Failed to trigger worker.`);
-      }
+      // Simulate delay for UX
+      setTimeout(() => {
+        setIsUnlocked(true);
+        setSubmitted(true);
+        setIsLoading(false);
+      }, 800);
     } catch (err) {
-      addLog(`[ERROR] Network error triggering worker.`);
-    } finally {
-      setTriggeringId(null);
+      console.error(err);
+      setIsLoading(false);
     }
-  };
-
-  const handleActivateClient = async (client: ClientProfile) => {
-    addLog(`[BILLING] Activating subscription for ${client.businessName}.`);
-    try {
-      const res = await fetch("/api/dashboard/clients", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: client.id, status: "ACTIVE" })
-      });
-      if (res.ok) {
-        addLog(`[SUCCESS] Client ${client.businessName} is now ACTIVE.`);
-        fetchData();
-      }
-    } catch (err) {
-      addLog(`[ERROR] Failed to activate client.`);
-    }
-  };
-
-  const addLog = (msg: string) => {
-    setLogs(prev => [...prev, `${new Date().toLocaleTimeString()} - ${msg}`].slice(-8));
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-gray-200 p-8 font-sans">
-      <div className="max-w-6xl mx-auto space-y-8">
-        
-        {/* Header */}
-        <div className="flex justify-between items-end border-b border-gray-800 pb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Mission Cockpit</h1>
-            <p className="text-gray-400">itappens.ai Autonomous CEO Dashboard</p>
-          </div>
-          <div className="flex items-center gap-6">
-            <div className="flex bg-[#111111] p-1 rounded-lg border border-gray-800">
-               <button 
-                onClick={() => setActiveTab("missions")}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'missions' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'}`}
-               >
-                 Missions
-               </button>
-               <button 
-                onClick={() => setActiveTab("clients")}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'clients' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'}`}
-               >
-                 Clients
-               </button>
-            </div>
-            <div className="flex items-center gap-3 border-l border-gray-800 pl-6">
-              <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-sm font-medium text-green-500">Live</span>
-            </div>
-          </div>
+    <div className="max-w-7xl mx-auto pb-12">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">AI Visibility Dashboard: {domain}</h1>
+        <p className="text-gray-500 text-sm mt-1">Data snapshot generated from recent LLM queries across ChatGPT, Claude, and Perplexity.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-1 h-64">
+          <AuditWidget />
         </div>
+        <div className="lg:col-span-2 h-64">
+          <ComparisonChart />
+        </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          <div className="lg:col-span-2 bg-[#111111] border border-gray-800 rounded-xl overflow-hidden">
-            {activeTab === "missions" ? (
-              <>
-                <div className="px-6 py-4 border-b border-gray-800 bg-[#161616]">
-                  <h2 className="text-lg font-semibold text-white">Incoming Missions (Audits)</h2>
-                </div>
-                <div className="p-0 overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead className="bg-[#0A0A0A] text-gray-400">
-                      <tr>
-                        <th className="px-6 py-3 font-medium">Target URL</th>
-                        <th className="px-6 py-3 font-medium">Email</th>
-                        <th className="px-6 py-3 font-medium">Status</th>
-                        <th className="px-6 py-3 font-medium text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-800">
-                      {loading ? (
-                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">Scanning satellite uplinks...</td></tr>
-                      ) : audits.length === 0 ? (
-                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">No missions found.</td></tr>
-                      ) : (
-                        audits.map((audit) => (
-                          <tr key={audit.id} className="hover:bg-[#1A1A1A] transition-colors">
-                            <td className="px-6 py-4 font-mono text-blue-400">{audit.siteUrl}</td>
-                            <td className="px-6 py-4">{audit.email}</td>
-                            <td className="px-6 py-4">
-                               <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                                 audit.status === 'AWAITING_PAYMENT' ? 'bg-orange-900/50 text-orange-300 border border-orange-800' :
-                                 audit.status === 'RUNNING' ? 'bg-blue-900/50 text-blue-300 border border-blue-800 animate-pulse' :
-                                 audit.status === 'COMPLETED' ? 'bg-green-900/50 text-green-300 border border-green-800' :
-                                 'bg-gray-800 text-gray-300'
-                               }`}>
-                                {audit.status}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 text-right">
-                              {audit.status === 'AWAITING_PAYMENT' && (
-                                <button 
-                                  onClick={() => handleApprove(audit)}
-                                  disabled={triggeringId === audit.id}
-                                  className="px-3 py-1 bg-white text-black font-semibold rounded hover:bg-gray-200 transition-colors disabled:opacity-50"
-                                >
-                                  {triggeringId === audit.id ? '...' : 'Approve'}
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="px-6 py-4 border-b border-gray-800 bg-[#161616]">
-                  <h2 className="text-lg font-semibold text-white">SaaS Clients (₹999)</h2>
-                </div>
-                <div className="p-0 overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead className="bg-[#0A0A0A] text-gray-400">
-                      <tr>
-                        <th className="px-6 py-3 font-medium">Business</th>
-                        <th className="px-6 py-3 font-medium">Email</th>
-                        <th className="px-6 py-3 font-medium">Status</th>
-                        <th className="px-6 py-3 font-medium text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-800">
-                      {loading ? (
-                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">Retrieving client database...</td></tr>
-                      ) : clients.length === 0 ? (
-                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">No clients onboarded yet.</td></tr>
-                      ) : (
-                        clients.map((client) => (
-                          <tr key={client.id} className="hover:bg-[#1A1A1A] transition-colors">
-                            <td className="px-6 py-4 font-semibold text-white">{client.businessName}</td>
-                            <td className="px-6 py-4 text-gray-400">{client.email}</td>
-                            <td className="px-6 py-4">
-                               <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                                 client.status === 'ACTIVE' ? 'bg-green-900/50 text-green-300 border border-green-800' :
-                                 client.status === 'AWAITING_PAYMENT' ? 'bg-orange-900/50 text-orange-300 border border-orange-800' :
-                                 'bg-gray-800 text-gray-300'
-                               }`}>
-                                {client.status}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 text-right">
-                              {client.status === 'AWAITING_PAYMENT' && (
-                                <button 
-                                  onClick={() => handleActivateClient(client)}
-                                  className="px-3 py-1 bg-green-500 text-black font-semibold rounded hover:bg-green-400 transition-colors"
-                                >
-                                  Activate
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className="bg-black border border-gray-800 rounded-xl overflow-hidden flex flex-col font-mono text-sm">
-            <div className="px-4 py-3 border-b border-gray-800 bg-[#0A0A0A] flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-red-500"></div>
-              <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
-              <div className="h-2 w-2 rounded-full bg-green-500"></div>
-              <span className="ml-2 text-gray-500 text-xs">zenith-agent-terminal</span>
-            </div>
-            <div className="p-4 flex-1 space-y-2 overflow-y-auto max-h-[500px]">
-              {logs.map((log, i) => (
-                <div key={i} className={`${log.includes('ERROR') ? 'text-red-400' : log.includes('ACTION') || log.includes('QUEUE') || log.includes('BILLING') || log.includes('SUCCESS') ? 'text-green-400' : 'text-gray-400'}`}>
-                  {log}
-                </div>
-              ))}
-              <div className="animate-pulse text-gray-600">_</div>
+      {/* The Gated Section */}
+      <div className="relative mt-6">
+        {!isUnlocked && (
+          <div className="absolute inset-0 z-10 backdrop-blur-md bg-white/30 flex flex-col items-center justify-center rounded-lg border border-gray-200">
+            <div className="bg-white p-8 rounded-xl shadow-xl max-w-md w-full text-center border border-gray-100">
+              <div className="w-12 h-12 bg-blue-100 text-[#3abeF9] rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              </div>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">Unlock the Full Threat Report</h2>
+              <p className="text-sm text-gray-500 mb-6">See exactly what the AI engines are saying about you vs. your competitors, and get the Semantic Schema to fix it.</p>
+              
+              <form onSubmit={handleUnlock} className="flex flex-col gap-3">
+                <input 
+                  type="email" 
+                  required
+                  placeholder="Enter your work email"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#3abeF9] focus:border-transparent text-gray-900"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <button 
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-[#3abeF9] hover:bg-blue-500 text-white font-semibold py-2.5 rounded-md transition-colors disabled:opacity-70"
+                >
+                  {isLoading ? 'Unlocking...' : 'Unlock Full Data (Free)'}
+                </button>
+              </form>
+              <p className="text-xs text-gray-400 mt-4">We will send a copy of the report to your inbox. No spam.</p>
             </div>
           </div>
+        )}
 
+        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 ${!isUnlocked ? 'opacity-40 select-none pointer-events-none' : ''}`}>
+          <div className="h-80">
+            <LLMProofWidget />
+          </div>
+          <div className="h-80">
+            <SemanticAnchorGenerator />
+          </div>
         </div>
       </div>
     </div>

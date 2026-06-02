@@ -1,359 +1,272 @@
 "use client";
 
-import { useState } from "react";
-import { searchApolloLeads, unlockApolloLead, deployToSequence, generateIcebreaker, SearchParams, Lead } from "./actions";
+import { useEffect, useState } from "react";
 
-export default function LeadGenDashboard() {
-  const [params, setParams] = useState<SearchParams>({
-    person_titles: "",
-    organisation_keywords: "",
-    organisation_localities: "",
-    q_organization_domains: "",
-  });
-  
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [unlocking, setUnlocking] = useState<Record<string, boolean>>({});
-  
-  // Phase 2: Deployment State
-  const [sequenceId, setSequenceId] = useState("");
-  const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
-  const [deploying, setDeploying] = useState(false);
-  const [deployStatus, setDeployStatus] = useState<string | null>(null);
+type Audit = {
+  id: string;
+  email: string;
+  siteUrl: string;
+  plan: string;
+  status: string;
+  paymentStatus: string;
+  createdAt: string;
+};
 
-  const toggleLeadSelection = (id: string) => {
-    const newSet = new Set(selectedLeads);
-    if (newSet.has(id)) newSet.delete(id);
-    else newSet.add(id);
-    setSelectedLeads(newSet);
-  };
+type ClientProfile = {
+  id: string;
+  businessName: string;
+  websiteUrl: string;
+  email: string;
+  status: string;
+  createdAt: string;
+};
 
-  const toggleAllLeads = () => {
-    if (selectedLeads.size === leads.length) {
-      setSelectedLeads(new Set());
-    } else {
-      setSelectedLeads(new Set(leads.map(l => l.id)));
-    }
-  };
+export default function MissionCockpit() {
+  const [activeTab, setActiveTab] = useState<"missions" | "clients">("missions");
+  const [audits, setAudits] = useState<Audit[]>([]);
+  const [clients, setClients] = useState<ClientProfile[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [triggeringId, setTriggeringId] = useState<string | null>(null);
 
-  const handleDeploy = async () => {
-    if (selectedLeads.size === 0) return alert("Select at least one lead.");
-    if (!sequenceId.trim()) return alert("Please enter an Apollo Sequence ID.");
+  const [logs, setLogs] = useState<string[]>([
+    "[SYSTEM] Zenith CEO Agent Online.",
+    "[SYSTEM] Mission Portal Connected to Supabase.",
+    "[SYSTEM] Awaiting incoming missions..."
+  ]);
 
-    setDeploying(true);
-    setDeployStatus("Initializing Deployment...");
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
+  const fetchData = async () => {
     try {
-      const ids = Array.from(selectedLeads);
-      
-      // Step 1: Bulk Unlock (if not already unlocked)
-      setDeployStatus("Unlocking Leads...");
-      for (const id of ids) {
-        const lead = leads.find(l => l.id === id);
-        if (lead && !lead.email) {
-          await unlockApolloLead(id);
-        }
+      // Fetch Audits
+      const auditRes = await fetch("/api/dashboard/leads");
+      if (auditRes.ok) {
+        const auditData = await auditRes.json();
+        setAudits(auditData.audits);
       }
 
-      // Step 2: Generate Icebreakers (Preview for now, until custom fields mapped)
-      setDeployStatus("Running AI AEO Scans...");
-      for (const id of ids) {
-        const lead = leads.find(l => l.id === id);
-        if (lead && lead.company) {
-          // Just triggering it to prove the concept works. 
-          // In production, we'd PUT /v1/contacts/{id} here.
-          await generateIcebreaker(lead.company, lead.title);
-        }
+      // Fetch Clients
+      const clientRes = await fetch("/api/dashboard/clients");
+      if (clientRes.ok) {
+        const clientData = await clientRes.json();
+        setClients(clientData.clients);
       }
 
-      // Step 3: Enroll in Sequence
-      setDeployStatus("Enrolling in Apollo Sequence...");
-      const result = await deployToSequence(ids, sequenceId);
-      
-      if (result.success) {
-        alert(`Successfully added ${result.added} leads to sequence!`);
-        setSelectedLeads(new Set());
-      } else {
-        alert(result.error);
-      }
-    } catch (e: any) {
-      alert("Deployment failed: " + e.message);
-    } finally {
-      setDeploying(false);
-      setDeployStatus(null);
-    }
-  };
-
-  const handleUnlock = async (id: string) => {
-    setUnlocking(prev => ({ ...prev, [id]: true }));
-    try {
-      const result = await unlockApolloLead(id);
-      if (!result) {
-        alert("Version mismatch. Please hard refresh.");
-        return;
-      }
-      if (result.error) {
-        alert(result.error);
-      } else if (result.lead) {
-        setLeads(prevLeads => prevLeads.map(l => l.id === id ? result.lead! : l));
-      }
-    } catch (err: any) {
-      alert(err.message || "Unlock failed");
-    } finally {
-      setUnlocking(prev => ({ ...prev, [id]: false }));
-    }
-  };
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const result = await searchApolloLeads(params);
-      if (!result) {
-        throw new Error("Version Mismatch: Please hard-refresh your browser (Ctrl+Shift+R or Cmd+Shift+R) to load the newly deployed code.");
-      }
-      if (result.error) {
-        setError(result.error);
-      } else {
-        setLeads(result.leads || []);
-      }
-    } catch (err: any) {
-      setError(err.message || "Search failed");
-    } finally {
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
       setLoading(false);
     }
   };
 
+  const handleApprove = async (audit: Audit) => {
+    setTriggeringId(audit.id);
+    addLog(`[ACTION] Manual override authorized. Sending ${audit.siteUrl} to Zenith.`);
+    
+    try {
+      const res = await fetch("/api/dashboard/trigger", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ auditId: audit.id })
+      });
+      
+      if (res.ok) {
+        addLog(`[QUEUE] Success! Upstash worker triggered for ${audit.siteUrl}.`);
+        fetchData();
+      } else {
+        addLog(`[ERROR] Failed to trigger worker.`);
+      }
+    } catch (err) {
+      addLog(`[ERROR] Network error triggering worker.`);
+    } finally {
+      setTriggeringId(null);
+    }
+  };
+
+  const handleActivateClient = async (client: ClientProfile) => {
+    addLog(`[BILLING] Activating subscription for ${client.businessName}.`);
+    try {
+      const res = await fetch("/api/dashboard/clients", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: client.id, status: "ACTIVE" })
+      });
+      if (res.ok) {
+        addLog(`[SUCCESS] Client ${client.businessName} is now ACTIVE.`);
+        fetchData();
+      }
+    } catch (err) {
+      addLog(`[ERROR] Failed to activate client.`);
+    }
+  };
+
+  const addLog = (msg: string) => {
+    setLogs(prev => [...prev, `${new Date().toLocaleTimeString()} - ${msg}`].slice(-8));
+  };
+
   return (
-    <div className="min-h-screen bg-[#050B14] text-white p-8 font-sans">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#0A0A0A] text-gray-200 p-8 font-sans">
+      <div className="max-w-6xl mx-auto space-y-8">
         
-        {/* Header Section */}
-        <header className="border-b border-cyan-500/20 pb-6">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
-            NIMDA Engine
-          </h1>
-          <p className="text-sm text-cyan-200/60 mt-2 tracking-widest uppercase">
-            Restricted Access: Apollo Lead Generation
-          </p>
-        </header>
-
-        {/* Search Form */}
-        <div className="bg-[#0B1221] border border-cyan-900/50 rounded-xl p-6 shadow-2xl shadow-cyan-900/20">
-          <h2 className="text-xl font-semibold mb-6 flex items-center text-cyan-50">
-            <svg className="w-5 h-5 mr-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            Target Query Parameters
-          </h2>
-          
-          <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-cyan-300/80 uppercase tracking-wider">Job Titles (comma-separated)</label>
-              <input 
-                type="text" 
-                placeholder="e.g. CMO, VP of Marketing"
-                className="w-full bg-[#050B14] border border-cyan-800/60 rounded-lg px-4 py-2.5 text-sm text-cyan-100 placeholder:text-cyan-800/50 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
-                value={params.person_titles}
-                onChange={(e) => setParams({...params, person_titles: e.target.value})}
-              />
+        {/* Header */}
+        <div className="flex justify-between items-end border-b border-gray-800 pb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Mission Cockpit</h1>
+            <p className="text-gray-400">itappens.ai Autonomous CEO Dashboard</p>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="flex bg-[#111111] p-1 rounded-lg border border-gray-800">
+               <button 
+                onClick={() => setActiveTab("missions")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'missions' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'}`}
+               >
+                 Missions
+               </button>
+               <button 
+                onClick={() => setActiveTab("clients")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'clients' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'}`}
+               >
+                 Clients
+               </button>
             </div>
-            
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-cyan-300/80 uppercase tracking-wider">Keywords (comma-separated)</label>
-              <input 
-                type="text" 
-                placeholder="e.g. AI, SaaS, Enterprise"
-                className="w-full bg-[#050B14] border border-cyan-800/60 rounded-lg px-4 py-2.5 text-sm text-cyan-100 placeholder:text-cyan-800/50 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
-                value={params.organisation_keywords}
-                onChange={(e) => setParams({...params, organisation_keywords: e.target.value})}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-cyan-300/80 uppercase tracking-wider">Locations (comma-separated)</label>
-              <input 
-                type="text" 
-                placeholder="e.g. San Francisco, New York"
-                className="w-full bg-[#050B14] border border-cyan-800/60 rounded-lg px-4 py-2.5 text-sm text-cyan-100 placeholder:text-cyan-800/50 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
-                value={params.organisation_localities}
-                onChange={(e) => setParams({...params, organisation_localities: e.target.value})}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-cyan-300/80 uppercase tracking-wider">Target Domain</label>
-              <input 
-                type="text" 
-                placeholder="e.g. openai.com"
-                className="w-full bg-[#050B14] border border-cyan-800/60 rounded-lg px-4 py-2.5 text-sm text-cyan-100 placeholder:text-cyan-800/50 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
-                value={params.q_organization_domains}
-                onChange={(e) => setParams({...params, q_organization_domains: e.target.value})}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-cyan-300/80 uppercase tracking-wider">Intent Topic IDs</label>
-              <input 
-                type="text" 
-                placeholder="e.g. 5f9b3..., 6a2c1..."
-                className="w-full bg-[#050B14] border border-cyan-800/60 rounded-lg px-4 py-2.5 text-sm text-cyan-100 placeholder:text-cyan-800/50 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 transition-all"
-                value={params.intent_topic_ids || ""}
-                onChange={(e) => setParams({...params, intent_topic_ids: e.target.value})}
-              />
-            </div>
-
-            <div className="col-span-1 md:col-span-2 lg:col-span-5 flex items-center justify-between pt-4 border-t border-cyan-900/30">
-              <div className="text-sm text-red-400 font-medium">{error}</div>
-              <button 
-                type="submit"
-                disabled={loading}
-                className="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:hover:bg-cyan-600 text-white text-sm font-bold rounded-lg shadow-[0_0_15px_rgba(8,145,178,0.4)] transition-all hover:shadow-[0_0_25px_rgba(8,145,178,0.6)] flex items-center"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Initializing Search...
-                  </>
-                ) : (
-                  "Execute Search"
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Results Table */}
-        {leads.length > 0 && (
-          <div className="bg-[#0B1221] border border-cyan-900/50 rounded-xl shadow-2xl overflow-hidden">
-            <div className="p-6 border-b border-cyan-900/50 flex justify-between items-center bg-[#070D18] flex-wrap gap-4">
-              <h2 className="text-lg font-semibold text-cyan-100 flex items-center">
-                Acquired Leads ({leads.length})
-                {selectedLeads.size > 0 && <span className="ml-3 px-2 py-0.5 text-xs bg-cyan-900/50 text-cyan-300 rounded border border-cyan-700/50">{selectedLeads.size} Selected</span>}
-              </h2>
-              
-              <div className="flex items-center space-x-3">
-                <input 
-                  type="text" 
-                  placeholder="Apollo Sequence ID"
-                  className="bg-[#050B14] border border-cyan-800/60 rounded px-3 py-1.5 text-xs text-cyan-100 placeholder:text-cyan-800/50 focus:outline-none focus:border-cyan-400 w-48"
-                  value={sequenceId}
-                  onChange={(e) => setSequenceId(e.target.value)}
-                />
-                
-                <button 
-                  onClick={handleDeploy}
-                  disabled={deploying || selectedLeads.size === 0}
-                  className="text-xs px-4 py-2 bg-purple-600/80 hover:bg-purple-500 disabled:opacity-50 border border-purple-500/50 rounded-md text-white font-bold transition-all shadow-[0_0_10px_rgba(147,51,234,0.3)] flex items-center"
-                >
-                  {deploying ? (
-                    <span className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      {deployStatus}
-                    </span>
-                  ) : (
-                    "Deploy to Sequence"
-                  )}
-                </button>
-
-                <button className="text-xs px-4 py-2 border border-cyan-700/50 rounded-md hover:bg-cyan-900/30 text-cyan-300 transition-colors">
-                  Export Data
-                </button>
-              </div>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-[#050B14] border-b border-cyan-900/50 text-xs uppercase tracking-wider text-cyan-400/70">
-                    <th className="px-6 py-4 font-medium w-12">
-                      <input 
-                        type="checkbox" 
-                        className="rounded border-cyan-700 bg-transparent text-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
-                        checked={selectedLeads.size === leads.length && leads.length > 0}
-                        onChange={toggleAllLeads}
-                      />
-                    </th>
-                    <th className="px-6 py-4 font-medium">Contact</th>
-                    <th className="px-6 py-4 font-medium">Title</th>
-                    <th className="px-6 py-4 font-medium">Company</th>
-                    <th className="px-6 py-4 font-medium">Contact Info</th>
-                    <th className="px-6 py-4 font-medium text-right">Intel</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-cyan-900/20">
-                  {leads.map((lead, idx) => (
-                    <tr key={lead.id || idx} className={`hover:bg-cyan-900/10 transition-colors group ${selectedLeads.has(lead.id) ? 'bg-cyan-900/5' : ''}`}>
-                      <td className="px-6 py-4">
-                        <input 
-                          type="checkbox" 
-                          className="rounded border-cyan-700 bg-transparent text-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
-                          checked={selectedLeads.has(lead.id)}
-                          onChange={() => toggleLeadSelection(lead.id)}
-                        />
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-medium text-cyan-50">{lead.name}</div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-cyan-200/80">{lead.title}</td>
-                      <td className="px-6 py-4 text-sm text-cyan-200/80">{lead.company}</td>
-                      <td className="px-6 py-4">
-                        {lead.email ? (
-                          <div className="flex flex-col gap-2">
-                            <span className="text-sm font-mono text-emerald-400 bg-emerald-950/30 px-2 py-1 rounded border border-emerald-800/50 w-max">
-                              {lead.email}
-                            </span>
-                            {lead.phone && (
-                              <span className="text-xs font-mono text-blue-400 bg-blue-950/30 px-2 py-1 rounded border border-blue-800/50 w-max">
-                                📞 {lead.phone}
-                              </span>
-                            )}
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => handleUnlock(lead.id)}
-                            disabled={unlocking[lead.id]}
-                            className="text-xs font-semibold px-3 py-1.5 bg-cyan-900/40 hover:bg-cyan-800/60 border border-cyan-700/50 text-cyan-200 rounded transition-all flex items-center disabled:opacity-50"
-                          >
-                            {unlocking[lead.id] ? (
-                              <span className="flex items-center">
-                                <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-cyan-200" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Unlocking...
-                              </span>
-                            ) : (
-                              "Unlock (1 Credit)"
-                            )}
-                          </button>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        {lead.linkedin_url ? (
-                          <a href={lead.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-cyan-500 hover:text-cyan-300 text-sm font-medium">
-                            LinkedIn ↗
-                          </a>
-                        ) : (
-                          <span className="text-cyan-800/50 text-sm">--</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="flex items-center gap-3 border-l border-gray-800 pl-6">
+              <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse"></div>
+              <span className="text-sm font-medium text-green-500">Live</span>
             </div>
           </div>
-        )}
-        
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <div className="lg:col-span-2 bg-[#111111] border border-gray-800 rounded-xl overflow-hidden">
+            {activeTab === "missions" ? (
+              <>
+                <div className="px-6 py-4 border-b border-gray-800 bg-[#161616]">
+                  <h2 className="text-lg font-semibold text-white">Incoming Missions (Audits)</h2>
+                </div>
+                <div className="p-0 overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-[#0A0A0A] text-gray-400">
+                      <tr>
+                        <th className="px-6 py-3 font-medium">Target URL</th>
+                        <th className="px-6 py-3 font-medium">Email</th>
+                        <th className="px-6 py-3 font-medium">Status</th>
+                        <th className="px-6 py-3 font-medium text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-800">
+                      {loading ? (
+                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">Scanning satellite uplinks...</td></tr>
+                      ) : audits.length === 0 ? (
+                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">No missions found.</td></tr>
+                      ) : (
+                        audits.map((audit) => (
+                          <tr key={audit.id} className="hover:bg-[#1A1A1A] transition-colors">
+                            <td className="px-6 py-4 font-mono text-blue-400">{audit.siteUrl}</td>
+                            <td className="px-6 py-4">{audit.email}</td>
+                            <td className="px-6 py-4">
+                               <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                                 audit.status === 'AWAITING_PAYMENT' ? 'bg-orange-900/50 text-orange-300 border border-orange-800' :
+                                 audit.status === 'RUNNING' ? 'bg-blue-900/50 text-blue-300 border border-blue-800 animate-pulse' :
+                                 audit.status === 'COMPLETED' ? 'bg-green-900/50 text-green-300 border border-green-800' :
+                                 'bg-gray-800 text-gray-300'
+                               }`}>
+                                {audit.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              {audit.status === 'AWAITING_PAYMENT' && (
+                                <button 
+                                  onClick={() => handleApprove(audit)}
+                                  disabled={triggeringId === audit.id}
+                                  className="px-3 py-1 bg-white text-black font-semibold rounded hover:bg-gray-200 transition-colors disabled:opacity-50"
+                                >
+                                  {triggeringId === audit.id ? '...' : 'Approve'}
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="px-6 py-4 border-b border-gray-800 bg-[#161616]">
+                  <h2 className="text-lg font-semibold text-white">SaaS Clients (₹999)</h2>
+                </div>
+                <div className="p-0 overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-[#0A0A0A] text-gray-400">
+                      <tr>
+                        <th className="px-6 py-3 font-medium">Business</th>
+                        <th className="px-6 py-3 font-medium">Email</th>
+                        <th className="px-6 py-3 font-medium">Status</th>
+                        <th className="px-6 py-3 font-medium text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-800">
+                      {loading ? (
+                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">Retrieving client database...</td></tr>
+                      ) : clients.length === 0 ? (
+                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">No clients onboarded yet.</td></tr>
+                      ) : (
+                        clients.map((client) => (
+                          <tr key={client.id} className="hover:bg-[#1A1A1A] transition-colors">
+                            <td className="px-6 py-4 font-semibold text-white">{client.businessName}</td>
+                            <td className="px-6 py-4 text-gray-400">{client.email}</td>
+                            <td className="px-6 py-4">
+                               <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                                 client.status === 'ACTIVE' ? 'bg-green-900/50 text-green-300 border border-green-800' :
+                                 client.status === 'AWAITING_PAYMENT' ? 'bg-orange-900/50 text-orange-300 border border-orange-800' :
+                                 'bg-gray-800 text-gray-300'
+                               }`}>
+                                {client.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              {client.status === 'AWAITING_PAYMENT' && (
+                                <button 
+                                  onClick={() => handleActivateClient(client)}
+                                  className="px-3 py-1 bg-green-500 text-black font-semibold rounded hover:bg-green-400 transition-colors"
+                                >
+                                  Activate
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="bg-black border border-gray-800 rounded-xl overflow-hidden flex flex-col font-mono text-sm">
+            <div className="px-4 py-3 border-b border-gray-800 bg-[#0A0A0A] flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-red-500"></div>
+              <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
+              <div className="h-2 w-2 rounded-full bg-green-500"></div>
+              <span className="ml-2 text-gray-500 text-xs">zenith-agent-terminal</span>
+            </div>
+            <div className="p-4 flex-1 space-y-2 overflow-y-auto max-h-[500px]">
+              {logs.map((log, i) => (
+                <div key={i} className={`${log.includes('ERROR') ? 'text-red-400' : log.includes('ACTION') || log.includes('QUEUE') || log.includes('BILLING') || log.includes('SUCCESS') ? 'text-green-400' : 'text-gray-400'}`}>
+                  {log}
+                </div>
+              ))}
+              <div className="animate-pulse text-gray-600">_</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

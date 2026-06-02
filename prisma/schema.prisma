@@ -84,19 +84,27 @@ model AuditEvent {
 }
 
 model Lead {
-  id              String   @id @default(cuid())
-  name            String
-  email           String
-  company         String
-  website         String
-  industry        String
-  targetQueries   Json
-  status          String   @default("new")
-  geoScore        Int?
-  geoReport       Json?
-  createdAt       DateTime @default(now())
-  lastContactedAt DateTime?
-  updatedAt       DateTime @updatedAt
+  id               String    @id @default(cuid())
+  name             String
+  email            String
+  company          String
+  website          String
+  industry         String
+  targetQueries    Json
+  status           String    @default("new")
+  geoScore         Int?
+  geoReport        Json?
+  
+  // Lead OS Additions
+  source           String    @default("manual") // apollo, organic_search, linkedin, manual
+  automationStatus String    @default("pending") // pending, scoring, nurturing, converted
+  externalId       String?   // Apollo or Notion ID
+  enrichedData     Json?     // Company size, revenue, etc.
+  competitors      String[]  // Competitor domains for FOMO alerts
+
+  createdAt        DateTime  @default(now())
+  lastContactedAt  DateTime?
+  updatedAt        DateTime  @updatedAt
 }
 
 enum ClientStatus {
