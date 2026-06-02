@@ -33,7 +33,7 @@ export default function HelpGuidePage() {
               <li><strong>Anticipation:</strong> The system triggers a 3.5-second "Probing LLMs..." animation, establishing technical authority.</li>
               <li><strong>The Paywall:</strong> They are routed to the Dashboard. The top metrics are visible, but the actionable data (Semantic Anchors, LLM Proofs) is blurred out.</li>
               <li><strong>Conversion:</strong> To unlock the full report, they must submit their work email. This submission hits the Universal Lead API.</li>
-            </form>
+            </ol>
           </div>
         </section>
 
