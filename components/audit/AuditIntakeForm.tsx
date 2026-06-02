@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,6 +61,9 @@ type AuditIntakeFormProps = {
 
 export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const prefilledDomain = searchParams.get("domain") || "";
+  
   const [captcha, setCaptcha] = useState<CaptchaState | null>(null);
   
   const [isPending, startTransition] = useTransition();
@@ -95,7 +98,7 @@ export function AuditIntakeForm({ selectedPlan }: AuditIntakeFormProps) {
       name: "",
       email: "",
       company: "",
-      website: "",
+      website: prefilledDomain,
       industry: "",
       query1: "",
       query2: "",

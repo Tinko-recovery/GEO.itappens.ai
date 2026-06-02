@@ -17,7 +17,7 @@ export default function SearchHeroSection() {
     
     // Simulate LLM Probing Delay
     setTimeout(() => {
-      router.push(`/dashboard?domain=${encodeURIComponent(domain)}`);
+      router.push(`/audit?domain=${encodeURIComponent(domain)}`);
     }, 3500);
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Script from "next/script";
 import { ArrowRight, CheckCircle2, ShieldCheck, Database, GitBranch, TerminalSquare, SearchCode, ServerCog } from "lucide-react";
 
@@ -111,7 +111,9 @@ export default function AuditPage() {
             </div>
             
             <div className="card-bento" style={{ width: '100%', maxWidth: '520px', marginLeft: 'auto', color: 'var(--navy)' }}>
-              <AuditIntakeForm selectedPlan={selectedPlan} />
+              <Suspense fallback={<div>Loading form...</div>}>
+                <AuditIntakeForm selectedPlan={selectedPlan} />
+              </Suspense>
             </div>
           </div>
         </section>
