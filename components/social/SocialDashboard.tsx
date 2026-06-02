@@ -25,6 +25,10 @@ export default function SocialDashboard() {
   const [editingSiteId, setEditingSiteId] = useState<string | null>(null);
   const [siteForm, setSiteForm] = useState({ toneOfVoice: '', targetAudience: '', formattingRules: '' });
 
+  // Promo code state
+  const [promoCode, setPromoCode] = useState("");
+  const [isRedeeming, setIsRedeeming] = useState(false);
+
   const fetchData = async () => {
     try {
       const [sitesRes, articlesRes, creditsRes, analyticsRes] = await Promise.all([
@@ -191,15 +195,39 @@ export default function SocialDashboard() {
     }
   };
 
+  const handleRedeemCode = async () => {
+    if (!promoCode.trim()) return;
+    setIsRedeeming(true);
+    try {
+      const res = await fetch('/api/aeo/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'test@example.com', code: promoCode.trim() }) // We will let the server handle session email, but for now we can just send it, or rely on Auth0. 
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setCredits(data.newBalance);
+        setPromoCode("");
+        alert(data.message);
+      } else {
+        alert(data.error || "Failed to redeem code");
+      }
+    } catch (error) {
+      alert("An error occurred");
+    } finally {
+      setIsRedeeming(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 p-4 md:p-8">
+    <div className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight">itappens <span className="text-indigo-400">AEO</span></h1>
-            <p className="text-slate-400 mt-1 flex items-center gap-2">
+            <p className="text-slate-500 mt-1 flex items-center gap-2">
               <span className="relative flex h-2 w-2">
                 <span className={checking ? "" : engineActive ? "animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" : "absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"}></span>
                 <span className={`relative inline-flex rounded-full h-2 w-2 ${checking ? 'bg-slate-500' : engineActive ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
@@ -207,38 +235,56 @@ export default function SocialDashboard() {
               {checking ? 'Connecting...' : engineActive ? 'Engine Online' : 'Engine Offline'}
             </p>
           </div>
-          <div className="bg-slate-900 border border-slate-800 rounded-xl px-6 py-3 flex items-center gap-4">
-            <div className="text-slate-400 text-sm">Available Credits</div>
-            <div className="text-2xl font-bold text-indigo-400">{credits !== null ? credits : '-'}</div>
+          <div className="flex items-center gap-4">
+            <div className="bg-white border border-slate-200 rounded-xl px-4 py-2 flex items-center gap-2">
+              <input 
+                type="text" 
+                placeholder="Promo Code" 
+                value={promoCode} 
+                onChange={(e) => setPromoCode(e.target.value)}
+                className="bg-transparent border-none outline-none text-sm w-32"
+              />
+              <button 
+                onClick={handleRedeemCode} 
+                disabled={isRedeeming || !promoCode}
+                className="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg font-bold hover:bg-indigo-200 disabled:opacity-50"
+              >
+                {isRedeeming ? '...' : 'Redeem'}
+              </button>
+            </div>
+            <div className="bg-white border border-slate-200 rounded-xl px-6 py-3 flex items-center gap-4">
+              <div className="text-slate-500 text-sm">Available Credits</div>
+              <div className="text-2xl font-bold text-indigo-400">{credits !== null ? credits : '-'}</div>
+            </div>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-slate-800 pb-px overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <div className="flex gap-2 mb-8 border-b border-slate-200 pb-px overflow-x-auto whitespace-nowrap scrollbar-hide">
           <button 
             onClick={() => setActiveTab('analytics')}
-            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'analytics' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'analytics' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-200'}`}
           >
             <BarChart3 className="w-4 h-4" />
             Performance
           </button>
           <button 
             onClick={() => setActiveTab('planner')}
-            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'planner' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'planner' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-200'}`}
           >
             <Bot className="w-4 h-4" />
             Keyword Planner
           </button>
           <button 
             onClick={() => setActiveTab('queue')}
-            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'queue' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'queue' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-200'}`}
           >
             <ListTodo className="w-4 h-4" />
             Article Queue ({articles.length})
           </button>
           <button 
             onClick={() => setActiveTab('sites')}
-            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'sites' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'sites' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-200'}`}
           >
             <Settings className="w-4 h-4" />
             Connected Sites ({sites.length})
@@ -252,12 +298,12 @@ export default function SocialDashboard() {
           {activeTab === 'analytics' && (
             <motion.div key="analytics" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
               <div className="grid md:grid-cols-3 gap-4">
-                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                  <div className="text-slate-400 text-sm mb-1">Total Published</div>
+                <div className="bg-white shadow-sm border border-slate-200 rounded-xl p-6">
+                  <div className="text-slate-500 text-sm mb-1">Total Published</div>
                   <div className="text-4xl font-extrabold text-white">{analyticsData?.statusCounts?.PUBLISHED || 0}</div>
                 </div>
-                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                  <div className="text-slate-400 text-sm mb-1">In Queue / Generating</div>
+                <div className="bg-white shadow-sm border border-slate-200 rounded-xl p-6">
+                  <div className="text-slate-500 text-sm mb-1">In Queue / Generating</div>
                   <div className="text-4xl font-extrabold text-white">{(analyticsData?.statusCounts?.PENDING || 0) + (analyticsData?.statusCounts?.GENERATING || 0)}</div>
                 </div>
                 <div className="bg-indigo-600/20 border border-indigo-500/50 rounded-xl p-6 relative overflow-hidden">
@@ -268,7 +314,7 @@ export default function SocialDashboard() {
                 </div>
               </div>
               
-              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+              <div className="bg-white shadow-sm border border-slate-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold mb-6">Content Velocity (30 Days)</h3>
                 <div className="h-[300px] w-full">
                   {analyticsData?.chartData ? (
@@ -288,7 +334,7 @@ export default function SocialDashboard() {
                       </AreaChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-full flex items-center justify-center text-slate-500"><Loader2 className="w-6 h-6 animate-spin"/></div>
+                    <div className="h-full flex items-center justify-center text-slate-9000"><Loader2 className="w-6 h-6 animate-spin"/></div>
                   )}
                 </div>
               </div>
@@ -298,9 +344,9 @@ export default function SocialDashboard() {
           {/* PLANNER TAB */}
           {activeTab === 'planner' && (
             <motion.div key="planner" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
-              <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+              <div className="bg-white shadow-sm border border-slate-200 rounded-2xl p-6 backdrop-blur-sm">
                 <h2 className="text-xl font-bold mb-2">Seed Keyword Planner</h2>
-                <p className="text-slate-400 text-sm mb-6">Enter a broad topic to instantly generate a 30-day topical map of AEO queries.</p>
+                <p className="text-slate-500 text-sm mb-6">Enter a broad topic to instantly generate a 30-day topical map of AEO queries.</p>
                 
                 <div className="flex gap-4">
                   <input 
@@ -308,7 +354,7 @@ export default function SocialDashboard() {
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g. Real Estate in Connecticut" 
-                    className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                   />
                   <button 
                     onClick={handleGeneratePlanner}
@@ -321,7 +367,7 @@ export default function SocialDashboard() {
               </div>
 
               {generatedTopics.length > 0 && (
-                <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+                <div className="bg-white shadow-sm border border-slate-200 rounded-2xl p-6 backdrop-blur-sm">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-lg font-bold">Generated Topic Map ({generatedTopics.length})</h3>
                     <button 
@@ -336,16 +382,16 @@ export default function SocialDashboard() {
                   
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {generatedTopics.map((t, idx) => (
-                      <div key={idx} className="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between group hover:border-indigo-500/50 transition-colors">
+                      <div key={idx} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between group hover:border-indigo-500/50 transition-colors">
                         <div>
                           <div className="flex justify-between items-start mb-2">
                             <span className="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">Vol: {t.estimatedVolume}</span>
-                            <button onClick={() => handleQueueSingle(t.title)} className="text-slate-500 hover:text-emerald-400 transition-colors" title="Queue this article">
+                            <button onClick={() => handleQueueSingle(t.title)} className="text-slate-9000 hover:text-emerald-400 transition-colors" title="Queue this article">
                               <Plus className="w-5 h-5" />
                             </button>
                           </div>
                           <h4 className="font-bold text-sm text-slate-200 leading-snug mb-2">{t.title}</h4>
-                          <p className="text-xs text-slate-500">Query: {t.targetQuery}</p>
+                          <p className="text-xs text-slate-9000">Query: {t.targetQuery}</p>
                         </div>
                       </div>
                     ))}
@@ -359,15 +405,15 @@ export default function SocialDashboard() {
           {activeTab === 'queue' && (
             <motion.div key="queue" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
               {articles.length === 0 ? (
-                <div className="text-center py-20 text-slate-500 border border-slate-800 border-dashed rounded-2xl">
+                <div className="text-center py-20 text-slate-9000 border border-slate-200 border-dashed rounded-2xl">
                   No articles in the queue. Use the Planner to generate some!
                 </div>
               ) : (
                 articles.map((art, idx) => (
-                  <div key={idx} className="bg-slate-900/50 border border-slate-800 rounded-xl p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                  <div key={idx} className="bg-white shadow-sm border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div>
                       <h4 className="font-bold text-slate-200 mb-1">{art.topic}</h4>
-                      <div className="flex items-center gap-3 text-xs text-slate-500">
+                      <div className="flex items-center gap-3 text-xs text-slate-9000">
                         <span>Created: {new Date(art.createdAt).toLocaleDateString()}</span>
                         {art.scheduledFor && <span>Scheduled: {new Date(art.scheduledFor).toLocaleString()}</span>}
                       </div>
@@ -403,13 +449,13 @@ export default function SocialDashboard() {
               </div>
 
               {sites.length === 0 ? (
-                <div className="text-center py-20 text-slate-500 border border-slate-800 border-dashed rounded-2xl">
+                <div className="text-center py-20 text-slate-9000 border border-slate-200 border-dashed rounded-2xl">
                   No sites connected. You must connect a WordPress site before queuing articles.
                 </div>
               ) : (
                 <div className="space-y-4">
                   {sites.map((site) => (
-                    <div key={site.id} className="bg-slate-900/50 border border-slate-800 rounded-xl p-5">
+                    <div key={site.id} className="bg-white shadow-sm border border-slate-200 rounded-xl p-5">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-lg flex items-center justify-center font-bold text-xl border border-indigo-500/20">W</div>
@@ -433,7 +479,7 @@ export default function SocialDashboard() {
                               });
                             }
                           }}
-                          className="text-slate-400 hover:text-indigo-400 transition-colors p-2"
+                          className="text-slate-500 hover:text-indigo-400 transition-colors p-2"
                         >
                           <Settings className="w-5 h-5" />
                         </button>
@@ -446,37 +492,37 @@ export default function SocialDashboard() {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            className="overflow-hidden border-t border-slate-800 pt-4 mt-2"
+                            className="overflow-hidden border-t border-slate-200 pt-4 mt-2"
                           >
                             <div className="grid md:grid-cols-2 gap-4 mb-4">
                               <div>
-                                <label className="block text-xs text-slate-400 mb-1">Tone of Voice</label>
+                                <label className="block text-xs text-slate-500 mb-1">Tone of Voice</label>
                                 <input 
                                   type="text" 
                                   value={siteForm.toneOfVoice} 
                                   onChange={e => setSiteForm({...siteForm, toneOfVoice: e.target.value})}
                                   placeholder="e.g. Professional, Witty, Conversational"
-                                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs text-slate-400 mb-1">Target Audience</label>
+                                <label className="block text-xs text-slate-500 mb-1">Target Audience</label>
                                 <input 
                                   type="text" 
                                   value={siteForm.targetAudience} 
                                   onChange={e => setSiteForm({...siteForm, targetAudience: e.target.value})}
                                   placeholder="e.g. Enterprise CEOs, Beginner Gardeners"
-                                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500"
                                 />
                               </div>
                               <div className="md:col-span-2">
-                                <label className="block text-xs text-slate-400 mb-1">Formatting Rules (Optional)</label>
+                                <label className="block text-xs text-slate-500 mb-1">Formatting Rules (Optional)</label>
                                 <input 
                                   type="text" 
                                   value={siteForm.formattingRules} 
                                   onChange={e => setSiteForm({...siteForm, formattingRules: e.target.value})}
                                   placeholder="e.g. Always include a pros/cons table"
-                                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-indigo-500"
                                 />
                               </div>
                             </div>

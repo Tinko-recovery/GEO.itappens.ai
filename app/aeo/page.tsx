@@ -9,19 +9,19 @@ export const metadata = {
 
 export default function AeoLandingPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500/30">
       
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/70 border-b border-slate-800">
+      <nav className="sticky top-0 z-50 backdrop-blur-md bg-slate-50/70 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Bot className="w-8 h-8 text-indigo-500" />
             <span className="text-xl font-bold tracking-tight">itappens <span className="text-indigo-400">AEO</span></span>
           </div>
           <div className="flex items-center gap-6">
-            <Link href="#features" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Features</Link>
-            <Link href="#pricing" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Pricing</Link>
-            <Link href="/api/auth/login" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Login</Link>
+            <Link href="#features" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Features</Link>
+            <Link href="#pricing" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Pricing</Link>
+            <Link href="/api/auth/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Login</Link>
             <Link href="/api/auth/login" className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg transition-all shadow-[0_0_15px_rgba(79,70,229,0.3)]">
               Start Free
             </Link>
@@ -37,7 +37,7 @@ export default function AeoLandingPage() {
         </div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/50 border border-slate-800 text-sm font-medium text-indigo-300 mb-8 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-slate-200 text-sm font-medium text-indigo-600 mb-8 backdrop-blur-sm">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
@@ -60,7 +60,7 @@ export default function AeoLandingPage() {
             <Link href="/api/auth/login" className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] hover:-translate-y-0.5">
               Start Your Free Trial
             </Link>
-            <Link href="#how-it-works" className="px-8 py-4 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold rounded-xl transition-all">
+            <Link href="#how-it-works" className="px-8 py-4 bg-white hover:bg-slate-800 border border-slate-200 text-white font-bold rounded-xl transition-all">
               See How It Works
             </Link>
           </div>
@@ -68,7 +68,7 @@ export default function AeoLandingPage() {
       </section>
 
       {/* Stats / Trust Bar */}
-      <section className="border-y border-slate-800/60 bg-slate-900/20 backdrop-blur-sm py-12">
+      <section className="border-y border-slate-200/60 bg-white/20 backdrop-blur-sm py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
@@ -101,7 +101,7 @@ export default function AeoLandingPage() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {/* Feature Card 1 */}
-            <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
+            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
               <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
                 <Bot className="w-6 h-6 text-indigo-400" />
               </div>
@@ -110,7 +110,7 @@ export default function AeoLandingPage() {
             </div>
 
             {/* Feature Card 2 */}
-            <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
+            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
               <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
                 <ImageIcon className="w-6 h-6 text-indigo-400" />
               </div>
@@ -119,7 +119,7 @@ export default function AeoLandingPage() {
             </div>
 
             {/* Feature Card 3 */}
-            <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
+            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
               <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
                 <Globe className="w-6 h-6 text-indigo-400" />
               </div>
@@ -128,7 +128,7 @@ export default function AeoLandingPage() {
             </div>
 
             {/* Feature Card 4 */}
-            <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
+            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
               <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
                 <CalendarClock className="w-6 h-6 text-indigo-400" />
               </div>
@@ -137,7 +137,7 @@ export default function AeoLandingPage() {
             </div>
 
             {/* Feature Card 5 */}
-            <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
+            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
               <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
                 <Zap className="w-6 h-6 text-indigo-400" />
               </div>
@@ -146,10 +146,10 @@ export default function AeoLandingPage() {
             </div>
 
             {/* Feature Card 6 */}
-            <div className="bg-slate-900/40 border border-indigo-500/30 p-8 rounded-2xl backdrop-blur-sm relative overflow-hidden group">
+            <div className="bg-white/40 border border-indigo-500/30 p-8 rounded-2xl backdrop-blur-sm relative overflow-hidden group">
               <div className="absolute top-0 right-0 bg-indigo-600 text-[10px] font-bold px-3 py-1 rounded-bl-lg">GAME CHANGER</div>
               <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/30 group-hover:scale-110 transition-transform">
-                <ShoppingCart className="w-6 h-6 text-indigo-300" />
+                <ShoppingCart className="w-6 h-6 text-indigo-600" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">E-Commerce Injector</h3>
               <p className="text-slate-400 leading-relaxed">Paste your Shopify/Woo product link. The AI naturally weaves your product as the ultimate solution inside the educational article.</p>
@@ -159,7 +159,7 @@ export default function AeoLandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-24 bg-slate-900/20 border-y border-slate-800/60">
+      <section id="pricing" className="py-24 bg-white/20 border-y border-slate-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">Pricing that respects your margins.</h2>
@@ -168,33 +168,33 @@ export default function AeoLandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Starter */}
-            <div className="bg-slate-950 border border-slate-800 rounded-3xl p-8 flex flex-col">
-              <h3 className="text-xl font-semibold text-slate-300 mb-2">Starter</h3>
-              <div className="text-4xl font-extrabold text-white mb-2">$29<span className="text-lg text-slate-500 font-normal">/mo</span></div>
-              <p className="text-slate-400 text-sm mb-6 border-b border-slate-800 pb-6">Perfect for solo bloggers.</p>
+            <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 flex flex-col">
+              <h3 className="text-xl font-semibold text-slate-600 mb-2">Starter</h3>
+              <div className="text-4xl font-extrabold text-white mb-2">$29<span className="text-lg text-slate-9000 font-normal">/mo</span></div>
+              <p className="text-slate-400 text-sm mb-6 border-b border-slate-200 pb-6">Perfect for solo bloggers.</p>
               
               <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 1,000 Credits/mo</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 1 WordPress Site</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Auto Scheduling</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 1,000 Credits/mo</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 1 WordPress Site</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Auto Scheduling</li>
               </ul>
-              <Link href="/api/auth/login" className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-center font-semibold transition-colors">
+              <Link href="/api/auth/login" className="w-full py-3 px-4 bg-white hover:bg-slate-800 border border-slate-200 rounded-xl text-center font-semibold transition-colors">
                 Start Free Trial
               </Link>
             </div>
 
             {/* Growth (Popular) */}
-            <div className="bg-slate-900 border-2 border-indigo-500 rounded-3xl p-8 flex flex-col relative shadow-[0_0_30px_rgba(79,70,229,0.15)] transform md:-translate-y-4">
+            <div className="bg-white border-2 border-indigo-500 rounded-3xl p-8 flex flex-col relative shadow-[0_0_30px_rgba(79,70,229,0.15)] transform md:-translate-y-4">
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
-              <h3 className="text-xl font-semibold text-indigo-300 mb-2">Growth</h3>
-              <div className="text-4xl font-extrabold text-white mb-2">$69<span className="text-lg text-slate-500 font-normal">/mo</span></div>
-              <p className="text-slate-400 text-sm mb-6 border-b border-slate-800 pb-6">For serious content operations.</p>
+              <h3 className="text-xl font-semibold text-indigo-600 mb-2">Growth</h3>
+              <div className="text-4xl font-extrabold text-white mb-2">$69<span className="text-lg text-slate-9000 font-normal">/mo</span></div>
+              <p className="text-slate-400 text-sm mb-6 border-b border-slate-200 pb-6">For serious content operations.</p>
               
               <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 2,500 Credits/mo</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Up to 5 WordPress Sites</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> E-Commerce Injector</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> AI Keyword Planner</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 2,500 Credits/mo</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Up to 5 WordPress Sites</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> E-Commerce Injector</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> AI Keyword Planner</li>
               </ul>
               <Link href="/api/auth/login" className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-center font-semibold text-white transition-colors">
                 Get Started
@@ -202,17 +202,17 @@ export default function AeoLandingPage() {
             </div>
 
             {/* Agency */}
-            <div className="bg-slate-950 border border-slate-800 rounded-3xl p-8 flex flex-col">
-              <h3 className="text-xl font-semibold text-slate-300 mb-2">Agency</h3>
-              <div className="text-4xl font-extrabold text-white mb-2">$159<span className="text-lg text-slate-500 font-normal">/mo</span></div>
-              <p className="text-slate-400 text-sm mb-6 border-b border-slate-800 pb-6">Manage multiple client portfolios.</p>
+            <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 flex flex-col">
+              <h3 className="text-xl font-semibold text-slate-600 mb-2">Agency</h3>
+              <div className="text-4xl font-extrabold text-white mb-2">$159<span className="text-lg text-slate-9000 font-normal">/mo</span></div>
+              <p className="text-slate-400 text-sm mb-6 border-b border-slate-200 pb-6">Manage multiple client portfolios.</p>
               
               <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 6,000 Credits/mo</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Unlimited WordPress Sites</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Dedicated Account Manager</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 6,000 Credits/mo</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Unlimited WordPress Sites</li>
+                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Dedicated Account Manager</li>
               </ul>
-              <Link href="/api/auth/login" className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-center font-semibold transition-colors">
+              <Link href="/api/auth/login" className="w-full py-3 px-4 bg-white hover:bg-slate-800 border border-slate-200 rounded-xl text-center font-semibold transition-colors">
                 Contact Sales
               </Link>
             </div>
@@ -229,11 +229,11 @@ export default function AeoLandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm">
+            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm">
               <div className="text-amber-400 mb-4 text-xl">★★★★★</div>
-              <p className="text-slate-300 leading-relaxed mb-6">"Our business hotel now gets 2-3 new guest inquiries every week purely from organic search. The AEO engine transformed our online presence completely while costing us pennies compared to our old marketing."</p>
+              <p className="text-slate-600 leading-relaxed mb-6">"Our business hotel now gets 2-3 new guest inquiries every week purely from organic search. The AEO engine transformed our online presence completely while costing us pennies compared to our old marketing."</p>
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-indigo-900 rounded-full flex items-center justify-center text-indigo-300 font-bold">NK</div>
+                <div className="w-10 h-10 bg-indigo-900 rounded-full flex items-center justify-center text-indigo-600 font-bold">NK</div>
                 <div>
                   <div className="font-bold text-white">NewKRINN's Verdict</div>
                   <div className="text-sm text-slate-400">Business Hotel</div>
@@ -241,9 +241,9 @@ export default function AeoLandingPage() {
               </div>
             </div>
 
-            <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm">
+            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm">
               <div className="text-amber-400 mb-4 text-xl">★★★★★</div>
-              <p className="text-slate-300 leading-relaxed mb-6">"Just add domain, connect WordPress — it does the rest. We added our Shopify product links and it writes content that actually converts readers into buyers. Organic bookings increased 50% in just 4 months."</p>
+              <p className="text-slate-600 leading-relaxed mb-6">"Just add domain, connect WordPress — it does the rest. We added our Shopify product links and it writes content that actually converts readers into buyers. Organic bookings increased 50% in just 4 months."</p>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 bg-emerald-900 rounded-full flex items-center justify-center text-emerald-300 font-bold">PB</div>
                 <div>
@@ -257,13 +257,13 @@ export default function AeoLandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/60 bg-slate-950 py-12">
+      <footer className="border-t border-slate-200/60 bg-slate-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
             <Bot className="w-6 h-6 text-slate-600" />
-            <span className="text-lg font-bold text-slate-400 tracking-tight">itappens <span className="text-slate-500">AEO</span></span>
+            <span className="text-lg font-bold text-slate-400 tracking-tight">itappens <span className="text-slate-9000">AEO</span></span>
           </div>
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-9000">
             © 2026 itappens.ai. All rights reserved.
           </div>
         </div>

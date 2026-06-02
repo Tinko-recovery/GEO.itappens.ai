@@ -38,7 +38,7 @@ export default function HomePage() {
   return (
     <div className="page-shell">
       <JsonLd data={homepageSchema} />
-      <Suspense fallback={<div className="h-20 bg-slate-900 animate-pulse" />}>
+      <Suspense fallback={<div className="h-20 bg-white animate-pulse" />}>
         <NavBar />
       </Suspense>
       
@@ -68,7 +68,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <Suspense fallback={<div className="h-40 bg-slate-900" />}>
+      <Suspense fallback={<div className="h-40 bg-white" />}>
         <SiteFooter />
       </Suspense>
     </div>
