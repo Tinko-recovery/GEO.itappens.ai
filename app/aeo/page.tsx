@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Bot, Image as ImageIcon, CalendarClock, Zap, ShoppingCart, Globe, CheckCircle2 } from 'lucide-react';
+import NavBar from '@/components/NavBar';
 
 export const metadata = {
   title: 'itappens AEO | The Answer Engine Optimization Auto-Blogger',
@@ -12,22 +13,7 @@ export default function AeoLandingPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500/30">
       
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-slate-50/70 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Bot className="w-8 h-8 text-indigo-500" />
-            <span className="text-xl font-bold tracking-tight">itappens <span className="text-indigo-400">AEO</span></span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link href="#features" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Features</Link>
-            <Link href="#pricing" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Pricing</Link>
-            <Link href="/dashboard" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Login</Link>
-            <Link href="/dashboard" className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg transition-all shadow-[0_0_15px_rgba(79,70,229,0.3)]">
-              Start Free
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <NavBar logoSuffix="AEO" />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">

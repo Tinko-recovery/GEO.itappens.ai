@@ -7,7 +7,7 @@ import Link from 'next/link';
 import BrandLogo from "./BrandLogo";
 import { primaryNav } from "@/lib/content/site";
 
-export default function NavBar() {
+export default function NavBar({ logoSuffix }: { logoSuffix?: string }) {
   const { user, isLoading } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -85,7 +85,7 @@ export default function NavBar() {
     >
       <div className="container" style={{ display: "flex", alignItems: "center" }}>
         <Link href="/" style={{ textDecoration: "none" }} onClick={() => setActiveHash("")}>
-          <BrandLogo color={showBg ? "white" : "var(--navy)"} />
+          <BrandLogo color={showBg ? "white" : "var(--navy)"} suffix={logoSuffix} />
         </Link>
 
         <div className="desktop-nav" style={{ display: "flex", gap: "24px", marginLeft: "48px" }}>

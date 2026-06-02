@@ -1,6 +1,6 @@
 'use client';
 
-export default function BrandLogo({ color = "white" }: { color?: string }) {
+export default function BrandLogo({ color = "white", suffix }: { color?: string, suffix?: string }) {
     return (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {/* Corporate Spark Icon */}
@@ -28,6 +28,7 @@ export default function BrandLogo({ color = "white" }: { color?: string }) {
                 alignItems: 'center'
             }}>
                 itappens.ai
+                {suffix && <span style={{ color: 'var(--indigo-500, #6366f1)', marginLeft: '6px' }}>{suffix}</span>}
             </div>
         </div>
     );
