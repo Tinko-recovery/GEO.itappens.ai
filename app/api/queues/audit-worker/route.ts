@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 // Prevent static pre-rendering — this route must run dynamically
 export const dynamic = 'force-dynamic';
@@ -12,13 +15,16 @@ export const maxDuration = 300;
 async function handler(req: Request) {
     console.log("[WORKER] Received background audit task from Upstash");
     
+    let auditId: string | undefined;
+
     try {
         const body = await req.json();
+        auditId = body.auditId;
         const { url, email, plan } = body;
 
-        if (!url) {
-            console.error("[WORKER] Missing URL in payload");
-            return NextResponse.json({ error: "URL is required" }, { status: 400 });
+        if (!url || !auditId) {
+            console.error("[WORKER] Missing URL or Audit ID in payload");
+            return NextResponse.json({ error: "URL and Audit ID are required" }, { status: 400 });
         }
 
         console.log(`[WORKER] Initiating Weaponized GEO Audit for: ${url}`);
@@ -102,13 +108,30 @@ STRICT STEALTH: Replace all references to human names or personal emails with 'T
 
         console.log(`[WORKER] Successfully completed audit for ${url}`);
         
-        // TODO: In a real app, update Supabase status to COMPLETED and save 'report' here.
-        // E.g., await supabase.from("audits").update({ status: "COMPLETED", report }).eq("url", url);
+        // 3. Update Supabase status to COMPLETED and save 'report'
+        await prisma.audit.update({
+            where: { id: auditId },
+            data: { 
+                status: "COMPLETED",
+                reportHtml: report
+            }
+        });
 
         return NextResponse.json({ success: true, report_length: report.length });
 
     } catch (error: any) {
         console.error("[WORKER] Fatal error:", error.message);
+        
+        // If we fail, try to update the audit to FAILED
+        if (auditId) {
+            try {
+                await prisma.audit.update({
+                    where: { id: auditId },
+                    data: { status: "FAILED", errorMessage: error.message }
+                });
+            } catch (e) {}
+        }
+
         return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
     }
 }

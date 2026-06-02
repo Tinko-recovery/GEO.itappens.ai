@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         if (process.env.QSTASH_TOKEN) {
             await qstashClient.publishJSON({
                 url: workerUrl,
-                body: { url: audit.siteUrl, email: audit.email, plan: audit.plan },
+                body: { auditId: audit.id, url: audit.siteUrl, email: audit.email, plan: audit.plan },
             });
         }
 
@@ -47,20 +47,6 @@ export async function POST(req: Request) {
                 paymentCompletedAt: new Date()
             }
         });
-
-        // 4. MOCK DEMO: Asynchronously complete the audit after 6 seconds so the dashboard updates.
-        // This ensures a 100% win for the presentation without needing real QStash/Firecrawl/Gemini API keys locally.
-        setTimeout(async () => {
-            try {
-                await prisma.audit.update({
-                    where: { id: auditId },
-                    data: { status: "COMPLETED" }
-                });
-                console.log(`[DASHBOARD] Mock Audit Completed for ID: ${auditId}`);
-            } catch (e) {
-                console.error("Failed to mock complete audit", e);
-            }
-        }, 6000);
 
         return NextResponse.json({ success: true, audit: updatedAudit }, { status: 200 });
 
