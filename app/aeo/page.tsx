@@ -43,7 +43,7 @@ export default function AeoLandingPage() {
           </p>
           
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/dashboard" className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] hover:-translate-y-0.5">
+            <Link href="/itcontents" className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] hover:-translate-y-0.5">
               Start Your Free Trial
             </Link>
             <Link href="#how-it-works" className="px-8 py-4 bg-white hover:bg-slate-800 border border-slate-200 text-slate-900 font-bold rounded-xl transition-all">
@@ -164,7 +164,7 @@ export default function AeoLandingPage() {
                 <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 1 WordPress Site</li>
                 <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Auto Scheduling</li>
               </ul>
-              <Link href="/dashboard" className="w-full py-3 px-4 bg-white hover:bg-slate-800 border border-slate-200 rounded-xl text-center font-semibold transition-colors">
+              <Link href="/itcontents" className="w-full py-3 px-4 bg-white hover:bg-slate-800 border border-slate-200 rounded-xl text-center font-semibold transition-colors">
                 Start Free Trial
               </Link>
             </div>
@@ -182,7 +182,7 @@ export default function AeoLandingPage() {
                 <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> E-Commerce Injector</li>
                 <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> AI Keyword Planner</li>
               </ul>
-              <Link href="/dashboard" className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-center font-semibold text-slate-900 transition-colors">
+              <Link href="/itcontents" className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-center font-semibold text-slate-900 transition-colors">
                 Get Started
               </Link>
             </div>
@@ -198,7 +198,7 @@ export default function AeoLandingPage() {
                 <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Unlimited WordPress Sites</li>
                 <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Dedicated Account Manager</li>
               </ul>
-              <Link href="/dashboard" className="w-full py-3 px-4 bg-white hover:bg-slate-800 border border-slate-200 rounded-xl text-center font-semibold transition-colors">
+              <Link href="/itcontents" className="w-full py-3 px-4 bg-white hover:bg-slate-800 border border-slate-200 rounded-xl text-center font-semibold transition-colors">
                 Contact Sales
               </Link>
             </div>
