@@ -35,7 +35,11 @@ export async function POST(req: Request) {
 
     // 3. Generate HTML with Claude 3.5 Haiku
     console.log(`[AEO Worker] Generating article for topic: ${topic}`);
-    const htmlContent = await generateAEOArticle(topic, article.ecommerceUrl);
+    const htmlContent = await generateAEOArticle(topic, article.ecommerceUrl, {
+      toneOfVoice: site.toneOfVoice,
+      targetAudience: site.targetAudience,
+      formattingRules: site.formattingRules
+    });
 
     // 4. Fetch Unsplash Image
     console.log(`[AEO Worker] Fetching featured image for: ${topic}`);

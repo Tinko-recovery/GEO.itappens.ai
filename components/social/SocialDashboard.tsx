@@ -1,12 +1,13 @@
 'use client';
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, ListTodo, Settings, Loader2, Plus, ArrowRight } from 'lucide-react';
+import { Bot, ListTodo, Settings, Loader2, Plus, ArrowRight, BarChart3, Save } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-type Tab = 'planner' | 'queue' | 'sites';
+type Tab = 'analytics' | 'planner' | 'queue' | 'sites';
 
 export default function SocialDashboard() {
-  const [activeTab, setActiveTab] = useState<Tab>('planner');
+  const [activeTab, setActiveTab] = useState<Tab>('analytics');
   const [engineActive, setEngineActive] = useState(false);
   const [checking, setChecking] = useState(true);
 
@@ -18,13 +19,19 @@ export default function SocialDashboard() {
   const [articles, setArticles] = useState<any[]>([]);
   const [sites, setSites] = useState<any[]>([]);
   const [credits, setCredits] = useState<number | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
+
+  // Settings editing state
+  const [editingSiteId, setEditingSiteId] = useState<string | null>(null);
+  const [siteForm, setSiteForm] = useState({ toneOfVoice: '', targetAudience: '', formattingRules: '' });
 
   const fetchData = async () => {
     try {
-      const [sitesRes, articlesRes, creditsRes] = await Promise.all([
+      const [sitesRes, articlesRes, creditsRes, analyticsRes] = await Promise.all([
         fetch('/api/aeo/sites'),
         fetch('/api/aeo/articles'),
-        fetch('/api/aeo/credits')
+        fetch('/api/aeo/credits'),
+        fetch('/api/aeo/analytics')
       ]);
 
       if (sitesRes.ok) setSites(await sitesRes.json());
@@ -33,6 +40,8 @@ export default function SocialDashboard() {
         const cData = await creditsRes.json();
         setCredits(cData.balance);
       }
+      if (analyticsRes.ok) setAnalyticsData(await analyticsRes.json());
+      
       setEngineActive(true);
     } catch (e) {
       console.error("Failed to load dashboard data", e);
@@ -165,6 +174,23 @@ export default function SocialDashboard() {
     }
   }
 
+  const handleSaveSettings = async (id: string) => {
+    try {
+      const res = await fetch('/api/aeo/sites', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, ...siteForm })
+      });
+      if (res.ok) {
+        setSites(sites.map(s => s.id === id ? { ...s, ...siteForm } : s));
+        setEditingSiteId(null);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to save settings");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
@@ -188,7 +214,14 @@ export default function SocialDashboard() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-slate-800 pb-px">
+        <div className="flex gap-2 mb-8 border-b border-slate-800 pb-px overflow-x-auto whitespace-nowrap scrollbar-hide">
+          <button 
+            onClick={() => setActiveTab('analytics')}
+            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'analytics' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          >
+            <BarChart3 className="w-4 h-4" />
+            Performance
+          </button>
           <button 
             onClick={() => setActiveTab('planner')}
             className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === 'planner' ? 'border-indigo-500 text-indigo-400 font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
@@ -215,6 +248,53 @@ export default function SocialDashboard() {
         {/* Tab Content */}
         <AnimatePresence mode="wait">
           
+          {/* ANALYTICS TAB */}
+          {activeTab === 'analytics' && (
+            <motion.div key="analytics" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                  <div className="text-slate-400 text-sm mb-1">Total Published</div>
+                  <div className="text-4xl font-extrabold text-white">{analyticsData?.statusCounts?.PUBLISHED || 0}</div>
+                </div>
+                <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                  <div className="text-slate-400 text-sm mb-1">In Queue / Generating</div>
+                  <div className="text-4xl font-extrabold text-white">{(analyticsData?.statusCounts?.PENDING || 0) + (analyticsData?.statusCounts?.GENERATING || 0)}</div>
+                </div>
+                <div className="bg-indigo-600/20 border border-indigo-500/50 rounded-xl p-6 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 bg-indigo-500 text-[10px] font-bold px-2 py-0.5 rounded-bl">ESTIMATED</div>
+                  <div className="text-indigo-300 text-sm mb-1">Organic Traffic Value</div>
+                  <div className="text-4xl font-extrabold text-indigo-400">${analyticsData?.estimatedTraffic || 0}</div>
+                  <div className="text-xs text-indigo-400/70 mt-2">Based on avg. CPC of $1.50 per click</div>
+                </div>
+              </div>
+              
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-lg font-bold mb-6">Content Velocity (30 Days)</h3>
+                <div className="h-[300px] w-full">
+                  {analyticsData?.chartData ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={analyticsData.chartData}>
+                        <defs>
+                          <linearGradient id="colorArticles" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <XAxis dataKey="date" stroke="#475569" fontSize={12} tickLine={false} axisLine={false} />
+                        <YAxis stroke="#475569" fontSize={12} tickLine={false} axisLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '8px' }} />
+                        <Area type="monotone" dataKey="articles" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorArticles)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-slate-500"><Loader2 className="w-6 h-6 animate-spin"/></div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {/* PLANNER TAB */}
           {activeTab === 'planner' && (
             <motion.div key="planner" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
@@ -327,16 +407,90 @@ export default function SocialDashboard() {
                   No sites connected. You must connect a WordPress site before queuing articles.
                 </div>
               ) : (
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   {sites.map((site) => (
-                    <div key={site.id} className="bg-slate-900/50 border border-slate-800 rounded-xl p-5 flex items-center gap-4">
-                      <div className="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-lg flex items-center justify-center font-bold text-xl border border-indigo-500/20">W</div>
-                      <div className="overflow-hidden">
-                        <div className="font-bold text-slate-200 truncate">{site.url}</div>
-                        <div className="text-xs text-emerald-400 font-medium mt-1 flex items-center gap-1">
-                          <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div> REST API Connected
+                    <div key={site.id} className="bg-slate-900/50 border border-slate-800 rounded-xl p-5">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-lg flex items-center justify-center font-bold text-xl border border-indigo-500/20">W</div>
+                          <div className="overflow-hidden">
+                            <div className="font-bold text-slate-200 truncate">{site.url}</div>
+                            <div className="text-xs text-emerald-400 font-medium mt-1 flex items-center gap-1">
+                              <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div> REST API Connected
+                            </div>
+                          </div>
                         </div>
+                        <button 
+                          onClick={() => {
+                            if (editingSiteId === site.id) {
+                              setEditingSiteId(null);
+                            } else {
+                              setEditingSiteId(site.id);
+                              setSiteForm({
+                                toneOfVoice: site.toneOfVoice || '',
+                                targetAudience: site.targetAudience || '',
+                                formattingRules: site.formattingRules || ''
+                              });
+                            }
+                          }}
+                          className="text-slate-400 hover:text-indigo-400 transition-colors p-2"
+                        >
+                          <Settings className="w-5 h-5" />
+                        </button>
                       </div>
+
+                      {/* Editing Form */}
+                      <AnimatePresence>
+                        {editingSiteId === site.id && (
+                          <motion.div 
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden border-t border-slate-800 pt-4 mt-2"
+                          >
+                            <div className="grid md:grid-cols-2 gap-4 mb-4">
+                              <div>
+                                <label className="block text-xs text-slate-400 mb-1">Tone of Voice</label>
+                                <input 
+                                  type="text" 
+                                  value={siteForm.toneOfVoice} 
+                                  onChange={e => setSiteForm({...siteForm, toneOfVoice: e.target.value})}
+                                  placeholder="e.g. Professional, Witty, Conversational"
+                                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs text-slate-400 mb-1">Target Audience</label>
+                                <input 
+                                  type="text" 
+                                  value={siteForm.targetAudience} 
+                                  onChange={e => setSiteForm({...siteForm, targetAudience: e.target.value})}
+                                  placeholder="e.g. Enterprise CEOs, Beginner Gardeners"
+                                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                                />
+                              </div>
+                              <div className="md:col-span-2">
+                                <label className="block text-xs text-slate-400 mb-1">Formatting Rules (Optional)</label>
+                                <input 
+                                  type="text" 
+                                  value={siteForm.formattingRules} 
+                                  onChange={e => setSiteForm({...siteForm, formattingRules: e.target.value})}
+                                  placeholder="e.g. Always include a pros/cons table"
+                                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                                />
+                              </div>
+                            </div>
+                            <div className="flex justify-end">
+                              <button 
+                                onClick={() => handleSaveSettings(site.id)}
+                                className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all flex items-center gap-2"
+                              >
+                                <Save className="w-4 h-4" /> Save Settings
+                              </button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   ))}
                 </div>

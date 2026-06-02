@@ -66,3 +66,35 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const session = await auth0.getSession();
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id, toneOfVoice, targetAudience, formattingRules } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: 'Site ID is required' }, { status: 400 });
+    }
+
+    const updatedSite = await prisma.wordPressSite.updateMany({
+      where: { 
+        id,
+        email: session.user.email 
+      },
+      data: {
+        toneOfVoice,
+        targetAudience,
+        formattingRules
+      }
+    });
+
+    return NextResponse.json({ success: true, updated: updatedSite.count });
+  } catch (error: any) {
+    console.error('Sites API PUT Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

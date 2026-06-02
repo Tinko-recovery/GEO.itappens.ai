@@ -7,7 +7,15 @@ const anthropic = new Anthropic({
 /**
  * Generate a 2000+ word AEO-optimized article in HTML format using Claude 3 Haiku.
  */
-export async function generateAEOArticle(topic: string, ecommerceUrl?: string | null): Promise<string> {
+export async function generateAEOArticle(
+  topic: string, 
+  ecommerceUrl?: string | null,
+  options?: {
+    toneOfVoice?: string | null;
+    targetAudience?: string | null;
+    formattingRules?: string | null;
+  }
+): Promise<string> {
   let prompt = `You are an expert Answer Engine Optimization (AEO) copywriter. 
 Your goal is to write a highly informative, deep-dive article about: "${topic}".
 
@@ -16,6 +24,16 @@ Requirements:
 2. Structure: Use H2s, H3s, bullet points, and at least one structured <table>.
 3. Optimization: Format it so Answer Engines (Perplexity, ChatGPT) can easily extract the facts. Include a "Key Takeaways" section at the top.
 4. Output format: Return pure HTML. Do not wrap in markdown \`\`\`html blocks, just return the raw HTML string starting with <h2> or <h1>.`;
+
+  if (options?.toneOfVoice) {
+    prompt += `\n5. Tone of Voice: ${options.toneOfVoice}`;
+  }
+  if (options?.targetAudience) {
+    prompt += `\n6. Target Audience: ${options.targetAudience}`;
+  }
+  if (options?.formattingRules) {
+    prompt += `\n7. Custom Formatting Rules: ${options.formattingRules}`;
+  }
 
   if (ecommerceUrl) {
     prompt += `\n\nCRITICAL E-COMMERCE CONSTRAINT:

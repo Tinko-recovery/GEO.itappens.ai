@@ -168,20 +168,35 @@ model EmailOTP {
 // ==========================================
 
 model UserCredits {
-  id        String   @id @default(cuid())
-  email     String   @unique // We use Auth0 email as primary identifier
-  balance   Int      @default(0)
-  updatedAt DateTime @updatedAt
+  id               String   @id @default(cuid())
+  email            String   @unique // We use Auth0 email as primary identifier
+  balance          Int      @default(0)
+  stripeCustomerId String?  @unique
+  updatedAt        DateTime @updatedAt
+  transactions     CreditTransaction[]
+}
+
+model CreditTransaction {
+  id              String   @id @default(cuid())
+  userEmail       String
+  amount          Int
+  stripeSessionId String?  @unique
+  createdAt       DateTime @default(now())
+
+  user            UserCredits @relation(fields: [userEmail], references: [email])
 }
 
 model WordPressSite {
-  id         String   @id @default(cuid())
-  email      String
-  url        String
-  appUser    String
-  appToken   String   // Encrypted or secure storage
-  createdAt  DateTime @default(now())
-  articles   AeoArticle[]
+  id               String   @id @default(cuid())
+  email            String
+  url              String
+  appUser          String
+  appToken         String   // Encrypted or secure storage
+  toneOfVoice      String?  @default("Professional and Authoritative")
+  targetAudience   String?  @default("General Audience")
+  formattingRules  String?
+  createdAt        DateTime @default(now())
+  articles         AeoArticle[]
 }
 
 model AeoArticle {
