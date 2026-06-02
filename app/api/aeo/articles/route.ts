@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     }
 
     const email = session.user.email;
-    const { topic, siteId } = await req.json();
+    const { topic, siteId, ecommerceUrl } = await req.json();
 
     if (!topic || !siteId) {
       return NextResponse.json({ error: 'Topic and Site ID are required' }, { status: 400 });
@@ -49,6 +49,18 @@ export async function POST(req: Request) {
         data: { balance: credits.balance - 1 }
       });
 
+      // Determine scheduled date (Drip feed: 1 per day)
+      const latestArticle = await tx.aeoArticle.findFirst({
+        where: { siteId, status: { in: ['PENDING', 'GENERATING', 'PUBLISHED'] } },
+        orderBy: { scheduledFor: 'desc' }
+      });
+
+      let nextSchedule = new Date();
+      if (latestArticle?.scheduledFor && latestArticle.scheduledFor > new Date()) {
+        nextSchedule = new Date(latestArticle.scheduledFor);
+        nextSchedule.setHours(nextSchedule.getHours() + 24);
+      }
+
       // Create article in PENDING state
       const article = await tx.aeoArticle.create({
         data: {
@@ -57,6 +69,8 @@ export async function POST(req: Request) {
           topic,
           targetQuery: topic, // Default to topic, can be refined by AI later
           status: 'PENDING',
+          scheduledFor: nextSchedule,
+          ecommerceUrl: ecommerceUrl || null
         }
       });
 
@@ -68,12 +82,23 @@ export async function POST(req: Request) {
     if (process.env.QSTASH_TOKEN) {
       console.log('[AEO API] Dispatching to QStash...');
       const qstashUrl = `https://qstash.upstash.io/v2/publish/${process.env.APP_URL || 'https://itappens.ai'}/api/aeo/worker`;
+      
+      const delayMs = result.scheduledFor ? new Date(result.scheduledFor).getTime() - new Date().getTime() : 0;
+      const delaySeconds = Math.max(0, Math.floor(delayMs / 1000));
+      
+      const headers: any = {
+        'Authorization': `Bearer ${process.env.QSTASH_TOKEN}`,
+        'Content-Type': 'application/json'
+      };
+      
+      if (delaySeconds > 0) {
+        headers['Upstash-Delay'] = `${delaySeconds}s`;
+        console.log(`[AEO API] Delaying QStash webhook by ${delaySeconds} seconds`);
+      }
+
       fetch(qstashUrl, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.QSTASH_TOKEN}`,
-          'Content-Type': 'application/json'
-        },
+        headers,
         body: JSON.stringify({ articleId: result.id })
       }).catch(e => console.error("QStash dispatch failed", e));
     } else {

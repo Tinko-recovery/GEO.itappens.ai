@@ -7,17 +7,24 @@ const anthropic = new Anthropic({
 /**
  * Generate a 2000+ word AEO-optimized article in HTML format using Claude 3 Haiku.
  */
-export async function generateAEOArticle(topic: string): Promise<string> {
-  const prompt = `You are an expert Answer Engine Optimization (AEO) copywriter. 
+export async function generateAEOArticle(topic: string, ecommerceUrl?: string | null): Promise<string> {
+  let prompt = `You are an expert Answer Engine Optimization (AEO) copywriter. 
 Your goal is to write a highly informative, deep-dive article about: "${topic}".
 
 Requirements:
 1. Length: 1500 to 2000+ words.
 2. Structure: Use H2s, H3s, bullet points, and at least one structured <table>.
 3. Optimization: Format it so Answer Engines (Perplexity, ChatGPT) can easily extract the facts. Include a "Key Takeaways" section at the top.
-4. Output format: Return pure HTML. Do not wrap in markdown \`\`\`html blocks, just return the raw HTML string starting with <h2> or <h1>.
+4. Output format: Return pure HTML. Do not wrap in markdown \`\`\`html blocks, just return the raw HTML string starting with <h2> or <h1>.`;
 
-Write the article now:`;
+  if (ecommerceUrl) {
+    prompt += `\n\nCRITICAL E-COMMERCE CONSTRAINT:
+The user is trying to sell a product at this URL: ${ecommerceUrl}. 
+You MUST weave a contextual, natural-sounding recommendation for this product into the article, ideally as the ultimate solution to the problem being discussed. 
+Include the exact URL as an HTML <a href="${ecommerceUrl}"> link within the text.`;
+  }
+
+  prompt += `\n\nWrite the article now:`;
 
   const msg = await anthropic.messages.create({
     model: "claude-3-haiku-20240307",

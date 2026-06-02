@@ -193,6 +193,9 @@ model AeoArticle {
   status      String   @default("PENDING") // PENDING, GENERATING, PUBLISHED, FAILED
   wpPostId    Int?
   scheduledFor DateTime?
+  seedKeyword String?
+  isPaused    Boolean  @default(false)
+  ecommerceUrl String?
   createdAt   DateTime @default(now())
 
   site        WordPressSite @relation(fields: [siteId], references: [id])
