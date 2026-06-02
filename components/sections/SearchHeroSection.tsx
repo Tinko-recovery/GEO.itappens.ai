@@ -30,9 +30,6 @@ export default function SearchHeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <span className="inline-block py-1 px-3 rounded-full bg-blue-500/10 text-brand-blue text-sm font-medium mb-6">
-            Phase 1: Generative Engine Optimization
-          </span>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-text mb-6">
             Become the Default Answer across <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-green">AI Engines.</span>
           </h1>

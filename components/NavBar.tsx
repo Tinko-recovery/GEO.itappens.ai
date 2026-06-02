@@ -85,7 +85,7 @@ export default function NavBar() {
     >
       <div className="container" style={{ display: "flex", alignItems: "center" }}>
         <Link href="/" style={{ textDecoration: "none" }} onClick={() => setActiveHash("")}>
-          <BrandLogo color="white" />
+          <BrandLogo color={showBg ? "white" : "var(--navy)"} />
         </Link>
 
         <div className="desktop-nav" style={{ display: "flex", gap: "24px", marginLeft: "48px" }}>
@@ -103,7 +103,7 @@ export default function NavBar() {
               style={{
                 fontSize: "14px",
                 fontWeight: 600,
-                color: isActive(link.href) ? "var(--cyan)" : "rgba(255,255,255,0.8)",
+                color: isActive(link.href) ? (showBg ? "var(--cyan)" : "var(--blue)") : (showBg ? "rgba(255,255,255,0.8)" : "var(--slate)"),
                 textDecoration: "none",
                 transition: "color 0.2s ease",
               }}
@@ -124,9 +124,6 @@ export default function NavBar() {
                 </Link>
               ) : (
                 <>
-                  {/* <Link href="/auth/login" prefetch={false} style={{ color: 'white', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
-                    Log In
-                  </Link> */}
                   <Link href="/audit" className="btn-orange" style={{ padding: '10px 24px', fontSize: '14px' }}>
                     Start Free Audit
                   </Link>
@@ -138,7 +135,7 @@ export default function NavBar() {
           <button 
             className="hamburger-btn" 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{ padding: '8px', background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
+            style={{ padding: '8px', background: 'none', border: 'none', color: showBg ? 'white' : 'var(--navy)', cursor: 'pointer' }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="3" y1="12" x2="21" y2="12"></line>
