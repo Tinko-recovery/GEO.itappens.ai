@@ -191,7 +191,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                   </span>
                 </div>
                 <div className="bg-zinc-900 rounded p-3 text-xs text-zinc-400 font-mono whitespace-pre-wrap max-h-40 overflow-y-auto border border-zinc-800">
-                  {item.content.substring(0, 300)}...
+                  {item.draftMarkdown ? item.draftMarkdown.substring(0, 300) + "..." : "Content pending generation."}
                 </div>
               </div>
             ))}
