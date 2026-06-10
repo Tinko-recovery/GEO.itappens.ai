@@ -13,7 +13,7 @@ export async function generateStrategy(clientId: string) {
       include: {
         audits: {
           orderBy: { createdAt: 'desc' },
-          take: 2 // get the most recent AEO and SEO audits
+          take: 2
         }
       }
     });
@@ -24,11 +24,10 @@ export async function generateStrategy(clientId: string) {
     const seoAudit = client.audits.find(a => a.type === "seo" && a.status === "completed");
 
     if (!aeoAudit || !seoAudit) {
-      console.warn("Cannot generate strategy: Missing completed AEO or SEO audits for client", clientId);
+      console.warn("Cannot generate strategy: Missing completed audits for client", clientId);
       return { success: false, error: "Missing completed audits" };
     }
 
-    // 1. Prepare data for Claude
     const prompt = `
       You are an elite SEO and AEO (Answer Engine Optimization) strategist.
       Analyze the following audit data for our client: "${client.name}" (${client.website}).
@@ -57,7 +56,6 @@ export async function generateStrategy(clientId: string) {
       ]
     `;
 
-    // 2. Generate Strategies via Claude
     const claudeRes = await anthropic.messages.create({
       model: "claude-3-7-sonnet-20250219",
       max_tokens: 1500,
@@ -68,20 +66,16 @@ export async function generateStrategy(clientId: string) {
 
     const textContent = claudeRes.content[0].type === 'text' ? claudeRes.content[0].text : '[]';
     const cleanJson = textContent.replace(/```json/g, '').replace(/```/g, '').trim();
-    const strategies = JSON.parse(cleanJson);
+    const strategiesData = JSON.parse(cleanJson);
 
-    // 3. Save strategies to DB
+    // Save strategies to DB — store the rich metadata in the `roadmap` JSON field
     const savedStrategies = [];
-    for (const strategy of strategies) {
+    for (const s of strategiesData) {
       const saved = await prisma.agencyStrategy.create({
         data: {
           clientId: client.id,
-          title: strategy.title,
-          description: strategy.description,
-          category: strategy.category,
           status: "pending",
-          priority: strategy.priority,
-          estimatedImpact: strategy.estimatedImpact
+          roadmap: s, // store full strategy object { title, description, category, priority, estimatedImpact }
         }
       });
       savedStrategies.push(saved);
