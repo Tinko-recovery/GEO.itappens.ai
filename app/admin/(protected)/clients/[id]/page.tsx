@@ -45,10 +45,27 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
         <div className="flex gap-3">
           <form action={async () => {
             "use server";
+            // Find or create audits to pass their IDs to the engines
+            let aeoId = aeoAudit?.id;
+            if (!aeoId) {
+              const newAeo = await prisma.agencyAudit.create({ data: { clientId: client.id, type: "aeo", status: "running" } });
+              aeoId = newAeo.id;
+            } else {
+              await prisma.agencyAudit.update({ where: { id: aeoId }, data: { status: "running" } });
+            }
+
+            let seoId = seoAudit?.id;
+            if (!seoId) {
+              const newSeo = await prisma.agencyAudit.create({ data: { clientId: client.id, type: "seo", status: "running" } });
+              seoId = newSeo.id;
+            } else {
+              await prisma.agencyAudit.update({ where: { id: seoId }, data: { status: "running" } });
+            }
+
             // Run audits in parallel
             await Promise.all([
-              runAeoAudit(client.id),
-              runSeoAudit(client.id)
+              runAeoAudit(client.id, aeoId),
+              runSeoAudit(client.id, seoId)
             ]);
             revalidatePath(`/admin/clients/${client.id}`);
           }}>
