@@ -70,7 +70,7 @@ export async function runAeoAudit(clientId: string, auditId: string) {
     `;
 
     const claudeRes = await anthropic.messages.create({
-      model: "claude-3-7-sonnet-20250219", // Using latest available
+      model: "claude-3-5-sonnet-20241022",
       max_tokens: 1000,
       temperature: 0.1,
       system: "You output valid JSON only.",
