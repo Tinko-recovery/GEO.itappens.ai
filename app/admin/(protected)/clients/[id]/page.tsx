@@ -11,9 +11,11 @@ import { executeStrategyContent } from "@/lib/engines/content";
 
 const prisma = new PrismaClient();
 
-export default async function ClientDetailPage({ params }: { params: { id: string } }) {
+export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  
   const client = await prisma.agencyClient.findUnique({
-    where: { id: params.id },
+    where: { id: resolvedParams.id },
     include: {
       audits: { orderBy: { createdAt: 'desc' }, take: 2 },
       strategies: { orderBy: { createdAt: 'desc' } },
