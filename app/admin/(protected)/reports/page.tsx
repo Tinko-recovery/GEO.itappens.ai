@@ -54,10 +54,10 @@ export default async function ReportsPage() {
                       </div>
                       <div className="text-sm">
                         <span className="text-zinc-500 block mb-1">Status:</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${
-                          latestReport.status === 'sent' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          latestReport.sentAt ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'
                         }`}>
-                          {latestReport.status}
+                          {latestReport.sentAt ? 'Sent' : 'Draft'}
                         </span>
                       </div>
                     </div>
