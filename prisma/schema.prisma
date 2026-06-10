@@ -37,23 +37,23 @@ enum PaymentProvider {
 }
 
 model Audit {
-  id                 String          @id @default(cuid())
+  id                 String           @id @default(cuid())
   siteUrl            String
   normalizedDomain   String
   email              String
   companyName        String?
   targetKeywords     String[]
-  shareToken         String          @unique
+  shareToken         String           @unique
   plan               AuditPlan
-  status             AuditStatus     @default(LEAD_CREATED)
-  paymentStatus      PaymentStatus   @default(NOT_REQUIRED)
+  status             AuditStatus      @default(LEAD_CREATED)
+  paymentStatus      PaymentStatus    @default(NOT_REQUIRED)
   paymentProvider    PaymentProvider?
-  checkoutSessionId  String?         @unique
-  paymentOrderId     String?         @unique
+  checkoutSessionId  String?          @unique
+  paymentOrderId     String?          @unique
   paymentId          String?
-  amount             Int             @default(0)
-  currency           String          @default("INR")
-  crawlDepth         Int             @default(5)
+  amount             Int              @default(0)
+  currency           String           @default("INR")
+  crawlDepth         Int              @default(5)
   freeScore          Int?
   fullScore          Int?
   submittedIpHash    String?
@@ -63,8 +63,8 @@ model Audit {
   reportHtml         String?
   errorMessage       String?
   paymentCompletedAt DateTime?
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
   events             AuditEvent[]
 
   @@index([email, createdAt])
@@ -84,27 +84,27 @@ model AuditEvent {
 }
 
 model Lead {
-  id               String    @id @default(cuid())
-  name             String
-  email            String
-  company          String
-  website          String
-  industry         String
-  targetQueries    Json
-  status           String    @default("new")
-  geoScore         Int?
-  geoReport        Json?
-  
-  // Lead OS Additions
-  source           String    @default("manual") // apollo, organic_search, linkedin, manual
-  automationStatus String    @default("pending") // pending, scoring, nurturing, converted
-  externalId       String?   // Apollo or Notion ID
-  enrichedData     Json?     // Company size, revenue, etc.
-  competitors      String[]  // Competitor domains for FOMO alerts
+  id            String @id @default(cuid())
+  name          String
+  email         String
+  company       String
+  website       String
+  industry      String
+  targetQueries Json
+  status        String @default("new")
+  geoScore      Int?
+  geoReport     Json?
 
-  createdAt        DateTime  @default(now())
-  lastContactedAt  DateTime?
-  updatedAt        DateTime  @updatedAt
+  // Lead OS Additions
+  source           String   @default("manual") // apollo, organic_search, linkedin, manual
+  automationStatus String   @default("pending") // pending, scoring, nurturing, converted
+  externalId       String? // Apollo or Notion ID
+  enrichedData     Json? // Company size, revenue, etc.
+  competitors      String[] // Competitor domains for FOMO alerts
+
+  createdAt       DateTime  @default(now())
+  lastContactedAt DateTime?
+  updatedAt       DateTime  @updatedAt
 }
 
 enum ClientStatus {
@@ -115,42 +115,42 @@ enum ClientStatus {
 }
 
 model ClientProfile {
-  id                String       @id @default(cuid())
-  businessName      String
-  websiteUrl        String
-  email             String       @unique
-  industry          String
-  niche             String
-  targetAudience    String
-  toneOfVoice       String       @default("Professional & Authoritative")
-  
+  id             String @id @default(cuid())
+  businessName   String
+  websiteUrl     String
+  email          String @unique
+  industry       String
+  niche          String
+  targetAudience String
+  toneOfVoice    String @default("Professional & Authoritative")
+
   // Buffer Credentials
-  bufferAccessToken String?
-  linkedinProfileId String?
-  twitterProfileId  String?
+  bufferAccessToken  String?
+  linkedinProfileId  String?
+  twitterProfileId   String?
   instagramProfileId String?
-  
-  status            ClientStatus @default(AWAITING_PAYMENT)
-  token             String       @unique @default(cuid()) // For the client portal link
-  
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-  
+
+  status ClientStatus @default(AWAITING_PAYMENT)
+  token  String       @unique @default(cuid()) // For the client portal link
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // History of posts
-  posts             ClientPost[]
+  posts ClientPost[]
 }
 
 model ClientPost {
-  id              String        @id @default(cuid())
-  clientId        String
-  client          ClientProfile @relation(fields: [clientId], references: [id])
-  platform        String        // linkedin, twitter, instagram
-  content         String
-  status          String        @default("scheduled") // scheduled, published, failed
-  publishedAt     DateTime?
-  bufferId        String?
-  errorMessage    String?
-  createdAt       DateTime      @default(now())
+  id           String        @id @default(cuid())
+  clientId     String
+  client       ClientProfile @relation(fields: [clientId], references: [id])
+  platform     String // linkedin, twitter, instagram
+  content      String
+  status       String        @default("scheduled") // scheduled, published, failed
+  publishedAt  DateTime?
+  bufferId     String?
+  errorMessage String?
+  createdAt    DateTime      @default(now())
 }
 
 model EmailOTP {
@@ -168,11 +168,11 @@ model EmailOTP {
 // ==========================================
 
 model UserCredits {
-  id               String   @id @default(cuid())
-  email            String   @unique // We use Auth0 email as primary identifier
-  balance          Int      @default(0)
-  stripeCustomerId String?  @unique
-  updatedAt        DateTime @updatedAt
+  id               String              @id @default(cuid())
+  email            String              @unique // We use Auth0 email as primary identifier
+  balance          Int                 @default(0)
+  stripeCustomerId String?             @unique
+  updatedAt        DateTime            @updatedAt
   transactions     CreditTransaction[]
 }
 
@@ -183,35 +183,140 @@ model CreditTransaction {
   stripeSessionId String?  @unique
   createdAt       DateTime @default(now())
 
-  user            UserCredits @relation(fields: [userEmail], references: [email])
+  user UserCredits @relation(fields: [userEmail], references: [email])
 }
 
 model WordPressSite {
-  id               String   @id @default(cuid())
-  email            String
-  url              String
-  appUser          String
-  appToken         String   // Encrypted or secure storage
-  toneOfVoice      String?  @default("Professional and Authoritative")
-  targetAudience   String?  @default("General Audience")
-  formattingRules  String?
-  createdAt        DateTime @default(now())
-  articles         AeoArticle[]
+  id              String       @id @default(cuid())
+  email           String
+  url             String
+  appUser         String
+  appToken        String // Encrypted or secure storage
+  toneOfVoice     String?      @default("Professional and Authoritative")
+  targetAudience  String?      @default("General Audience")
+  formattingRules String?
+  createdAt       DateTime     @default(now())
+  articles        AeoArticle[]
 }
 
 model AeoArticle {
-  id          String   @id @default(cuid())
-  siteId      String
-  email       String
-  topic       String
-  targetQuery String
-  status      String   @default("PENDING") // PENDING, GENERATING, PUBLISHED, FAILED
-  wpPostId    Int?
+  id           String    @id @default(cuid())
+  siteId       String
+  email        String
+  topic        String
+  targetQuery  String
+  status       String    @default("PENDING") // PENDING, GENERATING, PUBLISHED, FAILED
+  wpPostId     Int?
   scheduledFor DateTime?
-  seedKeyword String?
-  isPaused    Boolean  @default(false)
+  seedKeyword  String?
+  isPaused     Boolean   @default(false)
   ecommerceUrl String?
-  createdAt   DateTime @default(now())
+  createdAt    DateTime  @default(now())
 
-  site        WordPressSite @relation(fields: [siteId], references: [id])
+  site WordPressSite @relation(fields: [siteId], references: [id])
+}
+
+// ==========================================
+// Agency Automation Platform (Admin)
+// ==========================================
+
+model AgencyClient {
+  id            String   @id @default(uuid())
+  name          String
+  website       String
+  icp           String?
+  competitors   String[] @default([])
+  targetMarkets String[] @default([])
+  services      String[] @default([])
+  goals         String?
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  audits       AgencyAudit[]
+  strategies   AgencyStrategy[]
+  contentItems AgencyContentItem[]
+  reports      AgencyReport[]
+  mcpConfigs   AgencyMcpConfig[]
+  auditLogs    AgencyAuditLog[]
+}
+
+model AgencyAudit {
+  id          String       @id @default(uuid())
+  clientId    String
+  client      AgencyClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  type        String
+  status      String       @default("pending")
+  results     Json?
+  score       Int?
+  createdAt   DateTime     @default(now())
+  completedAt DateTime?
+}
+
+model AgencyStrategy {
+  id                String       @id @default(uuid())
+  clientId          String
+  client            AgencyClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  roadmap           Json?
+  clusters          Json?
+  competitorTargets Json?
+  status            String       @default("draft")
+  createdAt         DateTime     @default(now())
+  approvedAt        DateTime?
+
+  contentItems AgencyContentItem[]
+}
+
+model AgencyContentItem {
+  id              String          @id @default(uuid())
+  clientId        String
+  client          AgencyClient    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  strategyId      String?
+  strategy        AgencyStrategy? @relation(fields: [strategyId], references: [id])
+  title           String
+  type            String?
+  draftMarkdown   String?
+  schemaJson      Json?
+  metaTitle       String?
+  metaDescription String?
+  status          String          @default("draft")
+  createdAt       DateTime        @default(now())
+  approvedAt      DateTime?
+  publishedAt     DateTime?
+  publishedUrl    String?
+}
+
+model AgencyReport {
+  id                 String       @id @default(uuid())
+  clientId           String
+  client             AgencyClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  month              String
+  citationRate       Json?
+  topPages           Json?
+  competitorMovement Json?
+  actionsTaken       Json?
+  actionsPlanned     Json?
+  pdfUrl             String?
+  sentAt             DateTime?
+  createdAt          DateTime     @default(now())
+}
+
+model AgencyMcpConfig {
+  id          String       @id @default(uuid())
+  clientId    String
+  client      AgencyClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  serviceName String
+  apiKey      String?
+  config      Json?
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+}
+
+model AgencyAuditLog {
+  id        String        @id @default(uuid())
+  clientId  String?
+  client    AgencyClient? @relation(fields: [clientId], references: [id])
+  action    String
+  details   Json?
+  createdAt DateTime      @default(now())
 }

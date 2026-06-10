@@ -30,28 +30,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 308);
   }
 
-  // 3. Admin Basic Auth
+  // 3. NextAuth v5 for /admin
   if (pathname.startsWith("/admin")) {
-    const username = process.env.ADMIN_USERNAME || "admin";
-    const password = process.env.ADMIN_PASSWORD || "change-me";
-    const authHeader = request.headers.get("authorization");
-
-    if (!authHeader?.startsWith("Basic ")) {
-      return new NextResponse("Authentication required", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="itappens.ai admin"' },
-      });
-    }
-
-    const decoded = atob(authHeader.replace("Basic ", ""));
-    const [providedUser, providedPassword] = decoded.split(":");
-
-    if (providedUser !== username || providedPassword !== password) {
-      return new NextResponse("Unauthorized", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="itappens.ai admin"' },
-      });
-    }
+    const { auth } = require("./lib/auth");
+    
+    // Auth.js middleware handler
+    const authMiddleware = auth((req: any) => {
+      // The authorized callback in lib/auth.ts handles the actual redirect logic
+      return NextResponse.next();
+    });
+    
+    return authMiddleware(request as any, {} as any);
   }
 
   // 3. Auth0 v4 Middleware
