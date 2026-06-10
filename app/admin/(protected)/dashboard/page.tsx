@@ -3,6 +3,9 @@ import { PrismaClient } from "@prisma/client";
 import Link from "next/link";
 import { TrendingUp, TrendingDown, Users, FileText, CheckCircle, Activity } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
+
 const prisma = new PrismaClient();
 
 export default async function AdminDashboardPage() {

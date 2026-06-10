@@ -9,6 +9,8 @@ import { runSeoAudit } from "@/lib/engines/seo-audit";
 import { generateStrategy } from "@/lib/engines/strategy";
 import { executeStrategyContent } from "@/lib/engines/content";
 
+export const dynamic = 'force-dynamic';
+
 const prisma = new PrismaClient();
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {

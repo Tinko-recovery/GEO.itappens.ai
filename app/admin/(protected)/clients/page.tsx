@@ -2,7 +2,10 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { PrismaClient } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+
 const prisma = new PrismaClient();
+
 
 export default async function ClientsPage() {
   const clients = await prisma.agencyClient.findMany({
