@@ -8,49 +8,52 @@ const problems = [
         icon: "🕵️"
     },
     {
-        title: "Fragmented Tooling",
-        description: "You're paying for separate tools for lead gen, content creation, and SEO. Data is siloed, and execution is slow and expensive.",
-        icon: "🧩"
+        title: "Lost Organic Traffic",
+        description: "Traditional SEO is losing ground to AI-generated answers. If you aren't optimizing for generative engines, you're missing the highest intent traffic.",
+        icon: "📉"
     },
     {
-        title: "Manual Growth Workflows",
-        description: "Your team is wasting hours on manual research, outbound emails, and content formatting instead of closing deals. You need autonomous agents.",
-        icon: "⏳"
+        title: "Fragmented Entity Data",
+        description: "Your brand information is scattered. AI models can't confidently extract a single source of truth about your services, leading to zero citations.",
+        icon: "🧩"
     }
 ];
 
 export default function ProblemSection() {
     return (
-        <section id="problem" style={{ padding: '120px 0', backgroundColor: '#fff', position: 'relative' }}>
+        <section id="problem" className="py-24 md:py-32 bg-white relative overflow-hidden">
             {/* Subtle background element */}
-            <div style={{ position: 'absolute', top: 0, right: 0, width: '40%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(27, 79, 222, 0.03))', zIndex: 0 }} />
+            <div className="absolute top-0 right-0 w-2/5 h-full bg-gradient-to-l from-brand-primary/5 to-transparent z-0" />
             
-            <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-                <div className="grid-2col" style={{ alignItems: 'flex-start' }}>
+            <div className="container mx-auto px-4 relative z-10">
+                <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
                     
                     {/* Left Column: The Problem Text */}
-                    <div>
-                        <span className="badge-pill" style={{ marginBottom: '24px' }}>The Growth Bottleneck</span>
-                        <h2 className="headline-lg">Fragmented tools are killing your scale.</h2>
-                        <p className="text-large" style={{ marginBottom: '48px', fontSize: '18px', lineHeight: 1.6 }}>
-                            Scaling a B2B SaaS is harder than ever. You have one agency for SEO, another software for outbound, and manual workflows holding your team back. It's time to unify your growth engine.
+                    <div className="md:w-1/2">
+                        <span className="inline-block px-4 py-1 mb-6 text-sm font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 rounded-full uppercase tracking-wider">
+                            The Growth Bottleneck
+                        </span>
+                        <h2 className="text-4xl md:text-5xl font-bold text-brand-text mb-6">
+                            Traditional SEO is losing to AI Answers.
+                        </h2>
+                        <p className="text-xl text-brand-text-muted mb-12 leading-relaxed">
+                            Scaling a B2B SaaS is harder than ever. Buyers are skipping traditional search and asking ChatGPT, Perplexity, and Claude for recommendations. If you aren't optimizing for these engines, you simply don't exist.
                         </p>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                        <div className="flex flex-col gap-6">
                             {problems.map((p, i) => (
                                 <motion.div 
                                     key={i} 
-                                    className="card-bento"
+                                    className="bg-white border border-brand-border rounded-2xl p-6 flex gap-6 shadow-sm hover:shadow-md transition-shadow"
                                     initial={{ opacity: 0, x: -20 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1 }}
-                                    style={{ padding: '24px', display: 'flex', gap: '20px' }}
                                 >
-                                    <div style={{ fontSize: '32px' }}>{p.icon}</div>
+                                    <div className="text-3xl">{p.icon}</div>
                                     <div>
-                                        <h3 style={{ fontSize: '18px', marginBottom: '8px', color: 'var(--navy)' }}>{p.title}</h3>
-                                        <p style={{ color: 'var(--slate)', lineHeight: 1.6, fontSize: '15px' }}>{p.description}</p>
+                                        <h3 className="text-lg font-bold text-brand-text mb-2">{p.title}</h3>
+                                        <p className="text-brand-text-muted leading-relaxed text-[15px]">{p.description}</p>
                                     </div>
                                 </motion.div>
                             ))}
@@ -58,27 +61,21 @@ export default function ProblemSection() {
                     </div>
 
                     {/* Right Column: The AEO Poster */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        style={{ position: 'sticky', top: '120px' }}
-                    >
-                        <div style={{ 
-                            borderRadius: '16px', 
-                            overflow: 'hidden', 
-                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
-                            border: '1px solid var(--border)',
-                            background: '#fff'
-                        }}>
+                    <div className="md:w-1/2 w-full mt-10 md:mt-0">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="md:sticky md:top-32 rounded-2xl overflow-hidden shadow-2xl border border-brand-border bg-white"
+                        >
                             <img 
                                 src="/poster.png" 
                                 alt="The New Rules of AI Search Optimization (AEO)" 
-                                style={{ width: '100%', height: 'auto', display: 'block' }} 
+                                className="w-full h-auto block"
                             />
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -10,34 +10,38 @@ const pillars = [
     },
     {
         num: '02',
-        title: 'AI Automation Services',
-        body: 'Replace manual workflows with autonomous agents. From customer support to data extraction, we build custom AI systems that run 24/7.',
-        tag: 'Efficiency'
+        title: 'Generative Engine Optimization (GEO)',
+        body: 'Structure your domain for LLM ingestion. We optimize your website architecture, schema, and content to align with agentic search algorithms.',
+        tag: 'Technical'
     },
     {
         num: '03',
-        title: 'Content Creation at Scale',
+        title: 'AI Content Clusters',
         body: 'Programmatic, high-quality content generation that matches buyer intent. We build topical authority hubs designed specifically for LLM ingestion.',
         tag: 'Authority'
     },
     {
         num: '04',
-        title: 'Outbound Lead Generation',
-        body: 'Audit-driven outreach. Our lead generation engine identifies high-intent targets, runs automated audits, and deploys hyper-personalized sequences.',
+        title: 'Citation Authority Building',
+        body: 'Secure high-quality mentions and links from authoritative domains that are already trusted and cited by AI engines like ChatGPT and Perplexity.',
         tag: 'Growth'
     }
 ];
 
 export default function SolutionSection() {
     return (
-        <section id="solutions" style={{ padding: '120px 0', backgroundColor: 'var(--light-bg)' }}>
-            <div className="container">
-                <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-                    <span className="badge-pill" style={{ marginBottom: '24px' }}>4 Pillars of Growth</span>
-                    <h2 className="headline-lg">Everything you need to <br /> <span style={{ color: 'var(--blue)' }}>Scale with AI.</span></h2>
+        <section id="solutions" className="py-24 md:py-32 bg-brand-bg-muted">
+            <div className="container mx-auto px-4">
+                <div className="text-center mb-20">
+                    <span className="inline-block px-4 py-1 mb-6 text-sm font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 rounded-full uppercase tracking-wider">
+                        4 Pillars of Growth
+                    </span>
+                    <h2 className="text-4xl md:text-5xl font-bold text-brand-text">
+                        Everything you need to <br /> <span className="text-brand-primary">Scale in Agentic Search.</span>
+                    </h2>
                 </div>
 
-                <div className="grid-2col" style={{ marginBottom: '80px' }}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
                     {pillars.map((p, i) => (
                         <motion.div
                             key={i}
@@ -45,15 +49,14 @@ export default function SolutionSection() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: i * 0.1 }}
-                            className="card-bento"
-                            style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}
+                            className="bg-white border border-brand-border rounded-2xl p-8 flex flex-col gap-5 h-full shadow-sm hover:shadow-md transition-shadow"
                         >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontSize: '32px', fontWeight: 800, color: 'var(--blue)', opacity: 0.2 }}>{p.num}</span>
-                                <span className="badge-pill">{p.tag}</span>
+                            <div className="flex justify-between items-center">
+                                <span className="text-4xl font-black text-brand-primary opacity-20">{p.num}</span>
+                                <span className="px-3 py-1 text-xs font-bold text-brand-primary bg-brand-primary/10 rounded-full uppercase tracking-widest">{p.tag}</span>
                             </div>
-                            <h3 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--navy)' }}>{p.title}</h3>
-                            <p style={{ color: 'var(--slate)', lineHeight: 1.7 }}>
+                            <h3 className="text-2xl font-bold text-brand-text">{p.title}</h3>
+                            <p className="text-brand-text-muted leading-relaxed text-lg">
                                 {p.body}
                             </p>
                         </motion.div>
@@ -66,71 +69,30 @@ export default function SolutionSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    style={{ 
-                        background: 'var(--navy)', 
-                        borderRadius: '24px', 
-                        padding: '48px', 
-                        position: 'relative',
-                        overflow: 'hidden',
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-                    }}
+                    className="bg-brand-text rounded-3xl p-8 md:p-16 relative overflow-hidden shadow-2xl"
                 >
                     {/* Glowing effect inside the dark container */}
-                    <div style={{
-                        position: 'absolute',
-                        top: '0%', left: '50%', transform: 'translate(-50%, -50%)',
-                        width: '60%', height: '40%',
-                        background: 'var(--cyan)',
-                        filter: 'blur(100px)',
-                        opacity: 0.1,
-                        zIndex: 0
-                    }} />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/5 h-2/5 bg-brand-primary filter blur-[100px] opacity-20 z-0" />
 
-                    <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
-                        <h3 style={{ color: '#fff', fontSize: '28px', marginBottom: '16px' }}>The Complete Strategy Map</h3>
-                        <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
+                    <div className="relative z-10 text-center">
+                        <h3 className="text-white text-3xl font-bold mb-4">The Complete Strategy Map</h3>
+                        <p className="text-white/70 mb-10 max-w-2xl mx-auto text-lg">
                             A top-down view of our entire optimization architecture—from foundational entity definitions to off-site citation building.
                         </p>
                         
-                        <div style={{ 
-                            background: '#fff', 
-                            padding: '16px', 
-                            borderRadius: '16px',
-                            display: 'inline-block',
-                            width: '100%',
-                            maxWidth: '1000px',
-                            margin: '0 auto',
-                            position: 'relative'
-                        }}>
+                        <div className="bg-white p-4 rounded-2xl inline-block w-full max-w-4xl mx-auto relative">
                             {/* Obfuscation Container */}
-                            <div style={{ 
-                                position: 'relative',
-                                maxHeight: '400px', 
-                                overflow: 'hidden',
-                                borderRadius: '8px'
-                            }}>
+                            <div className="relative max-h-[400px] overflow-hidden rounded-xl border border-brand-border">
                                 <img 
                                     src="/mindmap.png" 
                                     alt="AI Search Optimization Strategy Map" 
-                                    style={{ width: '100%', height: 'auto', display: 'block' }} 
+                                    className="w-full h-auto block"
                                 />
                                 
                                 {/* Fade to white / blur overlay */}
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: 0, left: 0, right: 0,
-                                    height: '250px',
-                                    background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 60%, rgba(255,255,255,1) 100%)',
-                                    backdropFilter: 'blur(4px)',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'flex-end',
-                                    paddingBottom: '40px',
-                                    zIndex: 10
-                                }}>
-                                    <h4 style={{ color: 'var(--slate-dark)', fontSize: '20px', marginBottom: '16px', fontWeight: 700 }}>Want to see the exact execution plan?</h4>
-                                    <a href="/audit" className="btn-blue" style={{ padding: '16px 32px', fontSize: '16px', boxShadow: '0 10px 25px rgba(27, 79, 222, 0.3)' }}>
+                                <div className="absolute bottom-0 left-0 right-0 h-[250px] bg-gradient-to-b from-white/0 via-white/90 to-white backdrop-blur-[4px] flex flex-col items-center justify-end pb-10 z-10">
+                                    <h4 className="text-brand-text text-xl mb-6 font-bold">Want to see the exact execution plan?</h4>
+                                    <a href="/audit" className="inline-block bg-brand-primary hover:bg-brand-primary-hover text-white px-8 py-4 rounded-xl font-bold text-lg shadow-[0_10px_25px_rgba(139,92,246,0.3)] transition-colors">
                                         Unlock the Full Roadmap
                                     </a>
                                 </div>
@@ -142,4 +104,3 @@ export default function SolutionSection() {
         </section>
     );
 }
-

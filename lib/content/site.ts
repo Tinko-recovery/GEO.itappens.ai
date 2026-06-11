@@ -113,9 +113,9 @@ export const homepageFaqs: FaqItem[] = [
       "itappens.ai works with B2B SaaS companies and growth-stage startups globally, with deep roots in India. Clients are typically in the US, UK, Australia, and India.",
   },
   {
-    question: "How does AI content automation support GEO?",
+    question: "How does AEO support traditional SEO?",
     answer:
-      "AI-native distribution across LinkedIn, Instagram, X, and YouTube strengthens repetition, recall, and citation signals around the same entity and category language.",
+      "Answer Engine Optimization (AEO) complements traditional SEO by ensuring your brand is not just indexed, but actively cited as the authoritative answer by AI models.",
   },
 ];
 
@@ -259,9 +259,5 @@ export const geoPackages = [
 export const primaryNav = [
   { label: "Home", href: "/" },
   { label: "Solutions", href: "/#solutions" },
-  { label: "GEO", href: "/geo" },
-  { label: "Blog", href: "/blog" },
-  { label: "Pricing", href: "/#pricing" },
-  { label: "Answers", href: "/answers" },
-  { label: "Audit", href: "/audit" },
+  { label: "Free Audit", href: "/audit" },
 ];

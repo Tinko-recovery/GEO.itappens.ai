@@ -30,17 +30,26 @@
 }
 
 :root {
-  /* Corporate Palette (Stitch System) */
-  --navy: #0F172A;
-  --navy-dark: #020617;
-  --blue: #1B4FDE;
-  --blue-hover: #0038B4;
-  --cyan: #00C2FF;
-  --orange: #FF6B2B;
-  --slate: #434655;
-  --slate-dark: #131b2e;
-  --light-bg: #faf8ff;
-  --border-light: #c4c5d7;
+  /* Brand Color Template */
+  --brand-primary: #8b5cf6; /* Indigo/Purple */
+  --brand-primary-hover: #7c3aed;
+  --brand-text: #111827; /* Slate 900 */
+  --brand-text-muted: #6b7280; /* Gray 500 */
+  --brand-bg: #ffffff; /* White */
+  --brand-bg-muted: #f9fafb; /* Gray 50 */
+  --brand-border: #e5e7eb; /* Gray 200 */
+
+  /* Legacy aliases to avoid breaking existing styles during transition */
+  --navy: var(--brand-text);
+  --navy-dark: var(--brand-text);
+  --blue: var(--brand-primary);
+  --blue-hover: var(--brand-primary-hover);
+  --cyan: var(--brand-primary);
+  --orange: var(--brand-primary);
+  --slate: var(--brand-text-muted);
+  --slate-dark: var(--brand-text);
+  --light-bg: var(--brand-bg);
+  --border-light: var(--brand-border);
 
   /* Typography */
   --font-display: 'Inter', system-ui, sans-serif;

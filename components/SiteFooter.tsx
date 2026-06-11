@@ -4,23 +4,23 @@ import BrandLogo from "./BrandLogo";
 
 export default function SiteFooter() {
   return (
-    <footer style={{ backgroundColor: "var(--navy)", color: "white", padding: "100px 0 60px" }}>
-      <div className="container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "64px" }}>
-        <div style={{ gridColumn: "span 2" }}>
-          <Link href="/" style={{ textDecoration: "none", display: "inline-block", marginBottom: 32 }}>
-            <BrandLogo color="white" />
+    <footer className="bg-brand-bg-muted text-brand-text border-t border-brand-border py-16 md:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-12 md:gap-20">
+        <div className="md:w-1/3">
+          <Link href="/" className="inline-block mb-6 no-underline">
+            <BrandLogo color="var(--brand-text)" />
           </Link>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.6)", maxWidth: "400px" }}>
+          <p className="text-base leading-relaxed text-brand-text-muted max-w-sm">
             The Global Authority in Generative Engine Optimization. We help B2B SaaS brands become the primary cited authority in the AI era.
           </p>
         </div>
         
-        <div>
-          <h4 style={{ color: "white", fontSize: "14px", fontWeight: 700, marginBottom: "24px", textTransform: "uppercase", letterSpacing: "0.1em" }}>Solutions</h4>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className="md:w-1/4">
+          <h4 className="text-sm font-bold mb-6 uppercase tracking-wider text-brand-text">Solutions</h4>
+          <ul className="flex flex-col gap-3 list-none p-0">
             {primaryNav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 15 }}>
+                <Link href={item.href} className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
                   {item.label}
                 </Link>
               </li>
@@ -28,16 +28,16 @@ export default function SiteFooter() {
           </ul>
         </div>
 
-        <div>
-          <h4 style={{ color: "white", fontSize: "14px", fontWeight: 700, marginBottom: "24px", textTransform: "uppercase", letterSpacing: "0.1em" }}>Contact</h4>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className="md:w-1/4">
+          <h4 className="text-sm font-bold mb-6 uppercase tracking-wider text-brand-text">Contact</h4>
+          <ul className="flex flex-col gap-3 list-none p-0">
             <li>
-              <a href={`mailto:${siteConfig.email}`} style={{ color: "var(--cyan)", textDecoration: "none", fontSize: 15, fontWeight: 600 }}>
+              <a href={`mailto:${siteConfig.email}`} className="text-[15px] font-semibold text-brand-primary hover:text-brand-primary-hover transition-colors no-underline">
                 {siteConfig.email}
               </a>
             </li>
             <li>
-              <a href={siteConfig.sameAs[0]} target="_blank" rel="noreferrer" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 15 }}>
+              <a href={siteConfig.sameAs[0]} target="_blank" rel="noreferrer" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
                 LinkedIn
               </a>
             </li>
@@ -45,16 +45,15 @@ export default function SiteFooter() {
         </div>
       </div>
 
-      <div className="container" style={{ marginTop: 100, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "20px" }}>
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-brand-border flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="text-sm text-brand-text-muted">
           &copy; {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved.
         </p>
-        <div style={{ display: "flex", gap: 32 }}>
-          <Link href="/privacy" style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>Privacy Policy</Link>
-          <Link href="/terms" style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>Terms of Service</Link>
+        <div className="flex gap-6">
+          <Link href="/privacy" className="text-sm text-brand-text-muted hover:text-brand-text transition-colors no-underline">Privacy Policy</Link>
+          <Link href="/terms" className="text-sm text-brand-text-muted hover:text-brand-text transition-colors no-underline">Terms of Service</Link>
         </div>
       </div>
     </footer>
   );
 }
-

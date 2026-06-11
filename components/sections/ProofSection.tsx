@@ -31,45 +31,50 @@ const rows = [
 
 export default function ProofSection() {
     return (
-        <section id="proof" style={{ padding: '120px 0', backgroundColor: '#fff' }}>
-            <div className="container">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '80px', alignItems: 'start', marginBottom: '80px' }}>
+        <section id="proof" className="py-24 md:py-32 bg-brand-bg-muted">
+            <div className="container mx-auto px-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start mb-20">
                     <div>
-                        <span className="badge-pill" style={{ marginBottom: '24px' }}>The Evidence</span>
-                        <h2 className="headline-lg">Traditional Marketing is failing the AI era.</h2>
-                        <p className="text-large" style={{ marginTop: '32px' }}>
+                        <span className="inline-block px-4 py-1 mb-6 text-sm font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 rounded-full uppercase tracking-wider">
+                            The Evidence
+                        </span>
+                        <h2 className="text-4xl md:text-5xl font-bold text-brand-text mb-8">
+                            Traditional Marketing is failing the AI era.
+                        </h2>
+                        <p className="text-xl text-brand-text-muted leading-relaxed">
                             itappens.ai transitions your brand from traditional "ranking" to institutional "citation". We ensure you are the verified primary source for your industry.
                         </p>
                     </div>
-                    <div style={{ borderLeft: '2px solid var(--blue)', paddingLeft: '40px' }}>
-                        <p style={{ fontSize: '18px', color: 'var(--slate)', lineHeight: 1.8 }}>
+                    <div className="border-l-4 border-brand-primary pl-8">
+                        <p className="text-xl md:text-2xl font-light text-brand-text leading-relaxed">
                             "GEO is not just rebranded SEO. It is a new discipline built for how Agentic systems retrieve, synthesize, and cite information."
                         </p>
                     </div>
                 </div>
 
-                <div className="card-corporate" style={{ padding: 0, overflow: 'hidden' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr style={{ backgroundColor: 'var(--light-bg)' }}>
-                                <th style={{ padding: '24px', textAlign: 'left', fontSize: '13px', textTransform: 'uppercase', color: 'var(--slate)', borderBottom: '1px solid var(--border)' }}>Metric</th>
-                                <th style={{ padding: '24px', textAlign: 'left', fontSize: '13px', textTransform: 'uppercase', color: 'var(--slate)', borderBottom: '1px solid var(--border)' }}>Legacy Marketing</th>
-                                <th style={{ padding: '24px', textAlign: 'left', fontSize: '13px', textTransform: 'uppercase', color: 'var(--blue)', borderBottom: '1px solid var(--border)', fontWeight: 700 }}>itappens.ai System</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rows.map((row, idx) => (
-                                <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
-                                    <td style={{ padding: '24px', fontWeight: 600, color: 'var(--slate-dark)' }}>{row.metric}</td>
-                                    <td style={{ padding: '24px', color: 'var(--slate)', opacity: 0.8 }}>{row.old}</td>
-                                    <td style={{ padding: '24px', color: 'var(--blue)', fontWeight: 700 }}>{row.new}</td>
+                <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-brand-border">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr className="bg-brand-bg-muted border-b border-brand-border">
+                                    <th className="p-6 text-sm font-bold uppercase tracking-wider text-brand-text-muted">Metric</th>
+                                    <th className="p-6 text-sm font-bold uppercase tracking-wider text-brand-text-muted">Legacy Marketing</th>
+                                    <th className="p-6 text-sm font-bold uppercase tracking-wider text-brand-primary">itappens.ai System</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {rows.map((row, idx) => (
+                                    <tr key={idx} className="border-b border-brand-border last:border-0 hover:bg-brand-bg-muted/50 transition-colors">
+                                        <td className="p-6 font-semibold text-brand-text whitespace-nowrap">{row.metric}</td>
+                                        <td className="p-6 text-brand-text-muted">{row.old}</td>
+                                        <td className="p-6 font-bold text-brand-primary">{row.new}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
     );
 }
-

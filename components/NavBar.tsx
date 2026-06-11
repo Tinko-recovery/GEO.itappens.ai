@@ -11,12 +11,7 @@ export default function NavBar({ logoSuffix }: { logoSuffix?: string }) {
   const { user, isLoading } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeHash, setActiveHash] = useState("");
   const pathname = usePathname();
-
-  // On non-homepage, we want a dark background by default for visibility
-  const isHome = pathname === "/";
-  const showBg = scrolled || !isHome;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,155 +19,98 @@ export default function NavBar({ logoSuffix }: { logoSuffix?: string }) {
     };
     window.addEventListener("scroll", handleScroll);
     handleScroll();
-
-    // Track hash changes for active nav links
-    setActiveHash(window.location.hash);
-    const handleHashChange = () => setActiveHash(window.location.hash);
-    window.addEventListener("hashchange", handleHashChange);
-    
-    // Check if sections are in view for scrollspy
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveHash(`#${entry.target.id}`);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-    const solutionsSection = document.getElementById('solutions');
-    const pricingSection = document.getElementById('pricing');
-    const heroSection = document.getElementById('hero');
-
-    if (solutionsSection) observer.observe(solutionsSection);
-    if (pricingSection) observer.observe(pricingSection);
-    if (heroSection) observer.observe(heroSection); // hero can reset hash to empty
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("hashchange", handleHashChange);
-      observer.disconnect();
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const isActive = (href: string) => {
     if (href === "/") {
-      return pathname === "/" && (!activeHash || activeHash === "#hero");
-    }
-    if (href.startsWith("/#")) {
-      const hash = href.replace("/", "");
-      return pathname === "/" && activeHash === hash;
+      return pathname === "/";
     }
     return pathname.startsWith(href);
   };
 
   return (
     <nav
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        transition: "all 0.3s ease",
-        backgroundColor: showBg ? "rgba(10, 15, 30, 0.95)" : "transparent",
-        backdropFilter: showBg ? "blur(12px)" : "none",
-        borderBottom: showBg ? "1px solid rgba(255,255,255,0.1)" : "none",
-        padding: showBg ? "12px 0" : "20px 0",
-      }}
+      className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 border-b ${
+        scrolled ? 'bg-white/95 backdrop-blur-md border-brand-border py-3 shadow-sm' : 'bg-white border-transparent py-5'
+      }`}
     >
-      <div className="container" style={{ display: "flex", alignItems: "center" }}>
-        <Link href="/" style={{ textDecoration: "none" }} onClick={() => setActiveHash("")}>
-          <BrandLogo color={showBg ? "white" : "var(--navy)"} suffix={logoSuffix} />
-        </Link>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="flex items-center">
+          <Link href="/" className="no-underline" onClick={() => setMobileMenuOpen(false)}>
+            <BrandLogo color="var(--brand-text)" suffix={logoSuffix} />
+          </Link>
+        </div>
 
-        <div className="desktop-nav" style={{ display: "flex", gap: "24px", marginLeft: "48px" }}>
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-8">
           {primaryNav.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              onClick={() => {
-                if (link.href.startsWith("/#")) {
-                  setActiveHash(link.href.replace("/", ""));
-                } else if (link.href === "/") {
-                  setActiveHash("");
-                }
-              }}
-              style={{
-                fontSize: "14px",
-                fontWeight: 600,
-                color: isActive(link.href) ? (showBg ? "var(--cyan)" : "var(--blue)") : (showBg ? "rgba(255,255,255,0.8)" : "var(--slate)"),
-                textDecoration: "none",
-                transition: "color 0.2s ease",
-              }}
+              className={`text-sm font-semibold transition-colors ${
+                isActive(link.href) ? 'text-brand-primary' : 'text-brand-text hover:text-brand-primary'
+              }`}
             >
               {link.label}
             </Link>
           ))}
         </div>
 
-        <div style={{ flex: 1 }} />
+        {/* Desktop CTA */}
+        <div className="hidden md:flex items-center gap-4">
+          {!isLoading && (
+            user ? (
+              <Link href="/itcontents" className="btn-primary py-2 px-4 text-sm rounded-lg">
+                Dashboard
+              </Link>
+            ) : (
+              <Link href="/audit" className="btn-primary py-2 px-4 text-sm rounded-lg">
+                Start Free Audit
+              </Link>
+            )
+          )}
+        </div>
 
-        <div className="flex items-center gap-4">
-          <div className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            {!isLoading && (
-              user ? (
-                <Link href="/itcontents" className="btn-blue" style={{ padding: '10px 20px', fontSize: '14px' }}>
-                  Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Link href="/audit" className="btn-orange" style={{ padding: '10px 24px', fontSize: '14px' }}>
-                    Start Free Audit
-                  </Link>
-                </>
-              )
-            )}
-          </div>
-          
+        {/* Mobile Hamburger */}
+        <div className="md:hidden flex items-center">
           <button 
-            className="hamburger-btn" 
+            className="p-2 text-brand-text focus:outline-none" 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{ padding: '8px', background: 'none', border: 'none', color: showBg ? 'white' : 'var(--navy)', cursor: 'pointer' }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
+            {mobileMenuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            )}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div style={{
-          position: "absolute",
-          top: "100%",
-          left: 0,
-          right: 0,
-          backgroundColor: "var(--navy)",
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
-          padding: "24px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-          zIndex: 999
-        }}>
+        <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-brand-border shadow-lg p-4 flex flex-col gap-4">
           {primaryNav.map((link) => (
             <Link 
               key={link.href} 
               href={link.href} 
               onClick={() => setMobileMenuOpen(false)} 
-              style={{ color: "white", textDecoration: "none", fontSize: "16px", fontWeight: 600 }}
+              className={`text-base font-semibold py-2 ${
+                isActive(link.href) ? 'text-brand-primary' : 'text-brand-text'
+              }`}
             >
               {link.label}
             </Link>
           ))}
-          <div style={{ paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <Link href="/audit" className="btn-orange" style={{ justifyContent: 'center' }} onClick={() => setMobileMenuOpen(false)}>
+          <div className="pt-4 border-t border-brand-border flex flex-col">
+            <Link href="/audit" className="btn-primary w-full justify-center" onClick={() => setMobileMenuOpen(false)}>
               Start Free Audit
             </Link>
           </div>
@@ -181,4 +119,3 @@ export default function NavBar({ logoSuffix }: { logoSuffix?: string }) {
     </nav>
   );
 }
-

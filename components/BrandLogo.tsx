@@ -13,7 +13,7 @@ export default function BrandLogo({ color = "white", suffix }: { color?: string,
             >
                 <path 
                     d="M16 2L19.5 12.5L30 16L19.5 19.5L16 30L12.5 19.5L2 16L12.5 12.5L16 2Z" 
-                    fill="var(--cyan, #00C2FF)" 
+                    fill="var(--brand-primary, #8b5cf6)" 
                 />
                 <circle cx="16" cy="16" r="4" fill="white" fillOpacity="0.3" />
             </svg>
