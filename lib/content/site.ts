@@ -259,5 +259,4 @@ export const geoPackages = [
 export const primaryNav = [
   { label: "Home", href: "/" },
   { label: "Solutions", href: "/#solutions" },
-  { label: "Free Audit", href: "/audit" },
 ];

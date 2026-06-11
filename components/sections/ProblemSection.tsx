@@ -60,22 +60,7 @@ export default function ProblemSection() {
                         </div>
                     </div>
 
-                    {/* Right Column: The AEO Poster */}
-                    <div className="md:w-1/2 w-full mt-10 md:mt-0">
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="md:sticky md:top-32 rounded-2xl overflow-hidden shadow-2xl border border-brand-border bg-white"
-                        >
-                            <img 
-                                src="/poster.png" 
-                                alt="The New Rules of AI Search Optimization (AEO)" 
-                                className="w-full h-auto block"
-                            />
-                        </motion.div>
-                    </div>
+                    {/* Right Column removed based on user request */}
                 </div>
             </div>
         </section>

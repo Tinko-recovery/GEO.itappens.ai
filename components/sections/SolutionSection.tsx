@@ -63,43 +63,7 @@ export default function SolutionSection() {
                     ))}
                 </div>
 
-                {/* Mind Map Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="bg-brand-text rounded-3xl p-8 md:p-16 relative overflow-hidden shadow-2xl"
-                >
-                    {/* Glowing effect inside the dark container */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/5 h-2/5 bg-brand-primary filter blur-[100px] opacity-20 z-0" />
 
-                    <div className="relative z-10 text-center">
-                        <h3 className="text-white text-3xl font-bold mb-4">The Complete Strategy Map</h3>
-                        <p className="text-white/70 mb-10 max-w-2xl mx-auto text-lg">
-                            A top-down view of our entire optimization architecture—from foundational entity definitions to off-site citation building.
-                        </p>
-                        
-                        <div className="bg-white p-4 rounded-2xl inline-block w-full max-w-4xl mx-auto relative">
-                            {/* Obfuscation Container */}
-                            <div className="relative max-h-[400px] overflow-hidden rounded-xl border border-brand-border">
-                                <img 
-                                    src="/mindmap.png" 
-                                    alt="AI Search Optimization Strategy Map" 
-                                    className="w-full h-auto block"
-                                />
-                                
-                                {/* Fade to white / blur overlay */}
-                                <div className="absolute bottom-0 left-0 right-0 h-[250px] bg-gradient-to-b from-white/0 via-white/90 to-white backdrop-blur-[4px] flex flex-col items-center justify-end pb-10 z-10">
-                                    <h4 className="text-brand-text text-xl mb-6 font-bold">Want to see the exact execution plan?</h4>
-                                    <a href="/audit" className="inline-block bg-brand-primary hover:bg-brand-primary-hover text-white px-8 py-4 rounded-xl font-bold text-lg shadow-[0_10px_25px_rgba(139,92,246,0.3)] transition-colors">
-                                        Unlock the Full Roadmap
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </motion.div>
             </div>
         </section>
     );

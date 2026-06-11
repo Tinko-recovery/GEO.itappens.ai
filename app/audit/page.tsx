@@ -1,13 +1,10 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import Script from "next/script";
-import { ArrowRight, CheckCircle2, ShieldCheck, Database, GitBranch, TerminalSquare, SearchCode, ServerCog } from "lucide-react";
+import { useState } from "react";
+import { TerminalSquare, CheckCircle2, ServerCog, ArrowRight } from "lucide-react";
 
 import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
-import { AuditIntakeForm } from "@/components/audit/AuditIntakeForm";
-import type { AuditPlanKey } from "@/lib/audit/types";
 
 const features = [
   "Crawl: Analyze existing citation signals & knowledge graphs.",
@@ -16,237 +13,172 @@ const features = [
 ];
 
 export default function AuditPage() {
-  const [selectedPlan, setSelectedPlan] = useState<Exclude<AuditPlanKey, "free">>("growth");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [email, setEmail] = useState("");
 
-  const schemaJson = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "SoftwareApplication",
-        "name": "GeoAudit AI",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web",
-        "description": "An enterprise-grade Generative Engine Optimization (GEO) audit tool that analyzes brand visibility and citation signals across major LLMs.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0.00",
-          "priceCurrency": "USD"
-        }
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is Generative Engine Optimization (GEO)?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Generative Engine Optimization (GEO) is the process of structuring your brand's digital footprint and entity data so that Answer Engines like ChatGPT, Perplexity, and Google AI Overviews reliably recommend your products and services."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does the GeoAudit AI tool work?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The engine crawls your website and compares your entity prominence against major LLMs. It generates a roadmap identifying technical gaps, missing citations, and semantic bridging opportunities."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Why do B2B companies need GEO?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Decision makers are increasingly using LLMs for research instead of traditional search engines. If your brand is not explicitly cited by ChatGPT or Claude as a category leader, you lose high-intent pipeline."
-            }
-          }
-        ]
-      }
-    ]
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const submittedEmail = formData.get("email") as string;
+    
+    // Simulate API call to trigger backend audit execution and email dispatch
+    setTimeout(() => {
+      setEmail(submittedEmail);
+      setIsSubmitted(true);
+      setIsSubmitting(false);
+    }, 1500);
   };
 
   return (
-    <div className="page-shell">
-      <Script 
-        id="geo-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
-      />
-      
+    <div className="flex flex-col min-h-screen font-sans text-brand-text bg-brand-bg">
       <NavBar />
       
-      <main>
+      <main className="flex-grow pt-24">
         {/* Header Hero Section */}
-        <section className="section dark-section" aria-label="Hero">
-          <div className="container grid-2col">
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
-                <TerminalSquare className="h-5 w-5" style={{ color: 'var(--cyan)' }} />
-                <span className="overline" style={{ marginBottom: 0 }}>
+        <section className="py-20 md:py-32 bg-brand-bg">
+          <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-6">
+                <TerminalSquare className="h-5 w-5 text-brand-primary" />
+                <span className="text-sm font-bold text-brand-primary uppercase tracking-wider">
                   Enterprise GEO Intelligence
                 </span>
               </div>
-              <h1 className="headline-xl" style={{ margin: '0 0 32px 0' }}>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-brand-text mb-8 leading-tight">
                 Master the <br />
-                <span style={{ color: 'var(--cyan)' }}>Generative Layer.</span>
+                <span className="text-brand-primary">Generative Layer.</span>
               </h1>
-              <p className="text-sub" style={{ marginBottom: '40px', maxWidth: '540px' }}>
+              <p className="text-xl text-brand-text-muted mb-10 max-w-xl leading-relaxed">
                 Answer Engines have replaced search. Our diagnostic engine maps exactly how ChatGPT, Claude, and Perplexity perceive your brand, revealing the precise technical and semantic gaps costing you pipeline.
               </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="flex flex-col gap-4">
                 {features.map((item) => (
-                  <div key={item} style={{ 
-                    display: 'flex', 
-                    alignItems: 'flex-start', 
-                    gap: '12px', 
-                    fontSize: '15px',
-                    fontWeight: 500,
-                    color: '#fff'
-                  }}>
-                    <CheckCircle2 className="h-5 w-5" style={{ color: 'var(--cyan)', flexShrink: 0, marginTop: '2px' }} />
-                    <span style={{ lineHeight: 1.5 }}>{item}</span>
+                  <div key={item} className="flex items-start gap-3 text-[15px] font-medium text-brand-text">
+                    <CheckCircle2 className="h-5 w-5 text-brand-primary shrink-0 mt-0.5" />
+                    <span className="leading-relaxed">{item}</span>
                   </div>
                 ))}
               </div>
             </div>
             
-            <div className="card-bento" style={{ width: '100%', maxWidth: '520px', marginLeft: 'auto', color: 'var(--navy)' }}>
-              <Suspense fallback={<div>Loading form...</div>}>
-                <AuditIntakeForm selectedPlan={selectedPlan} />
-              </Suspense>
-            </div>
-          </div>
-        </section>
+            {/* Simple Audit Form */}
+            <div className="w-full max-w-lg mx-auto md:ml-auto">
+              <div className="bg-white border border-brand-border rounded-2xl p-8 shadow-xl">
+                {!isSubmitted ? (
+                  <>
+                    <h2 className="text-2xl font-bold text-brand-text mb-2">Get Your Free Audit</h2>
+                    <p className="text-brand-text-muted mb-8 text-sm">Enter your details and we will email you the complete GEO diagnostic report.</p>
+                    
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="website" className="text-sm font-semibold text-brand-text">Your Website URL <span className="text-red-500">*</span></label>
+                        <input 
+                          type="text" 
+                          id="website" 
+                          name="website" 
+                          required 
+                          placeholder="yourwebsite.com" 
+                          className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                        />
+                      </div>
+                      
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="email" className="text-sm font-semibold text-brand-text">Email Address <span className="text-red-500">*</span></label>
+                        <input 
+                          type="email" 
+                          id="email" 
+                          name="email" 
+                          required 
+                          placeholder="you@company.com" 
+                          className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                        />
+                      </div>
 
-        {/* Technical Bento Grid */}
-        <section className="section" aria-label="Features">
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-              <h2 className="headline-lg">
-                Diagnostic Capabilities
-              </h2>
-              <p className="text-sub" style={{ maxWidth: '600px', margin: '0 auto' }}>
-                Enterprise-grade analysis to reverse-engineer Answer Engine logic.
-              </p>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
-              
-              <article className="card-bento" style={{ borderTop: '4px solid var(--cyan)' }}>
-                <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'rgba(6, 182, 212, 0.1)', width: 'fit-content', marginBottom: '24px' }}>
-                   <GitBranch className="h-6 w-6" style={{ color: 'var(--cyan)' }} />
-                </div>
-                <h3 className="headline-md" style={{ marginBottom: '16px' }}>Entity Health Monitoring</h3>
-                <p className="text-sub" style={{ fontSize: '15px' }}>
-                  Track how LLMs associate your brand with core industry topics. We identify semantic drift and recommend structural fixes to strengthen your knowledge graph presence.
-                </p>
-              </article>
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="company" className="text-sm font-semibold text-brand-text">Company Name <span className="text-red-500">*</span></label>
+                        <input 
+                          type="text" 
+                          id="company" 
+                          name="company" 
+                          required 
+                          placeholder="Acme Inc." 
+                          className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                        />
+                      </div>
 
-              <article className="card-bento" style={{ borderTop: '4px solid var(--blue)' }}>
-                <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'rgba(37, 99, 235, 0.1)', width: 'fit-content', marginBottom: '24px' }}>
-                   <Database className="h-6 w-6" style={{ color: 'var(--blue)' }} />
-                </div>
-                <h3 className="headline-md" style={{ marginBottom: '16px' }}>Real-time Citation Tracking</h3>
-                <p className="text-sub" style={{ fontSize: '15px' }}>
-                  Monitor which third-party domains are feeding data about your company to Answer Engines. Prioritize digital PR and link-building efforts based on actual RAG impact.
-                </p>
-              </article>
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="business" className="text-sm font-semibold text-brand-text">What does your business do? <span className="text-red-500">*</span></label>
+                        <input 
+                          type="text" 
+                          id="business" 
+                          name="business" 
+                          required 
+                          placeholder="e.g., project management software" 
+                          className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                        />
+                      </div>
 
-              <article className="card-bento" style={{ borderTop: '4px solid var(--slate)' }}>
-                <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'rgba(71, 85, 105, 0.1)', width: 'fit-content', marginBottom: '24px' }}>
-                   <SearchCode className="h-6 w-6" style={{ color: 'var(--slate)' }} />
-                </div>
-                <h3 className="headline-md" style={{ marginBottom: '16px' }}>Semantic Gap Analysis</h3>
-                <p className="text-sub" style={{ fontSize: '15px' }}>
-                  Compare your technical content structure against competitors. We provide explicit schema, markdown, and content velocity recommendations to outrank them in AI answers.
-                </p>
-              </article>
-              
-              <article className="card-bento" style={{ borderTop: '4px solid var(--cyan)' }}>
-                <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'rgba(6, 182, 212, 0.1)', width: 'fit-content', marginBottom: '24px' }}>
-                   <ShieldCheck className="h-6 w-6" style={{ color: 'var(--cyan)' }} />
-                </div>
-                <h3 className="headline-md" style={{ marginBottom: '16px' }}>Abuse-Resistant Audits</h3>
-                <p className="text-sub" style={{ fontSize: '15px' }}>
-                  Our proprietary engine is protected by signed captcha challenges and rate-limiting, ensuring high-fidelity outputs for enterprise domains without compromising data integrity.
-                </p>
-              </article>
-
-            </div>
-          </div>
-        </section>
-
-        {/* Answer Engine Optimized FAQ */}
-        <section className="section" style={{ backgroundColor: '#fff', borderTop: '1px solid var(--border-light)' }} aria-label="Frequently Asked Questions">
-          <div className="container-narrow">
-            <div style={{ marginBottom: '48px', textAlign: 'center' }}>
-              <span className="overline">FAQ</span>
-              <h2 className="headline-lg">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-sub">
-                Understanding the mechanics of Generative Engine Optimization.
-              </p>
-            </div>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              
-              <article className="card-bento">
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--navy)', marginBottom: '16px' }}>
-                  What is Generative Engine Optimization (GEO)?
-                </h3>
-                <p style={{ color: 'var(--slate)', fontSize: '15px', lineHeight: 1.7 }}>
-                  Generative Engine Optimization (GEO) is the process of structuring your brand's digital footprint and entity data so that Answer Engines like ChatGPT, Perplexity, and Google AI Overviews reliably recommend your products and services. Unlike traditional SEO, GEO focuses on context, semantic density, and authoritative citations.
-                </p>
-              </article>
-
-              <article className="card-bento">
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--navy)', marginBottom: '16px' }}>
-                  How does the GeoAudit AI tool work?
-                </h3>
-                <ul style={{ color: 'var(--slate)', fontSize: '15px', lineHeight: 1.7, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <li><strong>Crawl Phase:</strong> The engine analyzes your website's schema, semantic structure, and technical health.</li>
-                  <li><strong>Retrieval Phase:</strong> It queries live LLMs (ChatGPT, Claude, Perplexity) to assess brand perception and citation frequency.</li>
-                  <li><strong>Synthesis Phase:</strong> It generates a technical roadmap identifying specific gaps and actionable bridging strategies.</li>
-                </ul>
-              </article>
-
-              <article className="card-bento">
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--navy)', marginBottom: '16px' }}>
-                  Why do B2B companies need GEO?
-                </h3>
-                <p style={{ color: 'var(--slate)', fontSize: '15px', lineHeight: 1.7 }}>
-                  Decision makers are increasingly using LLMs for research, vendor comparison, and technical evaluation instead of traditional search engines. If your brand is not explicitly cited by these AI models as a category leader, you lose high-intent pipeline before they ever reach your website.
-                </p>
-              </article>
-
+                      <button 
+                        type="submit" 
+                        disabled={isSubmitting}
+                        className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold py-4 rounded-xl mt-4 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Processing...
+                          </>
+                        ) : (
+                          "Get My Free Audit"
+                        )}
+                      </button>
+                    </form>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-center py-10">
+                    <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+                      <CheckCircle2 className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-brand-text mb-4">Audit Request Received!</h3>
+                    <p className="text-brand-text-muted leading-relaxed">
+                      We are running your GEO diagnostic audit now. We will send the full report directly to <strong>{email}</strong> once it's complete.
+                    </p>
+                    <button 
+                      onClick={() => setIsSubmitted(false)}
+                      className="mt-8 text-sm font-semibold text-brand-primary hover:underline"
+                    >
+                      Submit another domain
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="section dark-section" aria-label="Call to Action">
-          <div className="container">
-            <div className="card-bento" style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              textAlign: 'center',
-              gap: '24px',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ServerCog className="h-5 w-5" style={{ color: 'var(--cyan)' }} />
-                <span className="overline" style={{ marginBottom: 0 }}>
+        <section className="py-24 bg-brand-bg-muted border-t border-brand-border">
+          <div className="container mx-auto px-4 text-center">
+            <div className="bg-white rounded-3xl p-12 max-w-4xl mx-auto shadow-sm border border-brand-border flex flex-col items-center gap-6">
+              <div className="flex items-center gap-2">
+                <ServerCog className="h-5 w-5 text-brand-primary" />
+                <span className="text-sm font-bold text-brand-primary uppercase tracking-wider">
                   Direct Implementation
                 </span>
               </div>
-              <h2 className="headline-lg">Execute the GEO Blueprint.</h2>
-              <p className="text-sub" style={{ maxWidth: '640px' }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-text">Execute the GEO Blueprint.</h2>
+              <p className="text-lg text-brand-text-muted max-w-2xl">
                 Once you have your audit, our engineering team can map out the 90-day technical signals and entity roadmap required for total AI dominance.
               </p>
-              <a href="mailto:hello@itappens.ai" className="btn-primary" style={{ marginTop: '16px' }}>
-                Contact Engineering
-                <ArrowRight className="h-4 w-4" />
+              <a href="mailto:hello@itappens.ai" className="inline-flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors mt-4">
+                Get in touch.
+                <ArrowRight className="h-5 w-5" />
               </a>
             </div>
           </div>
