@@ -4,6 +4,8 @@ import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { getSortedPostsData } from "@/lib/blog";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "GEO Blog | itappens.ai",
   description:

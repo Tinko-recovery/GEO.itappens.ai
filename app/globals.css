@@ -30,22 +30,22 @@
 }
 
 :root {
-  /* Brand Color Template */
-  --brand-primary: #8b5cf6; /* Indigo/Purple */
-  --brand-primary-hover: #7c3aed;
-  --brand-text: #111827; /* Slate 900 */
-  --brand-text-muted: #6b7280; /* Gray 500 */
-  --brand-bg: #ffffff; /* White */
-  --brand-bg-muted: #f9fafb; /* Gray 50 */
-  --brand-border: #e5e7eb; /* Gray 200 */
+  /* Cyber-Pop Brand Color Template */
+  --brand-primary: #FF007F; /* Neon Pink */
+  --brand-primary-hover: #D9006C; /* Darker Pink */
+  --brand-text: #13003A; /* Almost Black Purple */
+  --brand-text-muted: #5A3E92; /* Muted Purple */
+  --brand-bg: #FCFAFF; /* Stark White with tiny hint of purple */
+  --brand-bg-muted: #F3EFFF; /* Light muted purple */
+  --brand-border: #E0D1FF; /* Light purple border */
 
   /* Legacy aliases to avoid breaking existing styles during transition */
-  --navy: var(--brand-text);
-  --navy-dark: var(--brand-text);
+  --navy: #2D00F7; /* Deep Electric Purple */
+  --navy-dark: #13003A; /* Darker background purple */
   --blue: var(--brand-primary);
   --blue-hover: var(--brand-primary-hover);
-  --cyan: var(--brand-primary);
-  --orange: var(--brand-primary);
+  --cyan: #00F0FF; /* Electric Cyan */
+  --orange: #FF007F; /* Map orange to pink for consistency */
   --slate: var(--brand-text-muted);
   --slate-dark: var(--brand-text);
   --light-bg: var(--brand-bg);

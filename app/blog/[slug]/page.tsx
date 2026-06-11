@@ -4,6 +4,8 @@ import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function BlogPost(props: { params: Promise<{ slug: string }> }) {
     const { slug } = await props.params;
     let post;
@@ -42,7 +44,7 @@ export default async function BlogPost(props: { params: Promise<{ slug: string }
 
             <main style={{ backgroundColor: 'var(--light-bg)' }}>
                 {/* Article Header */}
-                <header className="section" style={{ backgroundColor: '#fff', borderBottom: '1px solid var(--border-light)', paddingTop: '160px', paddingBottom: '80px' }}>
+                <header className="section" style={{ backgroundColor: 'var(--brand-bg)', borderBottom: '1px solid var(--border-light)', paddingTop: '160px', paddingBottom: '80px' }}>
                     <div className="container-narrow">
                         <a href="/blog" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600, color: 'var(--slate)', textDecoration: 'none', marginBottom: '32px' }}>
                             <ArrowLeft className="h-4 w-4" /> Back to Blog
@@ -60,7 +62,7 @@ export default async function BlogPost(props: { params: Promise<{ slug: string }
                 {/* Article Content */}
                 <article className="section" style={{ paddingBottom: '40px' }}>
                     <div className="container-narrow">
-                        <div className="card-bento" style={{ marginBottom: '64px', borderLeft: '4px solid var(--blue)', backgroundColor: 'rgba(37, 99, 235, 0.05)' }}>
+                        <div className="card-bento" style={{ marginBottom: '64px', borderLeft: '4px solid var(--blue)', backgroundColor: 'rgba(255, 0, 127, 0.05)' }}>
                             <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '8px' }}>
                                 GOLDEN SNIPPET
                             </span>
@@ -70,7 +72,7 @@ export default async function BlogPost(props: { params: Promise<{ slug: string }
                         </div>
                         
                         <div 
-                            className="prose prose-lg max-w-none"
+                            className="prose prose-lg max-w-none prose-headings:text-[var(--navy)] prose-a:text-[var(--blue)] prose-a:font-bold prose-strong:text-[var(--navy)]"
                             style={{ color: 'var(--slate)', fontSize: '18px', lineHeight: 1.8 }}
                             dangerouslySetInnerHTML={{ __html: post.contentHtml || "" }} 
                         />

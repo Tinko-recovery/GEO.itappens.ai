@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth0 } from "./lib/auth0";
-
 /**
  * Middleware handling:
  * 1. Hostname redirection (itappens.ai -> www.itappens.ai)
- * 2. Admin Basic Auth
- * 3. Auth0 v4 authentication (handling /auth routes)
+ * 2. NextAuth for /admin
  */
 export async function middleware(request: NextRequest) {
   const host = request.headers.get("host") || "";
@@ -43,38 +40,7 @@ export async function middleware(request: NextRequest) {
     return authMiddleware(request as any, {} as any);
   }
 
-  // 3. Auth0 v4 Middleware
-  const authRes = await auth0.middleware(request);
-
-  const protectedPrefixes = ["/dashboard", "/client", "/leadgen"];
-  const isProtected = protectedPrefixes.some(prefix => pathname === prefix || pathname.startsWith(`${prefix}/`));
-
-  if (isProtected) {
-    // In v4, you must pass the request to getSession when used in middleware
-    const session = await auth0.getSession(request);
-    if (!session) {
-      const loginUrl = new URL("/auth/login", request.url);
-      loginUrl.searchParams.set("returnTo", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  // 4. Secure Lead Generation Engine Access
-  if (pathname.startsWith("/nimda")) {
-    const session = await auth0.getSession(request);
-    if (!session) {
-      const loginUrl = new URL("/auth/login", request.url);
-      loginUrl.searchParams.set("returnTo", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-    
-    const userEmail = session.user.email?.toLowerCase() || "";
-    if (userEmail !== "sadish.sugumaran@itappens.ai") {
-      return new NextResponse("Forbidden - This area is restricted to authorized personnel.", { status: 403 });
-    }
-  }
-
-  return authRes;
+  return NextResponse.next();
 }
 
 export const config = {
