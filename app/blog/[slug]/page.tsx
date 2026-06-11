@@ -12,6 +12,10 @@ export default async function BlogPost(props: { params: Promise<{ slug: string }
     } catch {
         notFound();
     }
+    
+    if (!post) {
+        notFound();
+    }
 
     const allPosts = await getSortedPostsData();
     const currentIndex = allPosts.findIndex(p => p.slug === slug);
