@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogPage() {
-  const posts = getSortedPostsData();
+export default async function BlogPage() {
+  const posts = await getSortedPostsData();
   const featuredPost = posts.length > 0 ? posts[0] : null;
   const regularPosts = posts.length > 1 ? posts.slice(1) : [];
 

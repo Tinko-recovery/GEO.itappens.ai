@@ -17,8 +17,6 @@ const requestSchema = z.object({
   siteUrl: z.string().url().or(z.string().min(4)),
   email: z.string().email(),
   targetKeywords: z.array(z.string()).default([]),
-  captchaToken: z.string(),
-  captchaAnswer: z.string(),
 });
 
 export const runtime = "nodejs";
@@ -29,10 +27,6 @@ export async function POST(request: Request) {
 
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid request payload." }, { status: 400 });
-  }
-
-  if (!verifyCaptcha(parsed.data.captchaToken, parsed.data.captchaAnswer)) {
-    return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
   }
 
   let siteUrl: string;
@@ -46,13 +40,16 @@ export async function POST(request: Request) {
   const ipHash = await sha256(ip);
   
   if (!isBypass) {
+    // Check if email has already submitted
     try {
-      const limit = await assertRateLimit(`free:${ipHash}`, 10, 60 * 60 * 1000);
-      if (!limit.ok) {
-        return NextResponse.json({ error: "Too many free audits from this IP. Try again later." }, { status: 429 });
+      const existing = await prisma.audit.findFirst({
+        where: { email: parsed.data.email }
+      });
+      if (existing) {
+        return NextResponse.json({ error: "You have already run a free audit. Please contact us for a detailed strategy." }, { status: 429 });
       }
     } catch {
-      // gracefully bypass if redis connection fails
+      // ignore
     }
   }
 
@@ -126,6 +123,14 @@ export async function POST(request: Request) {
         siteUrl,
         planLabel: "Free Snapshot",
         targetKeywords: parsed.data.targetKeywords,
+      });
+      // Send customer the PDF link
+      import("@/lib/email").then((m) => {
+        m.sendAuditReadyEmail({
+          email: parsed.data.email,
+          siteUrl,
+          shareToken,
+        }).catch(() => {});
       });
     } catch {
       // ignore email sending failures

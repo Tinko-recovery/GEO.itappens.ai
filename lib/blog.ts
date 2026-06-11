@@ -1,10 +1,6 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
-
-const postsDirectory = path.join(process.cwd(), "content/blog");
+import { prisma } from "./db";
 
 export interface PostData {
     slug: string;
@@ -16,45 +12,41 @@ export interface PostData {
     readTime?: string;
 }
 
-export function getSortedPostsData(): PostData[] {
-    // Ensure directory exists
-    if (!fs.existsSync(postsDirectory)) {
-        fs.mkdirSync(postsDirectory, { recursive: true });
-    }
+export async function getSortedPostsData(): Promise<PostData[]> {
+    const posts = await prisma.blogPost.findMany({
+        where: { published: true },
+        orderBy: { createdAt: "desc" },
+    });
 
-    const fileNames = fs.readdirSync(postsDirectory);
-    const allPostsData = fileNames
-        .filter((fileName) => fileName.endsWith(".md"))
-        .map((fileName) => {
-            const slug = fileName.replace(/\.md$/, "");
-            const fullPath = path.join(postsDirectory, fileName);
-            const fileContents = fs.readFileSync(fullPath, "utf8");
-            const matterResult = matter(fileContents);
-
-            return {
-                slug,
-                readTime: matterResult.data.readTime || "5 min read",
-                ...(matterResult.data as { title: string; date: string; category: string; excerpt: string }),
-            };
-        });
-
-    return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+    return posts.map(post => ({
+        slug: post.slug,
+        title: post.title,
+        date: post.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        category: post.category,
+        excerpt: post.excerpt,
+        readTime: post.readTime,
+    }));
 }
 
-export async function getPostData(slug: string): Promise<PostData> {
-    const fullPath = path.join(postsDirectory, `${slug}.md`);
-    const fileContents = fs.readFileSync(fullPath, "utf8");
-    const matterResult = matter(fileContents);
+export async function getPostData(slug: string): Promise<PostData | null> {
+    const post = await prisma.blogPost.findUnique({
+        where: { slug }
+    });
+
+    if (!post || !post.published) return null;
 
     const processedContent = await remark()
         .use(html)
-        .process(matterResult.content);
+        .process(post.content);
     const contentHtml = processedContent.toString();
 
     return {
-        slug,
+        slug: post.slug,
+        title: post.title,
+        date: post.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        category: post.category,
+        excerpt: post.excerpt,
         contentHtml,
-        readTime: matterResult.data.readTime || "5 min read",
-        ...(matterResult.data as { title: string; date: string; category: string; excerpt: string }),
+        readTime: post.readTime,
     };
 }

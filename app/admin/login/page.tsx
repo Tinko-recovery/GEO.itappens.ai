@@ -19,13 +19,13 @@ export default function AdminLoginPage() {
           className="w-full space-y-4"
         >
           <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">Username</label>
+            <label className="block text-sm font-medium text-zinc-400 mb-1">Email</label>
             <input
-              name="username"
-              type="text"
+              name="email"
+              type="email"
               required
               className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
-              placeholder="Enter admin username"
+              placeholder="employee@itappens.ai"
             />
           </div>
           <div>

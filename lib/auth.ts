@@ -6,18 +6,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     CredentialsProvider({
       name: "Admin Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.username || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password) return null;
         
-        const validUsername = process.env.ADMIN_USERNAME;
-        const validPassword = process.env.ADMIN_PASSWORD;
+        const email = credentials.email as string;
+        const password = credentials.password as string;
 
-        if (credentials.username === validUsername && credentials.password === validPassword) {
-          // Return a dummy user object with the authorized email so the rest of the app's whitelist works seamlessly
-          return { id: "1", name: "Admin", email: "sadish.sugumaran@itappens.ai" };
+        // Dynamically import to avoid breaking Next.js Edge Middleware
+        const { prisma } = await import("@/lib/db");
+        const bcrypt = await import("bcryptjs").then(m => m.default || m);
+
+        const employee = await prisma.employee.findUnique({
+          where: { email }
+        });
+
+        if (!employee) return null;
+
+        const isPasswordValid = await bcrypt.compare(password, employee.passwordHash);
+
+        if (isPasswordValid) {
+          return { id: employee.id, name: employee.name || "Employee", email: employee.email };
         }
         
         return null;
@@ -33,7 +44,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const isLoggedIn = !!auth?.user;
       const isTryingToAccessAdmin = nextUrl.pathname.startsWith('/admin');
       
-      // We don't want to block public login and access denied pages
       if (nextUrl.pathname === '/admin/login' || nextUrl.pathname === '/admin/access-denied') {
         return true;
       }
@@ -41,8 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (isTryingToAccessAdmin) {
         if (!isLoggedIn) return false;
         
-        // Double check email whitelist at edge (just in case)
-        if (auth.user?.email !== "sadish.sugumaran@itappens.ai") {
+        if (!auth.user?.email?.endsWith("@itappens.ai")) {
             return Response.redirect(new URL('/admin/access-denied', nextUrl));
         }
         return true;

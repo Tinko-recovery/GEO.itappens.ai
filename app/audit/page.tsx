@@ -17,19 +17,40 @@ export default function AuditPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     const formData = new FormData(e.currentTarget);
     const submittedEmail = formData.get("email") as string;
+    const siteUrl = formData.get("website") as string;
+    const business = formData.get("business") as string;
     
-    // Simulate API call to trigger backend audit execution and email dispatch
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/audit/free", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          siteUrl,
+          email: submittedEmail,
+          targetKeywords: [business],
+        })
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        alert(errorData?.error || "An error occurred submitting your audit.");
+        setIsSubmitting(false);
+        return;
+      }
+
       setEmail(submittedEmail);
       setIsSubmitted(true);
+    } catch (err) {
+      alert("Network error. Please try again.");
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (

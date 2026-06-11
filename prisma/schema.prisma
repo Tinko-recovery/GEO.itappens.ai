@@ -321,3 +321,33 @@ model AgencyAuditLog {
   details   Json?
   createdAt DateTime      @default(now())
 }
+
+// ==========================================
+// Employee & Blog CMS
+// ==========================================
+
+model Employee {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime   @default(now())
+  posts        BlogPost[]
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  category    String
+  excerpt     String
+  content     String
+  published   Boolean   @default(false)
+  readTime    String    @default("5 min read")
+  
+  authorId    String
+  author      Employee  @relation(fields: [authorId], references: [id])
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

@@ -13,7 +13,7 @@ export default async function BlogPost(props: { params: Promise<{ slug: string }
         notFound();
     }
 
-    const allPosts = getSortedPostsData();
+    const allPosts = await getSortedPostsData();
     const currentIndex = allPosts.findIndex(p => p.slug === slug);
     
     // Previous is chronologically newer (lower index), Next is chronologically older (higher index)
