@@ -14,29 +14,57 @@ const features = [
 ];
 
 export default function AuditPage() {
+  const [step, setStep] = useState<1 | 2>(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [email, setEmail] = useState("");
+  
+  const [formData, setFormData] = useState({
+    website: "",
+    email: "",
+    company: "",
+    business: "",
+  });
 
   const router = useRouter();
+
+  const handleContinue = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const res = await fetch("/api/audit/extract-business", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          siteUrl: formData.website,
+          companyName: formData.company,
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setFormData(prev => ({ ...prev, business: data.summary }));
+      }
+    } catch (err) {
+      console.error("Failed to extract business info:", err);
+    }
+    
+    setStep(2);
+    setIsSubmitting(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    const formData = new FormData(e.currentTarget);
-    const submittedEmail = formData.get("email") as string;
-    const siteUrl = formData.get("website") as string;
-    const business = formData.get("business") as string;
     
     try {
       const res = await fetch("/api/audit/free", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          siteUrl,
-          email: submittedEmail,
-          targetKeywords: [business],
+          siteUrl: formData.website,
+          email: formData.email,
+          targetKeywords: [formData.business],
         })
       });
 
@@ -47,7 +75,6 @@ export default function AuditPage() {
         return;
       }
 
-      setEmail(submittedEmail);
       setIsSubmitted(true);
     } catch (err) {
       alert("Network error. Please try again.");
@@ -95,73 +122,108 @@ export default function AuditPage() {
                     <h2 className="text-2xl font-bold text-brand-text mb-2">Get Your Free Audit</h2>
                     <p className="text-brand-text-muted mb-8 text-sm">Enter your details and we will email you the complete GEO diagnostic report.</p>
                     
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor="website" className="text-sm font-semibold text-brand-text">Your Website URL <span className="text-red-500">*</span></label>
-                        <input 
-                          type="text" 
-                          id="website" 
-                          name="website" 
-                          required 
-                          placeholder="yourwebsite.com" 
-                          className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
-                        />
-                      </div>
-                      
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor="email" className="text-sm font-semibold text-brand-text">Email Address <span className="text-red-500">*</span></label>
-                        <input 
-                          type="email" 
-                          id="email" 
-                          name="email" 
-                          required 
-                          placeholder="you@company.com" 
-                          className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
-                        />
-                      </div>
+                    {step === 1 ? (
+                      <form onSubmit={handleContinue} className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-2">
+                          <label htmlFor="website" className="text-sm font-semibold text-brand-text">Your Website URL <span className="text-red-500">*</span></label>
+                          <input 
+                            type="text" 
+                            id="website" 
+                            required 
+                            placeholder="yourwebsite.com" 
+                            value={formData.website}
+                            onChange={(e) => setFormData({...formData, website: e.target.value})}
+                            className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                          />
+                        </div>
+                        
+                        <div className="flex flex-col gap-2">
+                          <label htmlFor="email" className="text-sm font-semibold text-brand-text">Email Address <span className="text-red-500">*</span></label>
+                          <input 
+                            type="email" 
+                            id="email" 
+                            required 
+                            placeholder="you@company.com" 
+                            value={formData.email}
+                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                            className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                          />
+                        </div>
 
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor="company" className="text-sm font-semibold text-brand-text">Company Name <span className="text-red-500">*</span></label>
-                        <input 
-                          type="text" 
-                          id="company" 
-                          name="company" 
-                          required 
-                          placeholder="Acme Inc." 
-                          className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
-                        />
-                      </div>
+                        <div className="flex flex-col gap-2">
+                          <label htmlFor="company" className="text-sm font-semibold text-brand-text">Company Name <span className="text-red-500">*</span></label>
+                          <input 
+                            type="text" 
+                            id="company" 
+                            required 
+                            placeholder="Acme Inc." 
+                            value={formData.company}
+                            onChange={(e) => setFormData({...formData, company: e.target.value})}
+                            className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                          />
+                        </div>
 
-                      <div className="flex flex-col gap-2">
-                        <label htmlFor="business" className="text-sm font-semibold text-brand-text">What does your business do? <span className="text-red-500">*</span></label>
-                        <input 
-                          type="text" 
-                          id="business" 
-                          name="business" 
-                          required 
-                          placeholder="e.g., project management software" 
-                          className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
-                        />
-                      </div>
+                        <button 
+                          type="submit" 
+                          disabled={isSubmitting}
+                          className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold py-4 rounded-xl mt-4 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Analyzing domain...
+                            </>
+                          ) : (
+                            "Continue"
+                          )}
+                        </button>
+                      </form>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-2">
+                          <label htmlFor="business" className="text-sm font-semibold text-brand-text">What does your business do? <span className="text-red-500">*</span></label>
+                          <p className="text-xs text-brand-text-muted mb-1">We automatically generated this based on your website. Feel free to edit it.</p>
+                          <input 
+                            type="text" 
+                            id="business" 
+                            required 
+                            placeholder="e.g., project management software" 
+                            value={formData.business}
+                            onChange={(e) => setFormData({...formData, business: e.target.value})}
+                            className="w-full bg-brand-bg border border-brand-border px-4 py-3 rounded-lg text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
+                          />
+                        </div>
 
-                      <button 
-                        type="submit" 
-                        disabled={isSubmitting}
-                        className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold py-4 rounded-xl mt-4 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Processing...
-                          </>
-                        ) : (
-                          "Get My Free Audit"
-                        )}
-                      </button>
-                    </form>
+                        <button 
+                          type="submit" 
+                          disabled={isSubmitting}
+                          className="w-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold py-4 rounded-xl mt-4 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Processing...
+                            </>
+                          ) : (
+                            "Get My Free Audit"
+                          )}
+                        </button>
+                        
+                        <button 
+                          type="button"
+                          onClick={() => setStep(1)}
+                          className="text-sm text-brand-text-muted hover:text-brand-text transition-colors mt-2"
+                        >
+                          &larr; Back
+                        </button>
+                      </form>
+                    )}
                   </>
                 ) : (
                   <div className="flex flex-col items-center justify-center text-center py-10">
@@ -170,10 +232,14 @@ export default function AuditPage() {
                     </div>
                     <h3 className="text-2xl font-bold text-brand-text mb-4">Audit Request Received!</h3>
                     <p className="text-brand-text-muted leading-relaxed">
-                      We are running your GEO diagnostic audit now. We will send the full report directly to <strong>{email}</strong> once it's complete.
+                      We are running your GEO diagnostic audit now. We will send the full report directly to <strong>{formData.email}</strong> once it's complete.
                     </p>
                     <button 
-                      onClick={() => setIsSubmitted(false)}
+                      onClick={() => {
+                        setIsSubmitted(false);
+                        setStep(1);
+                        setFormData({ website: "", email: "", company: "", business: "" });
+                      }}
                       className="mt-8 text-sm font-semibold text-brand-primary hover:underline"
                     >
                       Submit another domain
