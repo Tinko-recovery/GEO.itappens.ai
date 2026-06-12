@@ -132,8 +132,8 @@ export async function POST(request: Request) {
           shareToken,
         }).catch(() => {});
       });
-    } catch {
-      // ignore email sending failures
+    } catch (e) {
+      console.error("Primary Email Sending Failed:", e);
     }
 
     return NextResponse.json({ shareToken });
@@ -318,8 +318,8 @@ export async function POST(request: Request) {
         planLabel: "Free Snapshot Fallback",
         targetKeywords,
       });
-    } catch {
-      // ignore
+    } catch (e) {
+      console.error("Fallback Email Sending Failed:", e);
     }
 
     return NextResponse.json({ shareToken });
