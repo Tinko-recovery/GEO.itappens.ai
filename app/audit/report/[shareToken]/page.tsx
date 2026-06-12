@@ -134,10 +134,6 @@ export default async function AuditReportPage({ params }: { params: Promise<{ sh
                     <span style={{ color: 'var(--accent)' }}>{siteUrl}</span>
                   </h1>
                 </div>
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <a href={`/api/audit/download/${shareToken}`} className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                    Download PDF
-                  </a>
                 </div>
               </div>
             </div>
@@ -168,10 +164,6 @@ export default async function AuditReportPage({ params }: { params: Promise<{ sh
                   <span style={{ color: 'var(--accent)' }}>{audit.siteUrl}</span>
                 </h1>
               </div>
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <a href={`/api/audit/download/${shareToken}`} className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                  Download PDF
-                </a>
               </div>
             </div>
           </div>

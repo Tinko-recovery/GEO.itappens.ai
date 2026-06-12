@@ -118,9 +118,6 @@ export async function sendAuditReadyEmail(input: {
         <a href="${reportUrl}" style="display:inline-block;background:#111827;color:#fff;padding:12px 22px;border-radius:999px;text-decoration:none;font-weight:600;margin-right:10px">
           Open report
         </a>
-        <a href="${buildAbsoluteUrl(`/api/audit/download/${input.shareToken}`)}" style="display:inline-block;background:#eef2ff;color:#312e81;padding:12px 22px;border-radius:999px;text-decoration:none;font-weight:600">
-          Download PDF
-        </a>
       </div>
     `,
   });
