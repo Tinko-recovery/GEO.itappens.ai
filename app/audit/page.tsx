@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { TerminalSquare, CheckCircle2, ServerCog, ArrowRight } from "lucide-react";
 
 import NavBar from "@/components/NavBar";
@@ -16,6 +17,8 @@ export default function AuditPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,11 +47,15 @@ export default function AuditPage() {
         return;
       }
 
-      setEmail(submittedEmail);
-      setIsSubmitted(true);
+      const data = await res.json();
+      if (data.shareToken) {
+        router.push(`/audit/report/${data.shareToken}`);
+      } else {
+        setEmail(submittedEmail);
+        setIsSubmitted(true);
+      }
     } catch (err) {
       alert("Network error. Please try again.");
-    } finally {
       setIsSubmitting(false);
     }
   };
