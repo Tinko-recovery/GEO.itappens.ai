@@ -49,7 +49,7 @@ export function slugify(input: string) {
 }
 
 export function buildAbsoluteUrl(pathname = "/") {
-  const base = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const base = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === "production" ? "https://itappens.ai" : "http://localhost:3000");
   return new URL(pathname, base).toString();
 }
 
