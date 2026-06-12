@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth0 } from '@/lib/auth0';
+import { auth } from '@/lib/auth';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
@@ -15,7 +15,7 @@ const CREDIT_PACKS: Record<string, { credits: number, price: number, name: strin
 
 export async function POST(req: Request) {
   try {
-    const session = await auth0.getSession();
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

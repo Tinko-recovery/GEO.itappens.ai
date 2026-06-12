@@ -5,7 +5,7 @@ import SiteFooter from "@/components/SiteFooter";
 import { motion } from 'framer-motion';
 import SocialDashboard from "@/components/social/SocialDashboard";
 import { Suspense } from 'react';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+
 
 function itcontents() {
     return (
@@ -143,4 +143,4 @@ function itcontents() {
     );
 }
 
-export default withPageAuthRequired(itcontents);
+export default itcontents;

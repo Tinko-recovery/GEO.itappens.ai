@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth0 } from '@/lib/auth0';
+import { auth } from '@/lib/auth';
 import Anthropic from '@anthropic-ai/sdk';
 
 export const maxDuration = 60; // Allow more time for AI generation
@@ -7,7 +7,7 @@ export const maxDuration = 60; // Allow more time for AI generation
 export async function POST(req: Request) {
   try {
     // 1. Verify Authentication
-    const session = await auth0.getSession();
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

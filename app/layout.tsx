@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   },
 };
 
-import Auth0Provider from '@/components/providers/Auth0Provider';
+
 import { Suspense } from 'react';
 import JsonLd from "@/components/JsonLd";
 import { organizationSchema, faqSchema, schemaGraph } from "@/lib/seo/schema";
@@ -68,11 +68,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <JsonLd data={siteSchema} />
       </head>
       <body>
-        <Auth0Provider>
           <Suspense fallback={<div className="min-h-screen bg-bg animate-pulse" />}>
             {children}
           </Suspense>
-        </Auth0Provider>
       </body>
     </html>
   );
