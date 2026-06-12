@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { verifyCaptcha } from "@/lib/captcha";
 import { prisma } from "@/lib/db";
-import { sendInternalLeadAlert } from "@/lib/email";
+import { sendInternalLeadAlert, sendAuditReadyEmail } from "@/lib/email";
 import { assertRateLimit } from "@/lib/rate-limit";
 import { normalizeSiteUrl, sha256, getHostname } from "@/lib/utils";
 
@@ -124,13 +124,10 @@ export async function POST(request: Request) {
         planLabel: "Free Snapshot",
         targetKeywords: parsed.data.targetKeywords,
       });
-      // Send customer the PDF link
-      import("@/lib/email").then((m) => {
-        m.sendAuditReadyEmail({
-          email: parsed.data.email,
-          siteUrl,
-          shareToken,
-        }).catch(() => {});
+      await sendAuditReadyEmail({
+        email: parsed.data.email,
+        siteUrl,
+        shareToken,
       });
     } catch (e) {
       console.error("Primary Email Sending Failed:", e);
@@ -317,6 +314,11 @@ export async function POST(request: Request) {
         siteUrl,
         planLabel: "Free Snapshot Fallback",
         targetKeywords,
+      });
+      await sendAuditReadyEmail({
+        email: parsed.data.email,
+        siteUrl,
+        shareToken,
       });
     } catch (e) {
       console.error("Fallback Email Sending Failed:", e);
