@@ -29,6 +29,8 @@ export async function POST(req: Request) {
 
     const origin = req.headers.get('origin') || 'http://localhost:3000';
 
+    const userEmail = session.user.email;
+
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -47,9 +49,9 @@ export async function POST(req: Request) {
       mode: 'payment',
       success_url: `${origin}/dashboard?checkout=success`,
       cancel_url: `${origin}/dashboard?checkout=canceled`,
-      client_reference_id: session.user.email,
+      client_reference_id: userEmail,
       metadata: {
-        email: session.user.email,
+        email: userEmail,
         credits: selectedPack.credits.toString()
       }
     });

@@ -24,7 +24,7 @@ export type SearchParams = {
 export async function searchApolloLeads(params: SearchParams): Promise<{ leads: Lead[], error?: string }> {
   // 1. Verify User Session for Security
   const session = await auth();
-  if (!session || session.user.email !== "sadish.sugumaran@itappens.ai") {
+  if (!session || session.user?.email !== "sadish.sugumaran@itappens.ai") {
     return { leads: [], error: "Unauthorized. This action is restricted." };
   }
 
@@ -107,7 +107,7 @@ export async function searchApolloLeads(params: SearchParams): Promise<{ leads: 
 export async function unlockApolloLead(id: string): Promise<{ lead: Lead | null, error?: string }> {
   // 1. Verify User Session for Security
   const session = await auth();
-  if (!session || session.user.email !== "sadish.sugumaran@itappens.ai") {
+  if (!session || session.user?.email !== "sadish.sugumaran@itappens.ai") {
     return { lead: null, error: "Unauthorized. This action is restricted." };
   }
 
@@ -169,7 +169,7 @@ export async function unlockApolloLead(id: string): Promise<{ lead: Lead | null,
 export async function deployToSequence(leadIds: string[], sequenceId: string): Promise<{ success: boolean, error?: string, added: number }> {
   // 1. Verify User Session for Security
   const session = await auth();
-  if (!session || session.user.email !== "sadish.sugumaran@itappens.ai") {
+  if (!session || session.user?.email !== "sadish.sugumaran@itappens.ai") {
     return { success: false, error: "Unauthorized. This action is restricted.", added: 0 };
   }
 
