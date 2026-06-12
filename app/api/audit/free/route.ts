@@ -133,7 +133,7 @@ export async function POST(request: Request) {
       console.error("Primary Email Sending Failed:", e);
     }
 
-    return NextResponse.json({ shareToken });
+    return NextResponse.json({ success: true });
   } catch (error) {
     // Extremely robust MVP Fallback generation to ensure success output
     const targetKeywords = parsed.data.targetKeywords.length ? parsed.data.targetKeywords : ["brand visibility", "category leadership"];
@@ -324,6 +324,6 @@ export async function POST(request: Request) {
       console.error("Fallback Email Sending Failed:", e);
     }
 
-    return NextResponse.json({ shareToken });
+    return NextResponse.json({ success: true });
   }
 }

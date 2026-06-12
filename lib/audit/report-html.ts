@@ -524,6 +524,7 @@ export function renderAuditHtml(report: AuditReport) {
   <div class="hero-bg"></div>
   <div class="hero-eyebrow">GEO + SEO Audit Report &nbsp;·&nbsp; itappens.ai</div>
   <div class="hero-title">
+    <img src="https://logo.clearbit.com/${report.hostname}" onerror="this.style.display='none'" style="max-height:60px; margin: 0 auto 24px; display:block; border-radius:12px;" alt="Logo" />
     ${report.hostname.split(".")[0].toUpperCase()}
     <em>${report.siteUrl.replace(/https?:\/\//, "")}</em>
   </div>

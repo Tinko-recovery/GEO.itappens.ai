@@ -41,8 +41,9 @@ export function ReportViewer({ report, html }: ReportViewerProps) {
         <TabsContent value="summary">
           <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             <Card className="bg-slate-900 border-slate-800">
-              <CardHeader>
-                <CardTitle className="text-white">Category Scores</CardTitle>
+              <CardHeader className="flex flex-row items-center gap-4 space-y-0">
+                <img src={`https://logo.clearbit.com/${report.hostname}`} onError={(e) => e.currentTarget.style.display = 'none'} style={{ maxHeight: '32px', borderRadius: '6px' }} alt="" />
+                <CardTitle className="text-white">Category Scores for {report.hostname}</CardTitle>
               </CardHeader>
               <CardContent className="h-[320px]">
                 <ResponsiveContainer width="100%" height="100%">

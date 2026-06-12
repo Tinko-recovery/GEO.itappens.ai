@@ -47,13 +47,8 @@ export default function AuditPage() {
         return;
       }
 
-      const data = await res.json();
-      if (data.shareToken) {
-        router.push(`/audit/report/${data.shareToken}`);
-      } else {
-        setEmail(submittedEmail);
-        setIsSubmitted(true);
-      }
+      setEmail(submittedEmail);
+      setIsSubmitted(true);
     } catch (err) {
       alert("Network error. Please try again.");
       setIsSubmitting(false);
