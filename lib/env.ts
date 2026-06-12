@@ -2,7 +2,12 @@ import { z } from "zod";
 
 const envSchema = z.object({
   DATABASE_URL: z.string().optional(),
-  NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
+  NEXT_PUBLIC_APP_URL: z.preprocess((val) => {
+    if (typeof val !== "string") return undefined;
+    const trimmed = val.trim();
+    if (!trimmed) return undefined;
+    return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  }, z.string().url().default("http://localhost:3000")),
   NEXT_PUBLIC_CALENDLY_URL: z.string().url().default("https://calendly.com/itappens/strategy-call"),
   PAYMENT_PROVIDER: z.enum(["stripe", "razorpay"]).default("stripe"),
   STRIPE_SECRET_KEY: z.string().optional(),
