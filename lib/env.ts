@@ -4,7 +4,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().optional(),
   NEXT_PUBLIC_APP_URL: z.preprocess((val) => {
     if (typeof val !== "string") return undefined;
-    const trimmed = val.trim();
+    const trimmed = val.trim().replace(/^"|"$/g, "").replace(/^'|'$/g, "");
     if (!trimmed) return undefined;
     return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
   }, z.string().url().default("http://localhost:3000")),
