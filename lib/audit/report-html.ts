@@ -1,9 +1,9 @@
 import type { AuditReport } from "@/lib/audit/types";
 
 function scoreColor(score: number) {
-  if (score >= 70) return "#c9a84c";   // gold — strong
-  if (score >= 45) return "#4a6741";   // sage — mid
-  return "#9b4a28";                    // sienna — weak
+  if (score >= 70) return "#e11d48";   // neon pink
+  if (score >= 45) return "#06b6d4";   // cyan
+  return "#94a3b8";                    // dim slate
 }
 
 function scoreLabel(score: number) {
@@ -129,7 +129,7 @@ export function renderAuditHtml(report: AuditReport) {
 
   const roadmap = report.roadmap
     .map((item, i) => {
-      const phaseColors = ["#9b4a28", "#c9a84c", "#4a6741"];
+      const phaseColors = ["#06b6d4", "#e11d48", "#10b981"];
       const c = phaseColors[i] ?? "#c9a84c";
       return `
       <article class="roadmap-card">
@@ -178,25 +178,24 @@ export function renderAuditHtml(report: AuditReport) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${report.hostname} — GEO + SEO Audit — itappens.ai</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink:      #0d0b08;
-      --paper:    #f5f0e8;
-      --cream:    #ede7d4;
-      --gold:     #c9a84c;
-      --gold-dim: rgba(201,168,76,0.14);
-      --gold-mid: rgba(201,168,76,0.30);
-      --sienna:   #9b4a28;
-      --sien-dim: rgba(155,74,40,0.20);
-      --sage:     #4a6741;
-      --sage-dim: rgba(74,103,65,0.20);
-      --dust:     #8c7b6b;
-      --rule:     rgba(201,168,76,0.18);
-      --card:     rgba(255,252,245,0.03);
+      --ink:      #020617; /* slate-950 */
+      --paper:    #f8fafc; /* slate-50 */
+      --cream:    #0f172a; /* slate-900 */
+      --gold:     #e11d48; /* neon pink */
+      --gold-dim: rgba(225, 29, 72, 0.14);
+      --gold-mid: rgba(225, 29, 72, 0.30);
+      --sienna:   #06b6d4; /* cyan */
+      --sien-dim: rgba(6, 182, 212, 0.20);
+      --sage:     #10b981; /* emerald */
+      --sage-dim: rgba(16, 185, 129, 0.20);
+      --dust:     #94a3b8; /* slate-400 */
+      --rule:     rgba(255, 255, 255, 0.08);
+      --card:     rgba(255, 255, 255, 0.03);
       --mono:     'DM Mono', monospace;
-      --serif:    'Cormorant Garamond', serif;
+      --serif:    'Inter', sans-serif;
       --display:  'Bebas Neue', sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

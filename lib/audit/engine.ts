@@ -195,7 +195,7 @@ function extractJsonObject(input: string) {
 }
 
 async function generateNarrativeWithAnthropic(facts: AuditFacts) {
-  if (!anthropic || facts.plan === "free") return null;
+  if (!anthropic) return null;
 
   const response = await anthropic.messages.create({
     model: env.ANTHROPIC_MODEL,
