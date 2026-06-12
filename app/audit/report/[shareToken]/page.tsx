@@ -4,6 +4,7 @@ import type { AuditReport } from "@/lib/audit/types";
 import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
 import { ReportViewer } from "@/components/audit/ReportViewer";
+import { StatusTracker } from "@/components/audit/StatusTracker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,9 +33,35 @@ export default async function AuditReportPage({ params }: { params: Promise<{ sh
     // gracefully handle database timeouts or unreachable production hosts
   }
 
+  // If audit is found but still running, show the Status Tracker
+  if (audit && (audit.status === "RUNNING" || audit.status === "PENDING")) {
+    return (
+      <div className="page-shell dark bg-slate-950 text-slate-50 min-h-screen">
+        <NavBar logoSuffix="Audit" />
+        <main>
+          <header className="py-24 bg-gradient-to-b from-slate-950 to-slate-900 border-b border-slate-800">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <span className="text-pink-500 font-mono text-sm tracking-widest uppercase">Deep Audit in Progress</span>
+              <h1 className="text-4xl font-display mt-6 tracking-tight text-white">
+                Preparing Premium Report
+              </h1>
+            </div>
+          </header>
+          <section className="py-16">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <StatusTracker siteUrl={audit.siteUrl} />
+            </div>
+          </section>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
+
+  // If totally missing or failed to fetch, show fallback
   if (!audit || !audit.reportJson || !audit.reportHtml) {
-    const siteUrl = "https://itappens.ai";
-    const hostname = "itappens.ai";
+    const siteUrl = audit?.siteUrl || "https://itappens.ai";
+    const hostname = siteUrl.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
     const mockReport: any = {
       version: "1.0.0",
       generatedAt: new Date().toISOString(),
