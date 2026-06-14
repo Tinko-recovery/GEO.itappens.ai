@@ -164,7 +164,7 @@ Be specific to ${domain} and the business described in the research. Don't be ge
 `;
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-5-20260408",
+      model: "claude-sonnet-4-5-20250929",
       max_tokens: 1000,
       messages: [{ role: "user", content: auditPrompt }]
     });
