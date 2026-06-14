@@ -134,7 +134,7 @@ Be specific to ${domain}. Don't be generic.
 `;
 
     const message = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-5-20260408",
       max_tokens: 1000,
       messages: [{ role: "user", content: auditPrompt }]
     });
