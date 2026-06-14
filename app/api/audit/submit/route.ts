@@ -122,7 +122,7 @@ async function generateAndSendAudit(
             tools: [{ googleSearch: {} }]
           }
         });
-        researchContext = geminiResponse.text;
+        researchContext = geminiResponse.text || "No text returned from Gemini.";
         console.log("Gemini research completed successfully.");
       } else {
         console.warn("GEMINI_API_KEY is not set. Skipping live research.");
