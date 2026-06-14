@@ -24,6 +24,14 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY === 'dummy') {
+      console.error("Missing SUPABASE_SERVICE_ROLE_KEY in environment");
+      return Response.json(
+        { error: "Server Configuration Error: Missing Database Key" },
+        { status: 500 }
+      );
+    }
+
     // Clean domain
     const cleanDomain = domain
       .toLowerCase()
