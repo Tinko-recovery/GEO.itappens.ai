@@ -35,23 +35,33 @@ export default function StrategyCallPage() {
               
               {/* Left Sidebar Info */}
               <div className="hidden md:block col-span-2 bg-brand-bg-muted p-10 border-r border-brand-border">
-                <h3 className="text-2xl font-bold mb-4">What to expect</h3>
-                <ul className="space-y-6 text-brand-text-muted">
+                <h3 className="text-2xl font-bold mb-4 text-brand-primary">What to expect</h3>
+                <ul className="space-y-8 text-brand-text-muted mt-8">
                   <li className="flex items-start">
-                    <div className="w-6 h-6 rounded-full bg-brand-primary/20 text-brand-primary flex items-center justify-center font-bold mr-4 mt-1">1</div>
+                    <div className="text-brand-text font-bold mr-4 mt-0.5">1</div>
                     <p>Deep dive into your custom AEO audit and current visibility scores.</p>
                   </li>
                   <li className="flex items-start">
-                    <div className="w-6 h-6 rounded-full bg-brand-primary/20 text-brand-primary flex items-center justify-center font-bold mr-4 mt-1">2</div>
+                    <div className="text-brand-text font-bold mr-4 mt-0.5">2</div>
                     <p>Analysis of your competitors' technical SEO footprints in AI engines.</p>
                   </li>
                   <li className="flex items-start">
-                    <div className="w-6 h-6 rounded-full bg-brand-primary/20 text-brand-primary flex items-center justify-center font-bold mr-4 mt-1">3</div>
+                    <div className="text-brand-text font-bold mr-4 mt-0.5">3</div>
                     <p>A custom 90-day action plan to build authority and trigger citations.</p>
                   </li>
                 </ul>
 
-                <div className="mt-12 p-6 bg-white rounded-xl border border-brand-border shadow-sm">
+                <div className="mt-16">
+                  <p className="text-sm text-brand-text-muted mb-4">Embed your Calendly, HubSpot, or Cal.com booking link right here.</p>
+                  <input type="text" placeholder="Paste Link Here" className="w-full px-4 py-3 border border-brand-border rounded-lg bg-white" disabled />
+                </div>
+              </div>
+
+              {/* Right Calendar Area */}
+              <div className="col-span-5 md:col-span-3 p-0 md:p-8 bg-white flex flex-col h-full overflow-y-auto">
+                
+                {/* Testimonial moved to top right */}
+                <div className="mb-8 p-6 bg-white rounded-xl border border-brand-border shadow-sm">
                   <p className="italic text-sm text-brand-text-muted mb-4">
                     "The strategy call completely changed how we view our content architecture. We saw a 300% increase in Perplexity citations within 2 months."
                   </p>
@@ -63,24 +73,18 @@ export default function StrategyCallPage() {
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Right Calendar Area */}
-              <div className="col-span-5 md:col-span-3 p-0 md:p-8 bg-white flex flex-col justify-center items-center h-full">
-                {/* Placeholder for Calendly or Cal.com embed */}
-                <div className="w-full max-w-md text-center p-8 border-2 border-dashed border-brand-border rounded-xl">
-                  <div className="w-16 h-16 bg-brand-bg-muted rounded-full flex items-center justify-center mx-auto mb-6 text-brand-primary">
+                {/* Calendar Placeholder */}
+                <div className="flex-grow w-full border-2 border-dashed border-brand-border rounded-xl flex flex-col items-center justify-center p-8 bg-brand-bg/30">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 text-brand-primary shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold mb-4">Calendar Integration</h3>
-                  <p className="text-brand-text-muted mb-6">
-                    Embed your Calendly, HubSpot, or Cal.com booking link right here.
+                  <p className="text-brand-text-muted text-center max-w-sm mb-6">
+                    This box will be replaced by the interactive calendar once we embed the link.
                   </p>
-                  <a href="mailto:sadish.sugumaran@gmail.com" className="inline-block px-8 py-4 bg-brand-primary text-white font-bold rounded-lg shadow hover:bg-brand-primary/90 transition-colors">
-                    Email to Book For Now
-                  </a>
                 </div>
               </div>
 
