@@ -18,6 +18,10 @@
     --input: 214 32% 91%;
     --ring: 226 78% 49%;
     --radius: 0.5rem; /* Stitch Roundness: 8px */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
   }
 
   .dark {
@@ -26,6 +30,10 @@
     --card: 217 33% 17%; /* #1E293B Slate 800 */
     --card-foreground: 210 40% 98%;
     --border: 217 19% 27%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
   }
 }
 
