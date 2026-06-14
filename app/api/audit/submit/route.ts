@@ -171,7 +171,19 @@ Be specific to ${domain} and the business described in the research. Don't be ge
 
     const auditText =
       message.content[0].type === "text" ? message.content[0].text : "{}";
-    const audit = JSON.parse(auditText);
+      
+    // Strip out markdown code blocks if Claude wrapped the JSON
+    let cleanText = auditText.trim();
+    if (cleanText.startsWith("```json")) {
+      cleanText = cleanText.substring(7);
+    } else if (cleanText.startsWith("```")) {
+      cleanText = cleanText.substring(3);
+    }
+    if (cleanText.endsWith("```")) {
+      cleanText = cleanText.substring(0, cleanText.length - 3);
+    }
+    
+    const audit = JSON.parse(cleanText.trim());
 
     // Save report
     await supabase.from("audit_reports").insert({
