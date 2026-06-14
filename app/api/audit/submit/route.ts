@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import { Resend } from "resend";
+import { GoogleGenAI } from "@google/genai";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "http://localhost",
@@ -9,6 +10,10 @@ const supabase = createClient(
 
 const anthropic = new Anthropic({ 
   apiKey: process.env.ANTHROPIC_API_KEY || "dummy" 
+});
+
+const gemini = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY || "dummy"
 });
 
 export async function POST(request: Request) {
@@ -104,9 +109,38 @@ async function generateAndSendAudit(
       domain_age: Math.floor(Math.random() * 15) + 1
     };
 
-    // Generate Tier 1 audit with Claude
+    // Phase 1: Research with Gemini (Google Search Grounding)
+    console.log(`Starting Gemini research for ${domain}...`);
+    let researchContext = "No live research available.";
+    
+    try {
+      if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "dummy") {
+        const geminiResponse = await gemini.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: `Search the web for the domain: ${domain}. Tell me about their main business, apparent tech stack, content quality (do they have a blog?), and obvious technical SEO or AEO visibility footprint. Keep it factual and concise.`,
+          config: {
+            tools: [{ googleSearch: {} }]
+          }
+        });
+        researchContext = geminiResponse.text;
+        console.log("Gemini research completed successfully.");
+      } else {
+        console.warn("GEMINI_API_KEY is not set. Skipping live research.");
+      }
+    } catch (geminiError) {
+      console.error("Gemini research failed:", geminiError);
+      // We don't fail the entire request, just fall back to Claude without research
+    }
+
+    // Phase 2: Audit Generation with Claude
     const auditPrompt = `
-You are an expert AEO auditor. Generate a brief Tier 1 audit for ${domain}.
+You are an expert AEO (Answer Engine Optimization) and Technical SEO auditor. 
+Generate a brief Tier 1 audit for ${domain}.
+
+Here is the live research data freshly fetched from Google Search about this domain:
+"""
+${researchContext}
+"""
 
 Return ONLY valid JSON with this exact structure:
 {
@@ -123,14 +157,10 @@ Return ONLY valid JSON with this exact structure:
   "action_3": "<Specific fix>"
 }
 
-Focus on:
-1. Missing schema markup (likely issue for most sites)
-2. Thin content (if blog exists, likely dormant)
-3. Zero FAQ pages
-4. Page speed issues (likely LCP > 2.5s)
-5. No AEO optimization
-
-Be specific to ${domain}. Don't be generic.
+Focus your findings on the live research provided above. 
+If the research indicates they lack a blog, mention thin content. 
+If they lack schema or AEO optimization, highlight that.
+Be specific to ${domain} and the business described in the research. Don't be generic.
 `;
 
     const message = await anthropic.messages.create({
