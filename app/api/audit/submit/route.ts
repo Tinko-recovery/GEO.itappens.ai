@@ -229,7 +229,20 @@ Be specific to ${domain} and the business described in the research. Don't be ge
   <li>${audit.action_3}</li>
 </ol>
 
-<p><a href="https://itappens.ai/strategy-call">📞 Book 30-min strategy call</a></p>
+<div style="margin-top: 30px; padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+  <h3 style="margin-top: 0; color: #0f172a;">🚀 Unlock Your Comprehensive Market Gap Analysis</h3>
+  <p style="color: #334155; font-size: 14px;">This was just a high-level overview. Want to see exactly how much revenue you are losing to your top 3 competitors in AI search?</p>
+  <ul style="color: #334155; font-size: 14px;">
+    <li>Deep Competitive Scorecard</li>
+    <li>12-Page Custom Action Plan</li>
+    <li>Exact ROI & Revenue Gap Projections</li>
+  </ul>
+  <a href="https://itappens.ai/pro-audit?domain=${domain}" style="display: inline-block; padding: 12px 24px; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px;">
+    Get the Pro Audit (INR 999)
+  </a>
+</div>
+
+<p style="margin-top: 30px;"><a href="https://itappens.ai/strategy-call">📞 Or book a 30-min strategy call</a></p>
 
 <p>Best,<br>Sadish<br>itappens.ai</p>
     `;
