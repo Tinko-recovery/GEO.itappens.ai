@@ -131,6 +131,18 @@ export function howToSchema(input: HowToInput): Schema {
   };
 }
 
+export function breadcrumbSchema(items: { name: string; item: string }[]): Schema {
+  return {
+    "@type": "BreadcrumbList",
+    "itemListElement": items.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.name,
+      "item": absoluteUrl(item.item),
+    })),
+  };
+}
+
 export function schemaGraph(...nodes: Schema[]) {
   return {
     "@context": "https://schema.org",

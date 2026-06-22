@@ -10,7 +10,7 @@ import ProofSection from "@/components/sections/ProofSection";
 
 import { homepageFaqs } from "@/lib/content/site";
 import { buildMetadata } from "@/lib/seo/metadata";
-import { faqSchema, organizationSchema, schemaGraph, serviceSchema } from "@/lib/seo/schema";
+import { faqSchema, organizationSchema, schemaGraph, serviceSchema, breadcrumbSchema } from "@/lib/seo/schema";
 import { Suspense } from "react";
 
 export const metadata: Metadata = buildMetadata({
@@ -30,6 +30,10 @@ const homepageSchema = schemaGraph(
     path: "/",
   }),
   faqSchema(homepageFaqs),
+  breadcrumbSchema([
+    { name: "Home", item: "/" },
+    { name: "Solutions", item: "/#solutions" },
+  ])
 );
 
 export default function HomePage() {
