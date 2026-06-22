@@ -25,6 +25,26 @@ const aeoFaqs = [
   {
     question: "Why is multi-platform corroboration important for AEO?",
     answer: "Conversational AI models do not trust single-source claims. When compiling answers, retrieval systems look for cross-site consensus. If your entity profile (name, services, phone, details) is identical and verified across your domain, LinkedIn, Crunchbase, and third-party directories, the AI engine's confidence score increases, leading to a much higher chance of being cited as the recommended solution."
+  },
+  {
+    question: "Which AI engines should I optimize for?",
+    answer: "You should optimize for the major conversational platforms including ChatGPT (OpenAI), Perplexity AI, Claude (Anthropic), Google Gemini, and SearchGPT. While their underlying LLM families differ, they all employ Retrieval-Augmented Generation (RAG) pipelines that ingest structured sitemaps and raw text chunks."
+  },
+  {
+    question: "Does AEO require paid API integrations?",
+    answer: "No. AEO operates on organic crawler extraction. AI platforms use automated user-agent bots (like GPTBot, ClaudeBot, and Google-Extended) to sweep and index public web pages. Your optimizations are made completely on-page via structured schema networks and clean HTML."
+  },
+  {
+    question: "What is Share of Model Voice (SOMV) in citation analytics?",
+    answer: "Share of Model Voice (SOMV) replaces standard rank positioning in AEO. Because conversational outputs are dynamic and personalized, SOMV tracks the mathematical percentage of times your brand is cited as a source across a designated benchmark of 50–100 target queries."
+  },
+  {
+    question: "Can growth-stage startups compete with enterprise domains in AI search?",
+    answer: "Yes. Retrieval engines evaluate factual density and exact semantic matches over legacy backlink authority. Startups that deploy precise JSON-LD entities and clean, single-intent content clusters frequently out-citation older domains that host unstructured copy."
+  },
+  {
+    question: "How does the llms.txt file help with crawler indexation?",
+    answer: "An llms.txt file is a markdown asset placed in your root folder that acts as a summary directory. It helps scrapers quickly map sitemap routes, documentation hubs, and entity pages without consuming excessive crawl budgets, speeding up citation updates."
   }
 ];
 

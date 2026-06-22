@@ -14,7 +14,7 @@ If your website relies solely on paragraph text to describe your brand, services
 
 **JSON-LD Structured Data** acts as a Rosetta Stone for AI scraper agents. By mapping your site with precise schemas, you translate your business assets into an unambiguous, machine-readable format. 
 
-Here is the exact schema markup blueprint required to optimize your brand for Generative Engine Optimization (GEO).
+Here is the exact schema markup blueprint required to optimize your brand for [Generative Engine Optimization (GEO)](/geo).
 
 ---
 

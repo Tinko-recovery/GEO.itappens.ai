@@ -8,7 +8,7 @@ readTime: "6 min read"
 
 ## Introduction: The New Retrieval Frontier
 
-To understand Answer Engine Optimization (AEO), you must first demystify how Large Language Models (LLMs) like ChatGPT, Gemini, and Claude retrieve information from the web and construct citations.
+To understand [Answer Engine Optimization (AEO)](/aeo), you must first demystify how Large Language Models (LLMs) like ChatGPT, Gemini, and Claude retrieve information from the web and construct citations.
 
 Unlike traditional search engines, which index pages based on keyword occurrence and link popularity (like Google’s PageRank), generative engines retrieve information using a complex architecture known as **Retrieval-Augmented Generation (RAG)**.
 

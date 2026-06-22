@@ -14,7 +14,7 @@ But the internet is undergoing a structural shift. The introduction of Large Lan
 
 Traditional search engines are directories of links. Conversational engines are synthesizers of answers.
 
-In this new reality, ranking #1 on Google is no longer the ultimate goal. The new objective is to become the **canonical, trusted citation inside the AI's generated response**. This is the domain of **Answer Engine Optimization (AEO)**.
+In this new reality, ranking #1 on Google is no longer the ultimate goal. The new objective is to become the **canonical, trusted citation inside the AI's generated response**. This is the domain of [Answer Engine Optimization (AEO)](/aeo).
 
 ---
 

@@ -140,6 +140,26 @@ export const geoFaqs: FaqItem[] = [
     answer:
       "Technical Signals can be delivered as a fixed-scope sprint. Ongoing GEO execution and the platform layer are scoped based on query set, content volume, and reporting depth.",
   },
+  {
+    question: "How does GEO improve click-through rates on traditional search?",
+    answer:
+      "Generative Engine Optimization (GEO) increases traditional search CTR by securing citation links within search engine AI Overviews (formerly SGE). Being recommended at the top of generative search panels drives high-intent referral traffic directly to your pages.",
+  },
+  {
+    question: "What are the most critical technical signals in GEO?",
+    answer:
+      "The core technical signals include canonical URL consolidation to prevent indexing bloat, clear robots.txt rules that permit AI crawler indexation, structured Organization and LocalBusiness schemas, and a verified llms.txt asset for scraper parsing.",
+  },
+  {
+    question: "How does the RAG scoring system evaluate local business entities?",
+    answer:
+      "Local RAG algorithms score entities based on Name-Address-Phone (NAP) consistency across directories, customer review sentiment on G2 and Google, and geographical proximity. GEO consolidates these profiles with structured schemas to secure AI Local Pack placements.",
+  },
+  {
+    question: "What characterizes a RAG-friendly content structure?",
+    answer:
+      "A RAG-friendly layout prioritizes clear header structures (H2, H3), lists, tables, and an answer-first paragraph structure. This design enables retrieval scrapers to easily chunk, score, and synthesize your text facts without formatting errors.",
+  },
 ];
 
 export const buyerFaqs: FaqItem[] = [
