@@ -47,6 +47,14 @@ export function organizationSchema(): Schema {
       addressRegion: "Karnataka",
       addressCountry: "IN",
     },
+    founder: {
+      "@type": "Person",
+      name: "Sadish Sugumaran",
+      jobTitle: "Founder & Principal",
+      sameAs: [
+        "https://www.linkedin.com/in/sadish-sugumaran-a890b016/"
+      ]
+    }
   };
 }
 
@@ -94,7 +102,12 @@ export function articleSchema(input: ArticleInput): Schema {
     dateModified: input.dateModified,
     mainEntityOfPage: absoluteUrl(input.path),
     author: {
-      "@id": `${siteConfig.url}/#organization`,
+      "@type": "Person",
+      name: "Sadish Sugumaran",
+      jobTitle: "Founder & Principal",
+      sameAs: [
+        "https://www.linkedin.com/in/sadish-sugumaran-a890b016/"
+      ]
     },
     publisher: {
       "@id": `${siteConfig.url}/#organization`,
