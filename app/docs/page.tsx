@@ -130,7 +130,7 @@ export default function DocsPage() {
             </p>
             <ol>
               <li>Once you select a paid plan, your mission is staged with an <code>AWAITING_PAYMENT</code> status.</li>
-              <li>Our founder (Sadish) will be instantly notified.</li>
+              <li>Our team will be instantly notified.</li>
               <li>You will receive a secure payment link via email.</li>
               <li>Upon payment confirmation, the mission is manually authorized via the Mission Cockpit, unleashing the full multi-agent python workforce on your target domain.</li>
             </ol>

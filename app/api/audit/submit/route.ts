@@ -244,7 +244,7 @@ Be specific to ${domain} and the business described in the research. Don't be ge
 
 <p style="margin-top: 30px;"><a href="https://itappens.ai/strategy-call">📞 Or book a 30-min strategy call</a></p>
 
-<p>Best,<br>Sadish<br>itappens.ai</p>
+<p>Best,<br>The itappens.ai Team</p>
     `;
 
     await resend.emails.send({
