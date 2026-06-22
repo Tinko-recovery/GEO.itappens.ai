@@ -10,7 +10,7 @@ import ProofSection from "@/components/sections/ProofSection";
 
 import { homepageFaqs } from "@/lib/content/site";
 import { buildMetadata } from "@/lib/seo/metadata";
-import { faqSchema, organizationSchema, schemaGraph, serviceSchema, breadcrumbSchema } from "@/lib/seo/schema";
+import { faqSchema, organizationSchema, schemaGraph, serviceSchema, breadcrumbSchema, localBusinessSchema } from "@/lib/seo/schema";
 import { Suspense } from "react";
 
 export const metadata: Metadata = buildMetadata({
@@ -23,6 +23,7 @@ export const metadata: Metadata = buildMetadata({
 
 const homepageSchema = schemaGraph(
   organizationSchema(),
+  localBusinessSchema(),
   serviceSchema({
     name: "GEO and AEO consultancy for B2B SaaS",
     description:

@@ -58,6 +58,52 @@ export function organizationSchema(): Schema {
   };
 }
 
+export function localBusinessSchema(): Schema {
+  return {
+    "@type": "LocalBusiness",
+    "name": "itappens.ai",
+    "url": siteConfig.url,
+    "hasOfferingDescription": [
+      {
+        "@type": "Service",
+        "name": "Answer Engine Optimization (AEO)",
+        "description": "Dominate ChatGPT, Perplexity, and Gemini. We build the technical infrastructure and semantic relevance required to make your brand the primary retrieved entity in AI-generated responses.",
+        "provider": {
+          "@type": "Organization",
+          "name": "itappens.ai",
+        },
+      },
+      {
+        "@type": "Service",
+        "name": "Generative Engine Optimization (GEO)",
+        "description": "Structure your domain for LLM ingestion. We optimize website architecture, schema, and content to align with agentic search algorithms.",
+        "provider": {
+          "@type": "Organization",
+          "name": "itappens.ai",
+        },
+      },
+      {
+        "@type": "Service",
+        "name": "AI Content Clusters",
+        "description": "Programmatic, high-quality content generation that matches buyer intent. Build topical authority hubs designed specifically for LLM ingestion.",
+        "provider": {
+          "@type": "Organization",
+          "name": "itappens.ai",
+        },
+      },
+      {
+        "@type": "Service",
+        "name": "Citation Authority Building",
+        "description": "Secure high-quality mentions and links from authoritative domains already trusted and cited by AI engines.",
+        "provider": {
+          "@type": "Organization",
+          "name": "itappens.ai",
+        },
+      }
+    ]
+  };
+}
+
 export function serviceSchema(input: ServiceInput): Schema {
   return {
     "@type": "Service",
