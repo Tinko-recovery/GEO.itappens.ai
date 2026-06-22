@@ -278,5 +278,9 @@ export const geoPackages = [
 
 export const primaryNav = [
   { label: "Home", href: "/" },
-  { label: "Solutions", href: "/#solutions" },
+  { label: "AEO Guide", href: "/aeo" },
+  { label: "GEO Framework", href: "/geo" },
+  { label: "Case Studies", href: "/case-studies" },
+  { label: "GEO Blog", href: "/blog" },
+  { label: "About", href: "/about" },
 ];

@@ -16,21 +16,100 @@ export default function SiteFooter() {
         </div>
         
         <div className="md:w-1/4">
-          <h4 className="text-sm font-bold mb-6 uppercase tracking-wider text-brand-text">Solutions</h4>
+          <h4 className="text-sm font-bold mb-6 uppercase tracking-wider text-brand-text">Pillars & Solutions</h4>
           <ul className="flex flex-col gap-3 list-none p-0">
-            {primaryNav.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            <li>
+              <Link href="/aeo" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                AEO Guide (Answer Engine)
+              </Link>
+            </li>
+            <li>
+              <Link href="/geo" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                GEO Framework (Generative)
+              </Link>
+            </li>
+            <li>
+              <Link href="/content-clusters" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                AI Content Clusters
+              </Link>
+            </li>
+            <li>
+              <Link href="/citation-authority" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                Citation Authority Building
+              </Link>
+            </li>
+            <li>
+              <Link href="/solutions/visible-in-ai" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                AI Visibility Program
+              </Link>
+            </li>
+            <li>
+              <Link href="/case-studies" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                Case Proofs
+              </Link>
+            </li>
           </ul>
         </div>
 
         <div className="md:w-1/4">
-          <h4 className="text-sm font-bold mb-6 uppercase tracking-wider text-brand-text">Contact</h4>
+          <h4 className="text-sm font-bold mb-6 uppercase tracking-wider text-brand-text">Resources & Crawling</h4>
           <ul className="flex flex-col gap-3 list-none p-0">
+            <li>
+              <Link href="/blog" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                GEO Blog
+              </Link>
+            </li>
+            <li>
+              <Link href="/answers" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                AI Answers Hub
+              </Link>
+            </li>
+            <li>
+              <Link href="/geo-guide" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                2026 GEO Guide
+              </Link>
+            </li>
+            <li>
+              <Link href="/insights" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                GEO vs SEO Insights
+              </Link>
+            </li>
+            <li>
+              <Link href="/faq" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                Service FAQ
+              </Link>
+            </li>
+            <li>
+              <Link href="/how-it-works" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                How It Works
+              </Link>
+            </li>
+            <li>
+              <a href="/llms.txt" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                llms.txt directory
+              </a>
+            </li>
+            <li>
+              <a href="/sitemap.xml" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                Sitemap Index
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="md:w-1/4">
+          <h4 className="text-sm font-bold mb-6 uppercase tracking-wider text-brand-text">Company</h4>
+          <ul className="flex flex-col gap-3 list-none p-0">
+            <li>
+              <Link href="/about" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link href="/audit" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
+                Request Free Audit
+              </Link>
+            </li>
             <li>
               <a href={`mailto:${siteConfig.email}`} className="text-[15px] font-semibold text-brand-primary hover:text-brand-primary-hover transition-colors no-underline">
                 {siteConfig.email}
@@ -51,7 +130,6 @@ export default function SiteFooter() {
         </p>
         <div className="flex gap-6">
           <Link href="/privacy" className="text-sm text-brand-text-muted hover:text-brand-text transition-colors no-underline">Privacy Policy</Link>
-          <Link href="/terms" className="text-sm text-brand-text-muted hover:text-brand-text transition-colors no-underline">Terms of Service</Link>
         </div>
       </div>
     </footer>
