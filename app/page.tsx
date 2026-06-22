@@ -16,7 +16,7 @@ import { Suspense } from "react";
 export const metadata: Metadata = buildMetadata({
   title: "itappens.ai | Global GEO & AEO Consultancy for B2B SaaS",
   description:
-    "itappens.ai is a dedicated GEO consultancy helping international B2B SaaS brands and startups get cited in ChatGPT, Perplexity, and Gemini.",
+    "Answer Engine Optimization (AEO) & Generative Engine Optimization (GEO) consultancy. Get cited in ChatGPT, Perplexity, Claude, and Gemini through technical signals, content strategy, and entity authority building.",
   path: "/",
   keywords: ["GEO agency for SaaS", "AEO consultant B2B", "LLM citation optimization"],
 });

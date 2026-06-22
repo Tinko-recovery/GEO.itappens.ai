@@ -100,22 +100,22 @@ export const homepageFaqs: FaqItem[] = [
   {
     question: "What does itappens.ai do?",
     answer:
-      "itappens.ai helps brands become visible, trusted, and repeatedly cited across AI platforms. The work combines technical signals, answer-engine content, entity-building, and weekly citation tracking.",
+      "itappens.ai is an Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) consultancy that helps B2B SaaS brands become visible and cited in AI answer engines like ChatGPT, Perplexity, Claude, and Gemini. The service combines four core components: technical signal optimization (schema, canonicals, llms.txt), answer-engine content strategy (snippet-optimized, entity-focused), entity authority building (brand data extraction, disambiguation), and citation tracking and authority monitoring. Unlike traditional SEO which targets Google rankings, AEO targets citation authority—ensuring your brand is actively recommended by AI models as the primary trusted source.",
   },
   {
     question: "Why lead with Technical Signals first?",
     answer:
-      "Technical Signals create the machine-readable base layer. Without clean canonicals, schema, llms.txt, and extractable HTML, later content and entity work compound more slowly.",
+      "Technical Signals establish the foundational, machine-readable base layer of your website before any content is written. Without clean canonicals, sitemaps, semantic HTML tags, and verified llms.txt and llms-full.txt files, search engine crawlers and LLM retrieval-augmented generation (RAG) systems struggle to parse your domain without error. By deploying these signals first, you ensure that future content hubs, brand claims, and entity-building efforts are easily extracted and corroborated by AI models, speeding up citation indexing times and preventing indexing conflicts.",
   },
   {
     question: "Who is this built for?",
     answer:
-      "itappens.ai works with B2B SaaS companies and growth-stage startups globally, with deep roots in India. Clients are typically in the US, UK, Australia, and India.",
+      "itappens.ai is built specifically for growth-stage B2B SaaS founders, enterprise startups, and marketing leaders globally who want to secure a first-mover advantage in AI search. Our framework is tailored to resolve high-intent research and vendor evaluation queries where prospects ask engines for platform recommendations. While we have deep roots in India (operating under Blocks and Loops Technologies Pvt Ltd in Bengaluru), we serve global SaaS brands across the United States, United Kingdom, Europe, Australia, and India looking to build defensible citation moats.",
   },
   {
     question: "How does AEO support traditional SEO?",
     answer:
-      "Answer Engine Optimization (AEO) complements traditional SEO by ensuring your brand is not just indexed, but actively cited as the authoritative answer by AI models.",
+      "Answer Engine Optimization (AEO) acts as a high-density overlay that complements and accelerates traditional SEO. While standard SEO focuses on keyword density and backlinks to rank in classic Search Engine Results Pages (SERPs), AEO optimizes page layouts and metadata for LLM crawlers using retrieval-augmented generation (RAG). By implementing answer-first structures like the Inverted Pyramid alongside deep schema markups (Organization, Service, FAQPage, BreadcrumbList), you improve your visibility in search engine AI Overviews (SGE) and secure direct attribution citations inside conversational AI answers.",
   },
 ];
 
