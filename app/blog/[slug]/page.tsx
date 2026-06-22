@@ -2,9 +2,27 @@ import { getPostData, getSortedPostsData } from "@/lib/blog";
 import { notFound } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { buildMetadata } from "@/lib/seo/metadata";
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
+    const { slug } = await props.params;
+    let post;
+    try {
+        post = await getPostData(slug);
+    } catch {
+        return {};
+    }
+    if (!post) return {};
+    return buildMetadata({
+        title: `${post.title} | itappens.ai Blog`,
+        description: post.excerpt,
+        path: `/blog/${slug}`,
+        type: "article",
+    });
+}
 
 export default async function BlogPost(props: { params: Promise<{ slug: string }> }) {
     const { slug } = await props.params;
