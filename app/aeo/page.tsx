@@ -1,259 +1,166 @@
-import React from 'react';
-import Link from 'next/link';
-import { Bot, Image as ImageIcon, CalendarClock, Zap, ShoppingCart, Globe, CheckCircle2 } from 'lucide-react';
-import NavBar from '@/components/NavBar';
+import type { Metadata } from "next";
+import Link from "next/link";
+import JsonLd from "@/components/JsonLd";
+import NavBar from "@/components/NavBar";
+import SiteFooter from "@/components/SiteFooter";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { articleSchema, faqSchema, organizationSchema, schemaGraph, serviceSchema } from "@/lib/seo/schema";
 
-export const metadata = {
-  title: 'itappens AEO | The Answer Engine Optimization Auto-Blogger',
-  description: 'Fully automated, deeply researched content pipelines that publish directly to your WordPress.',
-};
+export const metadata: Metadata = buildMetadata({
+  title: "What is Answer Engine Optimization (AEO)? | itappens.ai",
+  description: "A deep dive into Answer Engine Optimization (AEO). Learn how to make your brand the primary cited source in conversational AI search engines.",
+  path: "/aeo",
+  keywords: ["Answer Engine Optimization", "AEO guide", "LLM citations", "AI Search visibility"],
+});
 
-export default function AeoLandingPage() {
+const aeoFaqs = [
+  {
+    question: "How does Answer Engine Optimization (AEO) differ from traditional SEO?",
+    answer: "Traditional SEO focuses on optimizing keyword positioning and building page authority to rank high in the 10 blue links of search engine results pages. AEO, on the other hand, structures your digital footprint specifically for machine readability so that conversational AI engines like ChatGPT and Perplexity can synthesize your data into direct answers and attribute them to you via citation links."
+  },
+  {
+    question: "What is the Inverted Pyramid content structure in AEO?",
+    answer: "The Inverted Pyramid structure places a concise, bolded 60–80 word summary definition directly under the main heading. This is followed by structured bullets, lists, or tables that explain the details, and finally, deep explanatory prose. This layout allows LLM web scraper agents to extract a high-density, accurate answer chunk immediately, maximizing citation frequency."
+  },
+  {
+    question: "Why is multi-platform corroboration important for AEO?",
+    answer: "Conversational AI models do not trust single-source claims. When compiling answers, retrieval systems look for cross-site consensus. If your entity profile (name, services, phone, details) is identical and verified across your domain, LinkedIn, Crunchbase, and third-party directories, the AI engine's confidence score increases, leading to a much higher chance of being cited as the recommended solution."
+  }
+];
+
+const aeoSchema = schemaGraph(
+  organizationSchema(),
+  serviceSchema({
+    name: "Answer Engine Optimization (AEO)",
+    description: "Structuring technical signals, optimizing schema networks, and building content clusters to maximize AI citation share.",
+    path: "/aeo",
+  }),
+  articleSchema({
+    headline: "What is Answer Engine Optimization (AEO)?",
+    description: "A complete guide to making your business visible in conversational AI answer engines like ChatGPT, Claude, and Gemini.",
+    path: "/aeo",
+    datePublished: "2026-06-22",
+    dateModified: "2026-06-22",
+  }),
+  faqSchema(aeoFaqs, "/aeo")
+);
+
+const subsections = [
+  {
+    num: "01",
+    title: "The Shift from Links to Generative Syntheses",
+    description: "Traditional search engines act as directories, directing users to click outward to external websites. Generative engines read, summarize, and synthesize the internet's information directly within the chat window. AEO shifts your goal from winning clicks to winning the citations that power these summaries."
+  },
+  {
+    num: "02",
+    title: "How RAG (Retrieval-Augmented Generation) Triggers Citations",
+    description: "Answer engines do not make up facts; they pull text passages from a vectorized index of web crawls, score their relevance and factual density, and pass them to the LLM to generate the final response. If your website provides structured, high-density passages, it earns the citation."
+  },
+  {
+    num: "03",
+    title: "Structural Page Requirements for LLM Extraction",
+    description: "To make your pages easy for LLMs to extract, you must use clear semantic HTML headers (H1, H2, H3), place a bolded summary definition of 60–80 words (the Golden Snippet) at the top, and back it up with tables, markdown lists, and structured JSON-LD data."
+  },
+  {
+    num: "04",
+    title: "Entity Authority & Off-Site Corroboration",
+    description: "AI engines corroborate claims by scanning multiple domains. If your company's name, offerings, and leadership are mentioned consistently across directories, LinkedIn, news releases, and industry publications, your entity authority score increases, making your site a trusted reference."
+  },
+  {
+    num: "05",
+    title: "Monitoring Share of Voice across AI Platforms",
+    description: "Unlike tracking Google rank positions, tracking AEO requires measuring your Share of Model Voice (SOMV). This is the frequency with which your brand is cited across multiple query runs in platforms like ChatGPT, Claude, Gemini, and Perplexity when users ask commercial-intent questions."
+  }
+];
+
+export default function AeoPillarPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500/30">
-      
-      {/* Navigation */}
-      <NavBar logoSuffix="AEO" />
+    <div className="page-shell">
+      <JsonLd data={aeoSchema} />
+      <NavBar />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] opacity-20 pointer-events-none">
-          <div className="absolute inset-0 bg-indigo-500 blur-[120px] rounded-full mix-blend-screen"></div>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-slate-200 text-sm font-medium text-indigo-600 mb-8 backdrop-blur-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-            </span>
-            Powered by Claude 3.5 Haiku + Unsplash
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-            Answer Engine Optimization <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">
-              On Autopilot.
-            </span>
-          </h1>
-          
-          <p className="mt-6 text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            itappens AEO autonomously researches, writes, illustrates, and drip-publishes deep-dive SEO/AEO articles directly to your WordPress. Designed for maximum scale and extreme cost-efficiency.
-          </p>
-          
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/itcontents" className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] hover:-translate-y-0.5">
-              Start Your Free Trial
-            </Link>
-            <Link href="#how-it-works" className="px-8 py-4 bg-white hover:bg-slate-800 border border-slate-200 text-slate-900 font-bold rounded-xl transition-all">
-              See How It Works
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats / Trust Bar */}
-      <section className="border-y border-slate-200/60 bg-white/20 backdrop-blur-sm py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-extrabold text-slate-900 mb-2">98%</div>
-              <div className="text-sm text-slate-600 font-medium">Publish Success Rate</div>
-            </div>
-            <div>
-              <div className="text-4xl font-extrabold text-slate-900 mb-2">$0.02</div>
-              <div className="text-sm text-slate-600 font-medium">Avg Cost Per Article</div>
-            </div>
-            <div>
-              <div className="text-4xl font-extrabold text-slate-900 mb-2">30+</div>
-              <div className="text-sm text-slate-600 font-medium">Topics Planned Instantly</div>
-            </div>
-            <div>
-              <div className="text-4xl font-extrabold text-slate-900 mb-2">Zero</div>
-              <div className="text-sm text-slate-600 font-medium">Human Intervention</div>
+      <main>
+        {/* Hero Section */}
+        <header className="section dark-section" style={{ padding: "160px 0 100px", position: "relative" }}>
+          <div className="container" style={{ maxWidth: "900px" }}>
+            <span className="overline" style={{ color: "var(--cyan)" }}>Pillar 1: Answer Engine Optimization</span>
+            <h1 className="headline-xl" style={{ margin: "24px 0", lineHeight: 1.1 }}>
+              What is Answer Engine <br />
+              <span style={{ color: "var(--cyan)" }}>Optimization (AEO)?</span>
+            </h1>
+            
+            {/* The Golden Snippet (60-80 words, snippet-optimized) */}
+            <div className="card-bento" style={{ 
+              backgroundColor: "rgba(255, 255, 255, 0.05)", 
+              border: "1px solid rgba(255, 255, 255, 0.1)", 
+              padding: "32px",
+              marginTop: "40px",
+              borderRadius: "16px"
+            }}>
+              <span style={{ fontSize: "11px", fontWeight: 800, color: "var(--cyan)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: "8px" }}>
+                Summary Box (AEO Snippet)
+              </span>
+              <p className="text-large" style={{ color: "#fff", margin: 0, fontWeight: 500, lineHeight: 1.6 }}>
+                <strong>Answer Engine Optimization (AEO)</strong> is a digital marketing methodology that optimizes a brand's web presence for retrieval by conversational AI systems like ChatGPT, Perplexity, and Gemini. By implementing structured entity schemas, factual content clusters, and cross-site verification, AEO ensures your website is parsed as the authoritative source and cited as the recommended answer in generated AI search responses.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </header>
 
-      {/* Features Grid */}
-      <section id="features" className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">Everything you need for <br/>automated dominance.</h2>
-            <p className="text-lg text-slate-600">From AI keyword planning to final WordPress publication.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Feature Card 1 */}
-            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
-              <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
-                <Bot className="w-6 h-6 text-indigo-400" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">AI Article Writing</h3>
-              <p className="text-slate-600 leading-relaxed">Claude 3.5 Haiku generates structurally perfect, 2000+ word AEO articles optimized for both Google and Perplexity.</p>
+        {/* Subsections Grid */}
+        <section className="section" style={{ padding: "120px 0", backgroundColor: "var(--light-bg)" }}>
+          <div className="container">
+            <div style={{ textAlign: "center", marginBottom: "80px" }}>
+              <span className="overline">Framework Detail</span>
+              <h2 className="headline-lg">The 5 Pillars of <span style={{ color: "var(--blue)" }}>AEO Authority.</span></h2>
             </div>
-
-            {/* Feature Card 2 */}
-            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
-              <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
-                <ImageIcon className="w-6 h-6 text-indigo-400" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Zero-Cost Imagery</h3>
-              <p className="text-slate-600 leading-relaxed">Autonomous Unsplash integration fetches and inserts highly relevant, royalty-free photography without eating into your margins.</p>
-            </div>
-
-            {/* Feature Card 3 */}
-            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
-              <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
-                <Globe className="w-6 h-6 text-indigo-400" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Direct WP Integration</h3>
-              <p className="text-slate-600 leading-relaxed">Securely connects to your WordPress REST API to upload images directly to the Media Library and publish the post.</p>
-            </div>
-
-            {/* Feature Card 4 */}
-            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
-              <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
-                <CalendarClock className="w-6 h-6 text-indigo-400" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Smart Drip Scheduler</h3>
-              <p className="text-slate-600 leading-relaxed">Queue up 30 articles and let our Upstash QStash cron workers drip-feed them to your blog at optimal intervals.</p>
-            </div>
-
-            {/* Feature Card 5 */}
-            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm hover:border-indigo-500/50 transition-colors">
-              <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
-                <Zap className="w-6 h-6 text-indigo-400" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Instant Keyword Planner</h3>
-              <p className="text-slate-600 leading-relaxed">Enter a seed keyword and let AI instantly map out a 30-day topical cluster strategy. 1-click approve into your queue.</p>
-            </div>
-
-            {/* Feature Card 6 */}
-            <div className="bg-white/40 border border-indigo-500/30 p-8 rounded-2xl backdrop-blur-sm relative overflow-hidden group">
-              <div className="absolute top-0 right-0 bg-indigo-600 text-[10px] font-bold px-3 py-1 rounded-bl-lg">GAME CHANGER</div>
-              <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/30 group-hover:scale-110 transition-transform">
-                <ShoppingCart className="w-6 h-6 text-indigo-600" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">E-Commerce Injector</h3>
-              <p className="text-slate-600 leading-relaxed">Paste your Shopify/Woo product link. The AI naturally weaves your product as the ultimate solution inside the educational article.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-24 bg-white/20 border-y border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">Pricing that respects your margins.</h2>
-            <p className="text-lg text-slate-600">Pay for credits, not seats. Unused credits roll over.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Starter */}
-            <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 flex flex-col">
-              <h3 className="text-xl font-semibold text-slate-600 mb-2">Starter</h3>
-              <div className="text-4xl font-extrabold text-slate-900 mb-2">$29<span className="text-lg text-slate-500 font-normal">/mo</span></div>
-              <p className="text-slate-600 text-sm mb-6 border-b border-slate-200 pb-6">Perfect for solo bloggers.</p>
-              
-              <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 1,000 Credits/mo</li>
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 1 WordPress Site</li>
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Auto Scheduling</li>
-              </ul>
-              <Link href="/itcontents" className="w-full py-3 px-4 bg-white hover:bg-slate-800 border border-slate-200 rounded-xl text-center font-semibold transition-colors">
-                Start Free Trial
-              </Link>
-            </div>
-
-            {/* Growth (Popular) */}
-            <div className="bg-white border-2 border-indigo-500 rounded-3xl p-8 flex flex-col relative shadow-[0_0_30px_rgba(79,70,229,0.15)] transform md:-translate-y-4">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
-              <h3 className="text-xl font-semibold text-indigo-600 mb-2">Growth</h3>
-              <div className="text-4xl font-extrabold text-slate-900 mb-2">$69<span className="text-lg text-slate-500 font-normal">/mo</span></div>
-              <p className="text-slate-600 text-sm mb-6 border-b border-slate-200 pb-6">For serious content operations.</p>
-              
-              <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 2,500 Credits/mo</li>
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Up to 5 WordPress Sites</li>
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> E-Commerce Injector</li>
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> AI Keyword Planner</li>
-              </ul>
-              <Link href="/itcontents" className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-center font-semibold text-slate-900 transition-colors">
-                Get Started
-              </Link>
-            </div>
-
-            {/* Agency */}
-            <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 flex flex-col">
-              <h3 className="text-xl font-semibold text-slate-600 mb-2">Agency</h3>
-              <div className="text-4xl font-extrabold text-slate-900 mb-2">$159<span className="text-lg text-slate-500 font-normal">/mo</span></div>
-              <p className="text-slate-600 text-sm mb-6 border-b border-slate-200 pb-6">Manage multiple client portfolios.</p>
-              
-              <ul className="space-y-4 mb-8 flex-1">
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 6,000 Credits/mo</li>
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Unlimited WordPress Sites</li>
-                <li className="flex items-center gap-3 text-sm text-slate-600"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> Dedicated Account Manager</li>
-              </ul>
-              <Link href="/itcontents" className="w-full py-3 px-4 bg-white hover:bg-slate-800 border border-slate-200 rounded-xl text-center font-semibold transition-colors">
-                Contact Sales
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">Real results. Real revenue.</h2>
-            <p className="text-lg text-slate-600">Join agencies like NewKRINN's Verdict in dominating search.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm">
-              <div className="text-amber-400 mb-4 text-xl">★★★★★</div>
-              <p className="text-slate-600 leading-relaxed mb-6">"Our business hotel now gets 2-3 new guest inquiries every week purely from organic search. The AEO engine transformed our online presence completely while costing us pennies compared to our old marketing."</p>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-indigo-900 rounded-full flex items-center justify-center text-indigo-600 font-bold">NK</div>
-                <div>
-                  <div className="font-bold text-slate-900">NewKRINN's Verdict</div>
-                  <div className="text-sm text-slate-600">Business Hotel</div>
+            
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "32px" }}>
+              {subsections.map((sub) => (
+                <div key={sub.num} className="card-bento" style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "40px", backgroundColor: "#fff" }}>
+                  <div style={{ fontSize: "32px", fontWeight: 900, color: "var(--blue)", opacity: 0.3 }}>
+                    {sub.num}
+                  </div>
+                  <h3 className="headline-md" style={{ margin: 0, color: "var(--navy)" }}>{sub.title}</h3>
+                  <p style={{ color: "var(--slate)", fontSize: "15px", lineHeight: 1.6, margin: 0 }}>
+                    {sub.description}
+                  </p>
                 </div>
-              </div>
+              ))}
             </div>
 
-            <div className="bg-white/40 border border-slate-200 p-8 rounded-2xl backdrop-blur-sm">
-              <div className="text-amber-400 mb-4 text-xl">★★★★★</div>
-              <p className="text-slate-600 leading-relaxed mb-6">"Just add domain, connect WordPress — it does the rest. We added our Shopify product links and it writes content that actually converts readers into buyers. Organic bookings increased 50% in just 4 months."</p>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-emerald-900 rounded-full flex items-center justify-center text-emerald-300 font-bold">PB</div>
-                <div>
-                  <div className="font-bold text-slate-900">PackUrBags</div>
-                  <div className="text-sm text-slate-600">E-Commerce Retailer</div>
-                </div>
-              </div>
+            {/* CTAs */}
+            <div style={{ textAlign: "center", marginTop: "80px", display: "flex", gap: "20px", justifyContent: "center" }}>
+              <Link href="/solutions/visible-in-ai" className="btn-primary">
+                Get Visible in AI Solutions
+              </Link>
+              <Link href="/case-studies" className="btn-secondary">
+                See Our Case Studies
+              </Link>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200/60 bg-slate-50 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <Bot className="w-6 h-6 text-slate-600" />
-            <span className="text-lg font-bold text-slate-600 tracking-tight">itappens <span className="text-slate-500">AEO</span></span>
+        {/* FAQ Section */}
+        <section className="section" style={{ padding: "120px 0", borderTop: "1px solid var(--border-light)", backgroundColor: "#fff" }}>
+          <div className="container-narrow">
+            <div style={{ textAlign: "center", marginBottom: "64px" }}>
+              <span className="overline">FAQ</span>
+              <h2 className="headline-lg">Common questions about <span style={{ color: "var(--blue)" }}>AEO strategy.</span></h2>
+            </div>
+            <ul style={{ listStyle: "none", padding: 0 }}>
+              {aeoFaqs.map((faq, index) => (
+                <li key={index} style={{ padding: "24px 0", borderBottom: "1px solid var(--border-light)" }}>
+                  <h3 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "12px", color: "var(--navy)" }}>{faq.question}</h3>
+                  <p style={{ color: "var(--slate)", fontSize: "16px", lineHeight: 1.6, margin: 0 }}>{faq.answer}</p>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="text-sm text-slate-500">
-            © 2026 itappens.ai. All rights reserved.
-          </div>
-        </div>
-      </footer>
+        </section>
+      </main>
+
+      <SiteFooter />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-
+import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import NavBar from "@/components/NavBar";
 import SiteFooter from "@/components/SiteFooter";
@@ -7,26 +7,24 @@ import { caseStudies } from "@/lib/content/caseStudies";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { articleSchema, faqSchema, schemaGraph } from "@/lib/seo/schema";
 
-const selfCase = caseStudies[0];
-
 export const metadata: Metadata = buildMetadata({
-  title: "Case studies and proof",
-  description:
-    "The /case-studies page launches with the itappens.ai self-case and a proof posture designed for future client case studies.",
+  title: "AEO & GEO Case Studies | itappens.ai",
+  description: "Explore our collection of Generative Engine Optimization (GEO) and Answer Engine Optimization (AEO) case studies, including local hospitality and enterprise healthcare.",
   path: "/case-studies",
-  keywords: ["GEO case study", "AEO proof", "AI citation case study"],
-  type: "article",
+  keywords: ["GEO case studies", "AEO client results", "AI citation proof"],
 });
+
+const selfCase = caseStudies[0];
 
 const caseStudiesSchema = schemaGraph(
   articleSchema({
-    headline: selfCase.headline,
-    description: selfCase.summary,
+    headline: "itappens.ai Case Studies and Proof Directory",
+    description: "Proof of citation growth, local search optimization, and structured schema implementation results for SaaS, healthcare, and hospitality brands.",
     path: "/case-studies",
     datePublished: selfCase.publishedAt,
     dateModified: selfCase.updatedAt,
   }),
-  faqSchema(selfCase.faq),
+  faqSchema(selfCase.faq)
 );
 
 export default function CaseStudiesPage() {
@@ -35,77 +33,75 @@ export default function CaseStudiesPage() {
       <JsonLd data={caseStudiesSchema} />
       <NavBar />
       <main>
-        <header className="section" style={{ padding: '160px 0 100px', backgroundColor: 'var(--bg)' }}>
-          <div className="container grid-2col">
-            <div>
-              <span className="overline">/case-studies</span>
-              <h1 className="headline-xl" style={{ margin: '24px 0', letterSpacing: '-0.04em' }}>
-                Proof starts with the <br />
-                <span style={{ color: 'var(--accent)' }}>itappens.ai self-case.</span>
-              </h1>
-              <p className="text-sub" style={{ marginBottom: '40px' }}>{selfCase.summary}</p>
-            </div>
-            <div className="card-bento" style={{ padding: '40px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <span className="overline">Evidence Label</span>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--text-dim)', fontWeight: 500 }}>{selfCase.evidenceLabel}</p>
-              <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'var(--text-muted)' }}>
-                This page uses the itappens.ai deployment itself as live proof. Client case studies are added only when permission and verified data are ready.
-              </p>
-            </div>
+        {/* Header */}
+        <header className="section dark-section" style={{ padding: "160px 0 100px", position: "relative" }}>
+          <div className="container" style={{ maxWidth: "900px" }}>
+            <span className="overline" style={{ color: "var(--cyan)" }}>/case-studies</span>
+            <h1 className="headline-xl" style={{ margin: "24px 0", lineHeight: 1.1 }}>
+              Evidence of AI <br />
+              <span style={{ color: "var(--cyan)" }}>Citation Dominance.</span>
+            </h1>
+            <p className="text-large" style={{ color: "rgba(255,255,255,0.7)", maxWidth: "720px", margin: 0 }}>
+              Discover how brands secure recommendations, build local pack rankings, and increase citation voice share across ChatGPT, Perplexity, Claude, and Gemini.
+            </p>
           </div>
         </header>
 
-        <section className="section" style={{ padding: '120px 0', borderTop: '1px solid var(--border)' }}>
+        {/* Directory Grid */}
+        <section className="section" style={{ padding: "120px 0", backgroundColor: "var(--light-bg)" }}>
           <div className="container">
-            <dl className="metric-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-              {selfCase.metrics.map((metric) => (
-                <div key={metric.label} className="card-bento" style={{ padding: '40px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '24px', textAlign: 'center' }}>
-                  <dt style={{ fontSize: '40px', fontWeight: 800, color: 'var(--accent)', marginBottom: '8px', letterSpacing: '-0.04em' }}>{metric.value}</dt>
-                  <dd style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{metric.label}</span>
-                    <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{metric.detail}</span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "32px" }}>
+              {caseStudies.map((study) => {
+                // Find primary metric
+                const primaryMetric = study.metrics[0];
+                return (
+                  <div key={study.slug} className="card-bento" style={{ 
+                    backgroundColor: "#fff", 
+                    display: "flex", 
+                    flexDirection: "column", 
+                    gap: "24px",
+                    padding: "40px",
+                    height: "100%"
+                  }}>
+                    <div>
+                      <span className="badge-pill" style={{ display: "inline-block", fontSize: "11px", marginBottom: "16px" }}>
+                        {study.evidenceLabel}
+                      </span>
+                      <h2 className="headline-md" style={{ color: "var(--navy)", margin: 0 }}>
+                        {study.headline}
+                      </h2>
+                    </div>
 
-        <section className="section" style={{ padding: '120px 0', backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border)' }}>
-          <div className="container-narrow">
-            <article className="article-body" style={{ color: 'var(--text)', lineHeight: 1.8 }}>
-              <span className="overline" style={{ marginBottom: '24px' }}>Self-Case Analysis</span>
-              <h2 className="headline-lg" style={{ marginBottom: '48px' }}>{selfCase.headline}</h2>
-              {selfCase.sections.map((section) => (
-                <section key={section.heading} style={{ marginBottom: '60px' }}>
-                  <h3 className="headline-md" style={{ marginBottom: '24px', color: 'var(--text)' }}>
-                    {section.heading}
-                  </h3>
-                  {section.paragraphs.map((paragraph, pIdx) => (
-                    <p key={pIdx} style={{ fontSize: '17px', color: 'var(--text-dim)', marginBottom: '24px' }}>{paragraph}</p>
-                  ))}
-                </section>
-              ))}
-            </article>
-          </div>
-        </section>
+                    {/* Metric Highlight Box */}
+                    {primaryMetric && (
+                      <div style={{ 
+                        padding: "20px", 
+                        backgroundColor: "var(--light-bg)", 
+                        borderRadius: "12px",
+                        textAlign: "center"
+                      }}>
+                        <div style={{ fontSize: "36px", fontWeight: 900, color: "var(--blue)" }}>
+                          {primaryMetric.value}
+                        </div>
+                        <div style={{ fontSize: "13px", fontWeight: 700, textTransform: "uppercase", color: "var(--slate)" }}>
+                          {primaryMetric.label}
+                        </div>
+                      </div>
+                    )}
 
-        <section className="section" style={{ padding: '120px 0', borderTop: '1px solid var(--border)' }}>
-          <div className="container-narrow">
-            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-              <span className="overline">Case FAQ</span>
-              <h2 className="headline-lg" style={{ marginTop: '16px' }}>Technical clarity on <br /><span style={{ color: 'var(--accent)' }}>the evidence data.</span></h2>
-            </div>
-            <ul className="faq-list">
-              {selfCase.faq.map((item) => (
-                <li key={item.question} style={{ padding: '24px 0', borderBottom: '1px solid var(--border)' }}>
-                  <h3 className="faq-question" style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>{item.question}</h3>
-                  <div className="faq-answer">
-                    <p style={{ color: 'var(--text-dim)', fontSize: '16px', lineHeight: 1.6 }}>{item.answer}</p>
+                    <p style={{ color: "var(--slate)", fontSize: "15px", lineHeight: 1.6, margin: 0 }}>
+                      {study.summary}
+                    </p>
+
+                    <div style={{ marginTop: "auto", paddingTop: "20px", borderTop: "1px solid var(--border-light)" }}>
+                      <Link href={`/case-studies/${study.slug}`} className="btn-primary" style={{ display: "block", textAlign: "center" }}>
+                        Read Case Study →
+                      </Link>
+                    </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                );
+              })}
+            </div>
           </div>
         </section>
       </main>
@@ -113,4 +109,3 @@ export default function CaseStudiesPage() {
     </div>
   );
 }
-

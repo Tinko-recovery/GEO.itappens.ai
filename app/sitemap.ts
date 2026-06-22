@@ -1,13 +1,19 @@
 import type { MetadataRoute } from "next";
 
 import { answerPages } from "@/lib/content/answers";
+import { caseStudies } from "@/lib/content/caseStudies";
 import { siteConfig } from "@/lib/content/site";
+import { getSortedPostsData } from "@/lib/blog";
 
 const staticRoutes = [
   "",
+  "/about",
+  "/aeo",
   "/geo",
   "/geo-guide",
   "/how-it-works",
+  "/content-clusters",
+  "/citation-authority",
   "/case-studies",
   "/answers",
   "/blog",
@@ -18,7 +24,7 @@ const staticRoutes = [
   "/solutions/visible-in-ai",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticEntries = staticRoutes.map((route) => ({
@@ -35,5 +41,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.75,
   }));
 
-  return [...staticEntries, ...answerEntries];
+  const caseEntries = caseStudies.map((study) => ({
+    url: `${siteConfig.url}/case-studies/${study.slug}`,
+    lastModified: new Date(study.updatedAt),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  let blogEntries: any[] = [];
+  try {
+    const posts = await getSortedPostsData();
+    blogEntries = posts.map((post) => ({
+      url: `${siteConfig.url}/blog/${post.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.75,
+    }));
+  } catch (err) {
+    console.error("Failed to load blog sitemap entries:", err);
+  }
+
+  return [...staticEntries, ...answerEntries, ...caseEntries, ...blogEntries];
 }

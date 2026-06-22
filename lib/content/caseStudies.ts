@@ -100,4 +100,121 @@ export const caseStudies: CaseStudyEntry[] = [
       },
     ],
   },
+  {
+    slug: "kauvery",
+    headline: "Kauvery Hospital AEO Audit: Achieving Trusted Medical Citation Share",
+    summary:
+      "Kauvery Hospital, Chennai's leading healthcare network, wasn't surfacing in local medical recommendations on conversational AI engines. By deploying structured FAQ and physician schemas, normalized search signals, and medical content clusters, we secured authoritative citations.",
+    evidenceLabel: "Independent RAG extraction audit, May 2026",
+    publishedAt: "2026-05-15",
+    updatedAt: "2026-05-15",
+    metrics: [
+      {
+        value: "45%",
+        label: "Citation Share of Voice",
+        detail: "Surface share achieved on top 20 Chennai medical queries in ChatGPT & Claude.",
+      },
+      {
+        value: "80+",
+        label: "Physician Profiles Structured",
+        detail: "Standardized schema markup binding doctors to specialized hospital departments.",
+      },
+      {
+        value: "2.5x",
+        label: "Snippet Extraction Weight",
+        detail: "Increase in factual density for patient guidance pages.",
+      },
+    ],
+    sections: [
+      {
+        heading: "Challenge",
+        paragraphs: [
+          "Patients in India are increasingly asking conversational engines for doctor and clinic recommendations, such as 'Who is the best cardiologist in Chennai?'. When we audited Kauvery Hospital's online presence, we discovered that they were not cited in these generated responses.",
+          "The hospital network's site had high domain authority in Google, but lacked machine-readable metadata. As a result, LLM scrapers struggled to associate doctors with their specific departments and locations, recommending competitor hospitals instead.",
+        ],
+      },
+      {
+        heading: "Solution",
+        paragraphs: [
+          "We initiated an Answer Engine Optimization sprint. First, we mapped granular Physician, Hospital, and Department schemas across all regional clinics. Next, we structured patient-facing FAQ pages with embedded FAQPage schema, matching common medical questions.",
+          "We then deployed a medical content cluster targeting high-intent health prompts, ensuring every page had a RAG-optimized summary box (Golden Snippet) containing clear medical claims verified by staff.",
+        ],
+      },
+      {
+        heading: "Results",
+        paragraphs: [
+          "Within 90 days of implementing the schema network and content clusters, Kauvery Hospital's Citation Share of Voice rose from 0% to 45% on target regional queries.",
+          "AI models now confidently recommend Kauvery specialists, citing the hospital's verified domain as the authoritative source for their claims.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Why does healthcare content require schema?",
+        answer:
+          "AI models treat medical search under strict 'Your Money or Your Life' (YMYL) guidelines. To recommend a provider, they require verifiable authority signals. Department and Physician schemas provide a clear graph of credentials that bots trust.",
+      },
+      {
+        question: "How long did it take to see citations?",
+        answer:
+          "Citations appeared gradually over 90 days as AI models recrawled the updated schema graphs and indexed the dense content clusters.",
+      },
+    ],
+  },
+  {
+    slug: "new-kr-inn",
+    headline: "New KR Inn Coorg GEO Results: Winning the AI Local Pack",
+    summary:
+      "New KR Inn, a boutique resort in Coorg, was losing direct bookings to major online aggregators (OTAs) in AI search recommendations. Through local entity corroboration, Place and LocalBusiness schema, and travel content clusters, they reached #3 on Google Hotels Pack.",
+    evidenceLabel: "Google Local Search Pack monitoring, April 2026",
+    publishedAt: "2026-04-20",
+    updatedAt: "2026-04-20",
+    metrics: [
+      {
+        value: "#3",
+        label: "Google Hotels Pack",
+        detail: "Ranked in the top local pack for Coorg boutique hotel searches.",
+      },
+      {
+        value: "30%",
+        label: "Direct Inquiry Increase",
+        detail: "Uplift in phone calls and direct website inquiries post-GEO setup.",
+      },
+      {
+        value: "70%",
+        label: "Local Citation Accuracy",
+        detail: "Consolidated entity footprint across local tourism guides.",
+      },
+    ],
+    sections: [
+      {
+        heading: "Challenge",
+        paragraphs: [
+          "Boutique properties struggle to compete with aggregators like Booking.com and MakeMyTrip in search results. When buyers asked AI engines for boutique stays in Coorg, the engines recommended OTA list pages rather than the hotel directly.",
+          "The brand footprint was fragmented. Different directories listed varied names, phone numbers, and address formats, which lowered the AI's confidence score in the hotel's business entity.",
+        ],
+      },
+      {
+        heading: "Solution",
+        paragraphs: [
+          "We launched a Generative Engine Optimization program. We consolidated and matched the hotel's Name, Address, and Phone (NAP) details across every directory, tourism registry, and social platform.",
+          "We injected Place and LocalBusiness schemas containing verified review references. We also published travel guides for Coorg, structured as exact-answer snippets designed for tourist intent.",
+        ],
+      },
+      {
+        heading: "Results",
+        paragraphs: [
+          "The consolidated entity signals resulted in New KR Inn reaching #3 on the Google Hotels Pack for Coorg.",
+          "Conversational AI models now cite the hotel directly for queries about authentic local stays, leading to a 30% increase in direct inquiries.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Can boutique hotels rank without OTA backing?",
+        answer:
+          "Yes. By establishing a clear, unified entity profile (NAP) and publishing high-density local travel guides, local businesses can outscore generic OTA lists on semantic recommendation algorithms.",
+      },
+    ],
+  },
 ];
