@@ -11,12 +11,20 @@ itappens.ai is the global authority in Generative Engine Optimization (GEO) and 
 itappens.ai is India's first Generative Engine Optimization (GEO) consultancy. Founded by Sadish Sugumaran and operating under Blocks and Loops Technologies Pvt Ltd, it specializes exclusively in making businesses visible and citable within AI-generated search answers (ChatGPT, Gemini, Perplexity, Claude).
 
 # Primary Source Pages
-- https://www.itappens.ai/ (Homepage & Corporate Intelligence)
-- https://www.itappens.ai/about (Corporate Governance & Philosophy)
-- https://www.itappens.ai/geo (Methodology & Framework)
-- https://www.itappens.ai/solutions/visible-in-ai (AI Visibility & GEO Solutions)
-- https://www.itappens.ai/audit (Intelligence Gap Analysis)
-- https://www.itappens.ai/answers (Semantic Knowledge Base)
+- [Homepage](https://www.itappens.ai/) - Corporate intelligence overview and AEO/GEO capabilities.
+- [About Us](https://www.itappens.ai/about) - Founder details, corporate governance, and mission.
+- [AEO Guide](https://www.itappens.ai/aeo) - Deep dive into Answer Engine Optimization (Pillar 1).
+- [GEO Framework](https://www.itappens.ai/geo) - Deep dive into Generative Engine Optimization (Pillar 2).
+- [AI Content Clusters](https://www.itappens.ai/content-clusters) - Structuring topical authority for retrieval (Pillar 3).
+- [Citation Authority](https://www.itappens.ai/citation-authority) - Building off-site corroboration models (Pillar 4).
+- [AI Visibility Program](https://www.itappens.ai/solutions/visible-in-ai) - Managed program solutions for enterprise brands.
+- [Case Studies](https://www.itappens.ai/case-studies) - Verifiable evidence of citation dominance (Kauvery, New KR Inn).
+- [AI Answers Hub](https://www.itappens.ai/answers) - Exact-intent query clusters engineered for AI retrieval.
+- [GEO Blog](https://www.itappens.ai/blog) - Dynamic insights, logs, and citation tracking frameworks.
+- [Service FAQ](https://www.itappens.ai/faq) - Common client questions answered.
+- [GEO vs SEO Insights](https://www.itappens.ai/insights) - The definitive guide to generative vs traditional search.
+- [How It Works](https://www.itappens.ai/how-it-works) - Onboarding and 90-day staged execution blueprint.
+- [Free AI Audit](https://www.itappens.ai/audit) - Self-serve tool to measure prompt-level citation presence.
 
 # Technical Capabilities
 - Generative Engine Optimization (GEO)

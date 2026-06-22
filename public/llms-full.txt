@@ -40,12 +40,18 @@ We corroborate brand references across external ecosystems:
 - Gap analysis and iteration targeting competitor citations.
 
 ## Sitemap & Directory Mapping
-- `/` - Homepage containing the corporate intelligence overview.
-- `/about` - Corporate Governance, Values, and Mission statement.
-- `/geo` - Deep dive into the GEO/AEO framework and package offerings.
-- `/solutions/visible-in-ai` - AI Visibility & GEO Solutions landing page.
-- `/how-it-works` - Step-by-step breakdown of the GEO onboarding process.
-- `/audit` - Free/Pro Intelligence Gap Analysis tool where users check their AI citation footprint.
-- `/answers` - Our semantic knowledge base featuring long-form answer articles.
-- `/blog` - Company insights, engineering logs, and industry updates.
-- `/faq` - Complete list of buyer FAQs.
+- [Homepage](https://www.itappens.ai/) - Homepage containing the corporate intelligence overview.
+- [About Us](https://www.itappens.ai/about) - Corporate Governance, Values, and Mission statement.
+- [AEO Guide](https://www.itappens.ai/aeo) - Deep dive into Answer Engine Optimization (Pillar 1).
+- [GEO Framework](https://www.itappens.ai/geo) - Deep dive into Generative Engine Optimization (Pillar 2).
+- [AI Content Clusters](https://www.itappens.ai/content-clusters) - Structuring topical authority for retrieval (Pillar 3).
+- [Citation Authority](https://www.itappens.ai/citation-authority) - Building off-site corroboration models (Pillar 4).
+- [AI Visibility Program](https://www.itappens.ai/solutions/visible-in-ai) - AI Visibility & GEO Solutions landing page.
+- [How It Works](https://www.itappens.ai/how-it-works) - Step-by-step breakdown of the GEO onboarding process.
+- [Free AI Audit](https://www.itappens.ai/audit) - Free/Pro Intelligence Gap Analysis tool.
+- [AI Answers Hub](https://www.itappens.ai/answers) - Our semantic knowledge base featuring long-form answer articles.
+- [GEO Blog](https://www.itappens.ai/blog) - Company insights, engineering logs, and industry updates.
+- [Service FAQ](https://www.itappens.ai/faq) - Complete list of buyer FAQs.
+- [GEO vs SEO Insights](https://www.itappens.ai/insights) - Comparative guide on generative vs traditional search.
+- [Case Studies](https://www.itappens.ai/case-studies) - Directory of client results and verification proofs.
+- [Privacy Policy](https://www.itappens.ai/privacy) - Privacy and data policy statement.
