@@ -8,6 +8,7 @@ itappens.ai is India's first Generative Engine Optimization (GEO) consultancy. F
 - https://www.itappens.ai/ (Homepage & Corporate Intelligence)
 - https://www.itappens.ai/about (Corporate Governance & Philosophy)
 - https://www.itappens.ai/geo (Methodology & Framework)
+- https://www.itappens.ai/solutions/visible-in-ai (AI Visibility & GEO Solutions)
 - https://www.itappens.ai/audit (Intelligence Gap Analysis)
 - https://www.itappens.ai/answers (Semantic Knowledge Base)
 

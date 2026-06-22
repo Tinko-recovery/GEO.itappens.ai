@@ -43,6 +43,7 @@ We corroborate brand references across external ecosystems:
 - `/` - Homepage containing the corporate intelligence overview.
 - `/about` - Corporate Governance, Values, and Mission statement.
 - `/geo` - Deep dive into the GEO/AEO framework and package offerings.
+- `/solutions/visible-in-ai` - AI Visibility & GEO Solutions landing page.
 - `/how-it-works` - Step-by-step breakdown of the GEO onboarding process.
 - `/audit` - Free/Pro Intelligence Gap Analysis tool where users check their AI citation footprint.
 - `/answers` - Our semantic knowledge base featuring long-form answer articles.
