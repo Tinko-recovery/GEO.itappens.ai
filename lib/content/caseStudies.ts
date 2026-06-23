@@ -101,10 +101,10 @@ export const caseStudies: CaseStudyEntry[] = [
     ],
   },
   {
-    slug: "kauvery",
-    headline: "Kauvery Hospital AEO Audit: Achieving Trusted Medical Citation Share",
+    slug: "healthcare-network",
+    headline: "Enterprise Healthcare Network AEO Audit: Achieving Trusted Medical Citation Share",
     summary:
-      "Kauvery Hospital, Chennai's leading healthcare network, wasn't surfacing in local medical recommendations on conversational AI engines. By deploying structured FAQ and physician schemas, normalized search signals, and medical content clusters, we secured authoritative citations.",
+      "A leading regional healthcare network wasn't surfacing in local medical recommendations on conversational AI engines. By deploying structured FAQ and physician schemas, normalized search signals, and medical content clusters, we secured authoritative citations.",
     evidenceLabel: "Independent RAG extraction audit, May 2026",
     publishedAt: "2026-05-15",
     updatedAt: "2026-05-15",
@@ -129,7 +129,7 @@ export const caseStudies: CaseStudyEntry[] = [
       {
         heading: "Challenge",
         paragraphs: [
-          "Patients in India are increasingly asking conversational engines for doctor and clinic recommendations, such as 'Who is the best cardiologist in Chennai?'. When we audited Kauvery Hospital's online presence, we discovered that they were not cited in these generated responses.",
+          "Patients in India are increasingly asking conversational engines for doctor and clinic recommendations, such as 'Who is the best cardiologist in Chennai?'. When we audited the healthcare network's online presence, we discovered that they were not cited in these generated responses.",
           "The hospital network's site had high domain authority in Google, but lacked machine-readable metadata. As a result, LLM scrapers struggled to associate doctors with their specific departments and locations, recommending competitor hospitals instead.",
         ],
       },
@@ -143,8 +143,8 @@ export const caseStudies: CaseStudyEntry[] = [
       {
         heading: "Results",
         paragraphs: [
-          "Within 90 days of implementing the schema network and content clusters, Kauvery Hospital's Citation Share of Voice rose from 0% to 45% on target regional queries.",
-          "AI models now confidently recommend Kauvery specialists, citing the hospital's verified domain as the authoritative source for their claims.",
+          "Within 90 days of implementing the schema network and content clusters, the healthcare network's Citation Share of Voice rose from 0% to 45% on target regional queries.",
+          "AI models now confidently recommend the network's specialists, citing the network's verified domain as the authoritative source for their claims.",
         ],
       },
     ],
@@ -162,10 +162,10 @@ export const caseStudies: CaseStudyEntry[] = [
     ],
   },
   {
-    slug: "new-kr-inn",
-    headline: "New KR Inn Coorg GEO Results: Winning the AI Local Pack",
+    slug: "boutique-resort",
+    headline: "Boutique Coorg Resort GEO Results: Winning the AI Local Pack",
     summary:
-      "New KR Inn, a boutique resort in Coorg, was losing direct bookings to major online aggregators (OTAs) in AI search recommendations. Through local entity corroboration, Place and LocalBusiness schema, and travel content clusters, they reached #3 on Google Hotels Pack.",
+      "A boutique resort in Coorg was losing direct bookings to major online aggregators (OTAs) in AI search recommendations. Through local entity corroboration, Place and LocalBusiness schema, and travel content clusters, they reached #3 on Google Hotels Pack.",
     evidenceLabel: "Google Local Search Pack monitoring, April 2026",
     publishedAt: "2026-04-20",
     updatedAt: "2026-04-20",
@@ -204,8 +204,8 @@ export const caseStudies: CaseStudyEntry[] = [
       {
         heading: "Results",
         paragraphs: [
-          "The consolidated entity signals resulted in New KR Inn reaching #3 on the Google Hotels Pack for Coorg.",
-          "Conversational AI models now cite the hotel directly for queries about authentic local stays, leading to a 30% increase in direct inquiries.",
+          "The consolidated entity signals resulted in the boutique resort reaching #3 on the Google Hotels Pack for Coorg.",
+          "Conversational AI models now cite the resort directly for queries about authentic local stays, leading to a 30% increase in direct inquiries.",
         ],
       },
     ],

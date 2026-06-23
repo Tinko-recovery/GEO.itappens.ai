@@ -256,7 +256,7 @@ export default function AuditPage() {
                 ✓ 400+ audits completed | 2,500+ issues identified
               </p>
               <p className="text-xs text-gray-500">
-                Join companies like Kauvery Hospital and Writer Information
+                Join leading brands optimizing their AI search visibility
               </p>
             </div>
           </div>

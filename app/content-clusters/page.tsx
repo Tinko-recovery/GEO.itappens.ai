@@ -72,16 +72,16 @@ export default function ContentClustersPage() {
             <h2 className="headline-lg" style={{ marginBottom: "32px", marginTop: "64px" }}>Case Proof: Real-World Content Clusters</h2>
             
             <div className="card-bento" style={{ backgroundColor: "var(--light-bg)", padding: "40px", marginBottom: "32px", borderLeft: "4px solid var(--blue)" }}>
-              <h3 className="headline-md" style={{ color: "var(--navy)", margin: "0 0 12px 0" }}>New KR Inn: Local Authority Cluster</h3>
+              <h3 className="headline-md" style={{ color: "var(--navy)", margin: "0 0 12px 0" }}>Boutique Resort: Local Authority Cluster</h3>
               <p style={{ color: "var(--slate)", fontSize: "15px", lineHeight: 1.6, margin: 0 }}>
-                To optimize <strong>New KR Inn</strong> (boutique hospitality in Coorg), we built a dense cluster around local tourism, premium stay experiences, and Coorg travel guides. Instead of trying to rank for general travel terms, the clusters provided high-density answers for niche traveller prompts. When combined with LocalBusiness and Place schema markups, this content structure drove the hotel to rank #3 in the Google Hotels and local search recommendations pack.
+                To optimize <strong>a boutique resort in Coorg</strong>, we built a dense cluster around local tourism, premium stay experiences, and Coorg travel guides. Instead of trying to rank for general travel terms, the clusters provided high-density answers for niche traveller prompts. When combined with LocalBusiness and Place schema markups, this content structure drove the hotel to rank #3 in the Google Hotels and local search recommendations pack.
               </p>
             </div>
 
             <div className="card-bento" style={{ backgroundColor: "var(--light-bg)", padding: "40px", borderLeft: "4px solid var(--blue)" }}>
-              <h3 className="headline-md" style={{ color: "var(--navy)", margin: "0 0 12px 0" }}>Kauvery Hospital: Medical Topic Clusters</h3>
+              <h3 className="headline-md" style={{ color: "var(--navy)", margin: "0 0 12px 0" }}>Healthcare Network: Medical Topic Clusters</h3>
               <p style={{ color: "var(--slate)", fontSize: "15px", lineHeight: 1.6, margin: 0 }}>
-                For **Kauvery Hospital**, we mapped specialized medical query clusters. AI search crawlers require absolute accuracy for YMYL (Your Money or Your Life) topics. By linking physician entities to detailed clinic pages, publishing exact Q&A schema maps, and structuring articles around disease symptoms and treatments, the hospital established a machine-readable medical knowledge base that AI engines frequently reference.
+                For **a leading healthcare network**, we mapped specialized medical query clusters. AI search crawlers require absolute accuracy for YMYL (Your Money or Your Life) topics. By linking physician entities to detailed clinic pages, publishing exact Q&A schema maps, and structuring articles around disease symptoms and treatments, the hospital established a machine-readable medical knowledge base that AI engines frequently reference.
               </p>
             </div>
           </div>

@@ -84,16 +84,6 @@ export default function SiteFooter() {
                 How It Works
               </Link>
             </li>
-            <li>
-              <a href="/llms.txt" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
-                llms.txt directory
-              </a>
-            </li>
-            <li>
-              <a href="/sitemap.xml" className="text-[15px] text-brand-text-muted hover:text-brand-primary transition-colors no-underline">
-                Sitemap Index
-              </a>
-            </li>
           </ul>
         </div>
 
