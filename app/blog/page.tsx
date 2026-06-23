@@ -30,7 +30,7 @@ export default async function BlogPage() {
     <div className="page-shell">
       <NavBar />
       <main>
-        <header className="section dark-section">
+        <header className="section dark-section" style={{ padding: '160px 0 100px', position: 'relative' }}>
           <div className="container-narrow">
             <span className="overline">GEO Blog</span>
             <h1 className="headline-xl" style={{ margin: '24px 0' }}>

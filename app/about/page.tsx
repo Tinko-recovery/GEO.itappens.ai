@@ -49,14 +49,14 @@ export default function AboutPage() {
 
       <main>
         {/* Hero */}
-        <header style={{ padding: '180px 0 120px', backgroundColor: 'var(--navy)', color: 'white', position: 'relative', overflow: 'hidden' }}>
+        <header className="section dark-section" style={{ padding: '160px 0 100px', position: 'relative', overflow: 'hidden' }}>
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
             background: `radial-gradient(circle at 20% 50%, rgba(0, 194, 255, 0.1) 0%, transparent 50%)`,
             zIndex: 0
           }} />
           <div className="container" style={{ position: 'relative', zIndex: 10, maxWidth: '900px' }}>
-            <span className="badge-pill" style={{ marginBottom: '24px', background: 'rgba(255,255,255,0.1)', color: 'var(--cyan)' }}>About The Company</span>
+            <span className="overline" style={{ color: 'var(--cyan)' }}>About The Company</span>
             <h1 className="headline-xl" style={{ margin: '24px 0 40px', lineHeight: 1.05 }}>
               We make B2B SaaS brands{' '}
               <span style={{ color: 'var(--cyan)' }}>
@@ -70,13 +70,13 @@ export default function AboutPage() {
         </header>
 
         {/* Stats Bar */}
-        <section style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', backgroundColor: '#fff' }}>
+        <section style={{ borderTop: '1px solid var(--brand-border)', borderBottom: '1px solid var(--brand-border)', backgroundColor: '#fff' }}>
           <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0' }}>
             {stats.map((stat, i) => (
               <div key={i} style={{
                 padding: '48px 32px',
                 textAlign: 'center',
-                borderRight: i < stats.length - 1 ? '1px solid var(--border)' : 'none',
+                borderRight: i < stats.length - 1 ? '1px solid var(--brand-border)' : 'none',
               }}>
                 <p style={{ fontSize: '40px', fontWeight: 900, color: 'var(--blue)', margin: '0 0 8px', letterSpacing: '-0.04em' }}>
                   {stat.value}
@@ -90,10 +90,10 @@ export default function AboutPage() {
         </section>
 
         {/* Mission */}
-        <section style={{ padding: '140px 0', backgroundColor: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+        <section className="section" style={{ backgroundColor: 'var(--brand-bg)', borderBottom: '1px solid var(--brand-border)' }}>
           <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px', alignItems: 'center' }}>
             <div>
-              <span className="badge-pill" style={{ marginBottom: '24px' }}>Our Mission</span>
+              <span className="overline">Our Mission</span>
               <h2 className="headline-lg">
                 The next decade of discovery is{' '}
                 <span style={{ color: 'var(--blue)' }}>AI-first.</span>
@@ -111,7 +111,7 @@ export default function AboutPage() {
                 { label: 'What We Build', text: 'Technical signal layers, answer-engine content clusters, entity graphs, and citation tracking systems — end-to-end.' },
                 { label: 'How We Measure', text: 'Citation share on a defined set of high-intent queries. We track it weekly across ChatGPT, Perplexity, Gemini, and Claude.' },
               ].map((item, i) => (
-                <div key={i} className="card-corporate" style={{ padding: '32px 40px' }}>
+                <div key={i} className="card-bento" style={{ padding: '32px 40px' }}>
                   <p style={{ fontSize: '12px', fontWeight: 800, color: 'var(--blue)', textTransform: 'uppercase', marginBottom: '12px' }}>{item.label}</p>
                   <p style={{ fontSize: '15px', color: 'var(--slate)', lineHeight: 1.7, margin: 0 }}>{item.text}</p>
                 </div>
@@ -121,15 +121,15 @@ export default function AboutPage() {
         </section>
 
         {/* Values */}
-        <section style={{ padding: '120px 0', backgroundColor: 'var(--light-bg)' }}>
+        <section className="section" style={{ backgroundColor: 'var(--brand-bg)' }}>
           <div className="container">
             <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-              <span className="badge-pill" style={{ marginBottom: '24px' }}>Operating Principles</span>
+              <span className="overline">Operating Principles</span>
               <h2 className="headline-lg">How we think about <span style={{ color: 'var(--blue)' }}>the work.</span></h2>
             </div>
             <div className="bento-grid">
               {values.map((v, i) => (
-                <div key={i} className="card-corporate" style={{ padding: '48px' }}>
+                <div key={i} className="card-bento" style={{ padding: '48px' }}>
                   <div style={{ width: '48px', height: '4px', backgroundColor: v.color, borderRadius: '2px', marginBottom: '32px' }} />
                   <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '16px' }}>{v.title}</h3>
                   <p style={{ fontSize: '15px', color: 'var(--slate)', lineHeight: 1.7, margin: 0 }}>{v.description}</p>
@@ -140,9 +140,9 @@ export default function AboutPage() {
         </section>
 
         {/* CTA */}
-        <section id="audit" className="dark-section" style={{ padding: '120px 0' }}>
+        <section id="audit" className="section dark-section">
           <div className="container" style={{ textAlign: 'center', maxWidth: '800px' }}>
-            <span className="badge-pill" style={{ marginBottom: '24px', background: 'rgba(255,255,255,0.1)', color: 'var(--cyan)' }}>Get Started</span>
+            <span className="overline" style={{ color: 'var(--cyan)' }}>Get Started</span>
             <h2 className="headline-lg">
               Ready to own your <br />
               <span style={{ color: 'var(--cyan)' }}>AI citation layer?</span>
@@ -151,10 +151,10 @@ export default function AboutPage() {
               Start with a free GEO snapshot. We'll map your current citation visibility, identify the top technical gaps, and outline the first 90-day action plan.
             </p>
             <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="/audit" className="btn-blue" style={{ padding: '16px 32px' }}>
+              <a href="/audit" className="btn-primary" style={{ padding: '16px 32px' }}>
                 Get Free GEO Snapshot
               </a>
-              <a href="/geo" className="btn-ghost" style={{ padding: '16px 32px' }}>
+              <a href="/geo" className="btn-secondary" style={{ padding: '16px 32px' }}>
                 See the Framework →
               </a>
             </div>

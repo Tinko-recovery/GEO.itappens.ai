@@ -75,9 +75,6 @@ export default async function CaseStudyDetailPage(props: Props) {
             </div>
             <div className="card-bento" style={{ 
               padding: "40px", 
-              backgroundColor: "var(--surface)", 
-              border: "1px solid var(--border)", 
-              borderRadius: "24px",
               display: "flex", 
               flexDirection: "column", 
               gap: "16px",
@@ -92,15 +89,12 @@ export default async function CaseStudyDetailPage(props: Props) {
         </header>
 
         {/* Metrics Grid */}
-        <section className="section" style={{ padding: "80px 0", borderTop: "1px solid var(--border)", backgroundColor: "var(--light-bg)" }}>
+        <section className="section" style={{ padding: "80px 0", borderTop: "1px solid var(--brand-border)", backgroundColor: "var(--light-bg)" }}>
           <div className="container">
             <dl className="metric-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
               {study.metrics.map((metric) => (
                 <div key={metric.label} className="card-bento" style={{ 
                   padding: "40px", 
-                  backgroundColor: "#fff", 
-                  border: "1px solid var(--border)", 
-                  borderRadius: "24px", 
                   textAlign: "center" 
                 }}>
                   <dt style={{ fontSize: "40px", fontWeight: 800, color: "var(--blue)", marginBottom: "8px", letterSpacing: "-0.04em" }}>
@@ -121,7 +115,7 @@ export default async function CaseStudyDetailPage(props: Props) {
         </section>
 
         {/* Study Content Sections */}
-        <section className="section" style={{ padding: "120px 0", backgroundColor: "#fff", borderTop: "1px solid var(--border)" }}>
+        <section className="section" style={{ padding: "120px 0", backgroundColor: "#fff", borderTop: "1px solid var(--brand-border)" }}>
           <div className="container-narrow">
             <article className="article-body" style={{ color: "var(--text)", lineHeight: 1.8 }}>
               {study.sections.map((section) => (
@@ -141,7 +135,7 @@ export default async function CaseStudyDetailPage(props: Props) {
         </section>
 
         {/* Study FAQ List */}
-        <section className="section" style={{ padding: "120px 0", borderTop: "1px solid var(--border)", backgroundColor: "var(--light-bg)" }}>
+        <section className="section" style={{ padding: "120px 0", borderTop: "1px solid var(--brand-border)", backgroundColor: "var(--light-bg)" }}>
           <div className="container-narrow">
             <div style={{ textAlign: "center", marginBottom: "64px" }}>
               <span className="overline">Case FAQ</span>
@@ -149,7 +143,7 @@ export default async function CaseStudyDetailPage(props: Props) {
             </div>
             <ul className="faq-list" style={{ listStyle: "none", padding: 0 }}>
               {study.faq.map((item) => (
-                <li key={item.question} style={{ padding: "24px 0", borderBottom: "1px solid var(--border)" }}>
+                <li key={item.question} style={{ padding: "24px 0", borderBottom: "1px solid var(--brand-border)" }}>
                   <h3 className="faq-question" style={{ fontSize: "18px", fontWeight: 700, marginBottom: "12px", color: "var(--navy)" }}>
                     {item.question}
                   </h3>

@@ -39,34 +39,30 @@ const homepageSchema = schemaGraph(
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen font-sans text-brand-text bg-brand-bg">
+    <div className="page-shell">
       <JsonLd data={homepageSchema} />
       <Suspense fallback={<div className="h-20 bg-white animate-pulse" />}>
         <NavBar />
       </Suspense>
       
-      <main className="flex-grow">
+      <main>
         <SearchHeroSection />
         <ProblemSection />
         <SolutionSection />
         <ProofSection />
 
         {/* FAQ Section */}
-        <section className="py-24 md:py-32 bg-white">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center mb-16">
-              <span className="inline-block px-4 py-1 mb-6 text-sm font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 rounded-full uppercase tracking-wider">
-                Expertise
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-brand-text">
-                Frequently Asked Questions
-              </h2>
+        <section className="section" style={{ borderTop: "1px solid var(--border-light)", backgroundColor: "#fff" }}>
+          <div className="container-narrow">
+            <div style={{ textAlign: "center", marginBottom: "64px" }}>
+              <span className="overline">Expertise</span>
+              <h2 className="headline-lg">Frequently Asked Questions</h2>
             </div>
-            <ul className="space-y-8">
+            <ul style={{ listStyle: "none", padding: 0 }}>
               {homepageFaqs.map((item) => (
-                <li key={item.question} className="pb-8 border-b border-brand-border last:border-0">
-                  <h3 className="text-xl md:text-2xl font-bold mb-4 text-brand-text">{item.question}</h3>
-                  <p className="text-lg text-brand-text-muted leading-relaxed">{item.answer}</p>
+                <li key={item.question} style={{ padding: "24px 0", borderBottom: "1px solid var(--border-light)" }}>
+                  <h3 style={{ fontSize: "18px", fontWeight: 700, marginBottom: "12px", color: "var(--navy)" }}>{item.question}</h3>
+                  <p style={{ color: "var(--slate)", fontSize: "16px", lineHeight: 1.6, margin: 0 }}>{item.answer}</p>
                 </li>
               ))}
             </ul>
